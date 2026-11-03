@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner } from '@/components/feedback/States';
 import { Checkbox, TextField } from '@/components/forms/Fields';
-import { BrandMark, SunriseScene } from '@/components/illustrations/Illustrations';
+import { BrandMark, DecisionGlimpse } from '@/components/illustrations/Illustrations';
 import { Screen } from '@/components/layout/Screen';
 import { useApp } from '@/hooks/useAppState';
 import { mockHash } from '@/utils/id';
@@ -29,7 +29,7 @@ export function AuthWelcome() {
           <span className="brand-mark"><BrandMark size={26} color="#06222b" /></span>
           <span className="strong" style={{ fontSize: 17 }}>Money Decision Engine</span>
         </div>
-        <div className="reveal"><SunriseScene /></div>
+        <div className="reveal"><DecisionGlimpse /></div>
         <div className="stack">
           <h1 className="h1">Don't just track your money. Understand what to do with it.</h1>
           <p className="muted" style={{ fontSize: 16 }}>

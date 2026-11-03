@@ -70,10 +70,10 @@ export function HomeOverview() {
   const flowParts =
     income !== null && f.expenses.value !== null
       ? [
-          { label: 'Expenses', value: spent, color: 'var(--seg-1)' },
-          { label: 'Loan EMIs', value: emi, color: 'var(--rain)' },
-          { label: 'Other commitments', value: other, color: 'var(--faint)' },
-          { label: left !== null && left < 0 ? 'Shortfall' : 'Left over', value: Math.abs(left ?? 0), color: left !== null && left < 0 ? 'var(--act)' : 'var(--accent-bright)' },
+          { label: 'Expenses', value: spent, color: 'var(--s1)' },
+          { label: 'Loan EMIs', value: emi, color: 'var(--s2)' },
+          { label: 'Other commitments', value: other, color: 'var(--s4)' },
+          { label: left !== null && left < 0 ? 'Shortfall' : 'Left over', value: Math.abs(left ?? 0), color: left !== null && left < 0 ? 'var(--act)' : 'var(--s3)' },
         ]
       : [];
 
@@ -165,7 +165,7 @@ export function HomeOverview() {
               <div className="chips mt-12" style={{ gap: 6 }}>
                 {flowParts.map((p) => (
                   <span key={p.label} className="tag" style={{ background: 'transparent', padding: 0, gap: 6 }}>
-                    <i style={{ width: 9, height: 9, borderRadius: 3, background: p.color, display: 'inline-block', boxShadow: 'inset 0 0 0 0.5px var(--line)' }} />
+                    <i style={{ width: 8, height: 8, borderRadius: 4, background: p.color, display: 'inline-block' }} />
                     {p.label} <b className="num"><Money value={p.value} compact /></b>
                   </span>
                 ))}

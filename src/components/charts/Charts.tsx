@@ -1,12 +1,13 @@
-// Data-visualisation kit. Every chart is authored SVG/CSS, labelled directly (no legends where avoidable),
-// animated once on mount, and honest about zero baselines and missing data.
+// Data-visualisation kit, Sky style. Quiet chrome, loud data:
+// solid hairline grids, 2px lines over a soft wash, thin rounded bars with 2px surface gaps,
+// markers with a surface ring, sparing direct labels in text tokens (never in the series colour),
+// and a crosshair + tooltip on every plot (pointer and keyboard). Series colours come from
+// --s1..--s3 (validated for colour-vision deficiency in light and night); --s4 is the neutral "other".
 
-import { useId, type ReactNode } from 'react';
+import { useId, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
 import { inr, inrCompact } from '@/utils/format';
 
-const PALETTE = ['var(--seg-1)', 'var(--rain)', 'var(--accent-bright)', 'var(--s2)', 'var(--s3)', 'var(--faint)', 'var(--s4)'];
-const LINE_COLORS = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)'];
-const LINE_DASH = ['', '5 5', '2 5', '8 3 2 3'];
+const SERIES = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)'];
 
 /** Short axis label: ₹3.1L, ₹1.2Cr, ₹45k. */
 export function axisLabel(v: number): string {
@@ -18,6 +19,40 @@ export function axisLabel(v: number): string {
   return `${sign}₹${Math.round(a)}`;
 }
 
+/** Clean tick values (1, 2, 2.5, 5 × 10ⁿ) covering [min, max], at most ~4 lines. */
+function niceTicks(min: number, max: number, count = 3): number[] {
+  const span = max - min || Math.abs(max) || 1;
+  const raw = span / count;
+  const mag = 10 ** Math.floor(Math.log10(raw));
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw) ?? 10 * mag;
+  const lo = Math.floor(min / step) * step;
+  const hi = Math.ceil(max / step) * step;
+  const out: number[] = [];
+  for (let v = lo; v <= hi + step / 2; v += step) out.push(Math.round(v));
+  return out;
+}
+
+/** Monotone cubic path through points (Fritsch-Carlson): smooth, but never overshoots the data. */
+function smooth(p: Array<[number, number]>): string {
+  if (p.length < 3) return p.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const n = p.length;
+  const d = p.slice(0, -1).map(([x, y], i) => (p[i + 1][1] - y) / (p[i + 1][0] - x || 1));
+  const m = p.map((_, i) => (i === 0 ? d[0] : i === n - 1 ? d[n - 2] : d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2));
+  for (let i = 0; i < n - 1; i++) {
+    if (d[i] === 0) { m[i] = 0; m[i + 1] = 0; continue; }
+    const a = m[i] / d[i];
+    const b = m[i + 1] / d[i];
+    const h = a * a + b * b;
+    if (h > 9) { const t = 3 / Math.sqrt(h); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; }
+  }
+  let out = `M${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`;
+  for (let i = 0; i < n - 1; i++) {
+    const dx = (p[i + 1][0] - p[i][0]) / 3;
+    out += ` C${(p[i][0] + dx).toFixed(1)},${(p[i][1] + m[i] * dx).toFixed(1)} ${(p[i + 1][0] - dx).toFixed(1)},${(p[i + 1][1] - m[i + 1] * dx).toFixed(1)} ${p[i + 1][0].toFixed(1)},${p[i + 1][1].toFixed(1)}`;
+  }
+  return out;
+}
+
 export interface Series {
   label: string;
   values: number[];
@@ -27,97 +62,173 @@ export interface ChartEvent {
   label: string;
 }
 
+/** Index under the pointer, snapped to the nearest data position. */
+function useCrosshair(n: number, plotW: number, W: number) {
+  const [at, setAt] = useState<number | null>(null);
+  const onMove = (e: PointerEvent<SVGSVGElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = ((e.clientX - r.left) / r.width) * W;
+    setAt(Math.max(0, Math.min(n - 1, Math.round((px / plotW) * (n - 1)))));
+  };
+  const onKey = (e: KeyboardEvent<SVGSVGElement>) => {
+    if (e.key === 'ArrowRight') setAt((a) => Math.min(n - 1, (a ?? -1) + 1));
+    else if (e.key === 'ArrowLeft') setAt((a) => Math.max(0, (a ?? n) - 1));
+    else if (e.key === 'Escape') setAt(null);
+  };
+  return { at, setAt, onMove, onKey };
+}
+
+function Tooltip({ x, title, rows }: { x: number; title: string; rows: Array<{ color: string; value: string; label: string; dashed?: boolean }> }) {
+  const edge = x > 58 ? 'right' : 'mid';
+  return (
+    <div className={`viz-tip ${edge}`} style={{ left: `${x}%` }} role="status">
+      <div className="viz-tip-title">{title}</div>
+      {rows.map((r) => (
+        <div key={r.label} className="viz-tip-row">
+          <i className={r.dashed ? 'dashed' : ''} style={{ color: r.color }} />
+          <b>{r.value}</b>
+          <span>{r.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function LineLegend({ items }: { items: Array<{ label: string; color: string; dashed?: boolean }> }) {
+  return (
+    <div className="viz-legend">
+      {items.map((s) => (
+        <span key={s.label}><i className={s.dashed ? 'dashed' : ''} style={{ color: s.color }} />{s.label}</span>
+      ))}
+    </div>
+  );
+}
+
 /**
- * Area/line chart. The first series gets a filled area: blue above zero, red below zero, so a shortfall is
- * visible at a glance. Events are vertical markers; the lowest point is called out directly.
+ * Line chart. One series gets a soft wash (blue above zero, red below, so a shortfall reads at a glance).
+ * Several series get a legend, end dots, and a faint band showing the range between them.
+ * Events are hairline markers with a text label; the lowest point is called out directly.
  */
 export function LineChart({ series, height = 190, xLabels, events = [], zeroLine = true, lowLabel = 'Low' }: { series: Series[]; height?: number; xLabels?: string[]; events?: ChartEvent[]; zeroLine?: boolean; lowLabel?: string }) {
   const uid = useId().replace(/:/g, '');
   const W = 360;
   const H = height;
-  const padB = 20;
-  const padT = 36;
-  const padR = series.length > 1 ? 70 : 6;
+  const padT = events.length ? 30 : 16;
+  const padB = 22;
+  const padR = 6;
   const all = series.flatMap((s) => s.values);
+  const n = Math.max(0, ...series.map((s) => s.values.length));
+  const plotW = W - padR;
+  const ch = useCrosshair(n, plotW, W);
   if (all.length === 0) return <div className="skeleton" style={{ height }} />;
-  let min = Math.min(...all, zeroLine ? 0 : Infinity);
-  let max = Math.max(...all, zeroLine ? 0 : -Infinity);
-  if (min === max) {
-    min -= 1;
-    max += 1;
-  }
-  const n = Math.max(...series.map((s) => s.values.length));
-  const x = (i: number) => (n <= 1 ? 0 : (i / (n - 1)) * (W - padR));
-  const y = (v: number) => padT + (1 - (v - min) / (max - min)) * (H - padT - padB);
+  const rawMin = Math.min(...all, zeroLine ? 0 : Infinity);
+  const rawMax = Math.max(...all, zeroLine ? 0 : -Infinity);
+  const ticks = niceTicks(rawMin, rawMax === rawMin ? rawMin + 1 : rawMax);
+  const min = ticks[0];
+  const max = ticks[ticks.length - 1];
+  const x = (i: number) => (n <= 1 ? 0 : (i / (n - 1)) * plotW);
+  const y = (v: number) => padT + (1 - (v - min) / (max - min || 1)) * (H - padT - padB);
   const zeroY = y(0);
   const s0 = series[0].values;
-  // With several options on one chart, the shaded band is the true range across them at each month.
-  const bandHi = Array.from({ length: n }, (_, i) => Math.max(...series.map((s) => s.values[Math.min(i, s.values.length - 1)])));
-  const bandLo = Array.from({ length: n }, (_, i) => Math.min(...series.map((s) => s.values[Math.min(i, s.values.length - 1)])));
-  const band = series.length > 1 && n > 2 ? `${bandHi.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ')} ${bandLo.map((_, i) => `${x(n - 1 - i).toFixed(1)},${y(bandLo[n - 1 - i]).toFixed(1)}`).join(' ')}` : null;
-  const pts = (vals: number[]) => vals.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
-  const area = `${x(0)},${zeroY} ${pts(s0)} ${x(s0.length - 1)},${zeroY}`;
-  const labelEvery = Math.ceil(n / 6);
+  const xy = (vals: number[]) => vals.map((v, i) => [x(i), y(v)] as [number, number]);
+  const line = (vals: number[]) => smooth(xy(vals));
+  const area = `${line(s0)} L${x(s0.length - 1)},${zeroY} L${x(0)},${zeroY} Z`;
+  const labelEvery = Math.ceil(n / 5);
+  const single = series.length === 1;
   const minIdx = s0.indexOf(Math.min(...s0));
-  const lowX = Math.min(Math.max(x(minIdx), 44), W - padR - 44);
-  const lowAbove = y(s0[minIdx]) > H / 2;
-  // End labels for multi-series charts, nudged apart so they never overlap.
-  const ends = series
-    .map((s, i) => ({ label: s.label, color: LINE_COLORS[i % LINE_COLORS.length], y: y(s.values[s.values.length - 1]) }))
-    .sort((a, b) => a.y - b.y);
-  for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 13) ends[i].y = ends[i - 1].y + 13;
+  const lowAbove = y(s0[minIdx]) > (padT + H - padB) / 2;
+  const lowX = Math.min(Math.max(x(minIdx), 30), plotW - 30);
+  const at = (s: number[], i: number) => s[Math.min(i, s.length - 1)];
+  const bandHi = Array.from({ length: n }, (_, i) => Math.max(...series.map((s) => at(s.values, i))));
+  const bandLo = Array.from({ length: n }, (_, i) => Math.min(...series.map((s) => at(s.values, i))));
+  const band = !single && n > 2 ? `${line(bandHi)} L${smooth(xy(bandLo).reverse()).slice(1)} Z` : null;
+  const hov = ch.at;
   return (
-    <svg className="chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Chart: ${series.map((s) => s.label).join(', ')}`}>
-      <defs>
-        <linearGradient id={`${uid}p`} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.38" />
-          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.03" />
-        </linearGradient>
-        <linearGradient id={`${uid}n`} x1="0" x2="0" y1="1" y2="0">
-          <stop offset="0%" stopColor="var(--act)" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="var(--act)" stopOpacity="0.06" />
-        </linearGradient>
-        <clipPath id={`${uid}up`}><rect x="-2" y="0" width={W + 4} height={Math.max(0, zeroY)} /></clipPath>
-        <clipPath id={`${uid}dn`}><rect x="-2" y={zeroY} width={W + 4} height={Math.max(0, H - zeroY)} /></clipPath>
-      </defs>
-      {[max, min].map((t, i) => (
-        <g key={i}>
-          <line x1={0} x2={W - padR + 4} y1={y(t)} y2={y(t)} stroke="var(--line)" strokeDasharray="2 5" />
-          <text x={0} y={y(t) - 4}>{axisLabel(t)}</text>
-        </g>
-      ))}
-      {band && <polygon points={band} fill="var(--rain)" opacity={0.16} />}
-      <polygon points={area} fill={`url(#${uid}p)`} clipPath={`url(#${uid}up)`} />
-      <polygon points={area} fill={`url(#${uid}n)`} clipPath={`url(#${uid}dn)`} />
-      {zeroLine && min < 0 && max > 0 && <line x1={0} x2={W - padR + 4} y1={zeroY} y2={zeroY} stroke="var(--ink)" strokeWidth={1.2} />}
-      {events.map((e) => (
-        <g key={e.label + e.index}>
-          <line x1={x(e.index)} x2={x(e.index)} y1={padT - 4} y2={H - padB} stroke="var(--ink)" strokeDasharray="2 3" opacity={0.55} />
-          <rect x={Math.min(Math.max(x(e.index) - e.label.length * 2.9 - 6, 0), W - padR - e.label.length * 5.8 - 12)} y={2} width={e.label.length * 5.8 + 12} height={16} rx={8} fill="var(--midnight)" />
-          <text x={Math.min(Math.max(x(e.index), e.label.length * 2.9 + 6), W - padR - e.label.length * 2.9 - 6)} y={13} textAnchor="middle" style={{ fill: '#fff', fontWeight: 600 }}>{e.label}</text>
-        </g>
-      ))}
-      {series.map((s, si) => (
-        <polyline key={s.label} className={si === 0 ? 'draw' : undefined} pathLength={1} points={pts(s.values)} fill="none" stroke={LINE_COLORS[si % LINE_COLORS.length]} strokeWidth={si === 0 ? 3 : 2.2} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={si === 0 ? undefined : LINE_DASH[si % LINE_DASH.length]} />
-      ))}
-      {series.length === 1 && s0.length > 2 && (
-        <g>
-          <circle cx={x(minIdx)} cy={y(s0[minIdx])} r={5} fill="var(--paper)" stroke="var(--ink)" strokeWidth={2.5} />
-          <rect x={lowX - 38} y={lowAbove ? y(s0[minIdx]) - 30 : y(s0[minIdx]) + 11} width={76} height={19} rx={9.5} fill="var(--midnight)" />
-          <text x={lowX} y={(lowAbove ? y(s0[minIdx]) - 30 : y(s0[minIdx]) + 11) + 13} textAnchor="middle" style={{ fill: '#fff', fontWeight: 600 }}>{lowLabel} {axisLabel(s0[minIdx])}</text>
-        </g>
-      )}
-      <circle cx={x(s0.length - 1)} cy={y(s0[s0.length - 1])} r={5} fill="var(--accent-bright)" stroke="var(--ink)" strokeWidth={2.5} />
-      {series.length > 1 &&
-        ends.map((e) => (
-          <text key={e.label} x={W - padR + 10} y={e.y + 3} style={{ fill: e.color === 'var(--s4)' ? 'var(--muted)' : e.color, fontWeight: 600 }}>{e.label.length > 11 ? e.label.slice(0, 10) + '…' : e.label}</text>
-        ))}
-      {xLabels?.map((l, i) => (i % labelEvery === 0 ? <text key={i} x={x(i)} y={H - 4} textAnchor="middle">{l}</text> : null))}
-    </svg>
+    <div className="viz">
+      {!single && <LineLegend items={series.map((s, i) => ({ label: s.label, color: SERIES[i % SERIES.length] }))} />}
+      <div className="viz-plot">
+        <svg
+          className="chart"
+          viewBox={`0 0 ${W} ${H}`}
+          role="img"
+          tabIndex={0}
+          aria-label={`Chart: ${series.map((s) => s.label).join(', ')}. Use left and right arrow keys to read values.`}
+          onPointerMove={ch.onMove}
+          onPointerLeave={() => ch.setAt(null)}
+          onKeyDown={ch.onKey}
+          onBlur={() => ch.setAt(null)}
+        >
+          <defs>
+            <linearGradient id={`${uid}p`} x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="var(--s1)" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="var(--s1)" stopOpacity="0.02" />
+            </linearGradient>
+            <linearGradient id={`${uid}n`} x1="0" x2="0" y1="1" y2="0">
+              <stop offset="0%" stopColor="var(--act)" stopOpacity="0.18" />
+              <stop offset="100%" stopColor="var(--act)" stopOpacity="0.03" />
+            </linearGradient>
+            <clipPath id={`${uid}up`}><rect x="-2" y="0" width={W + 4} height={Math.max(0, zeroY)} /></clipPath>
+            <clipPath id={`${uid}dn`}><rect x="-2" y={zeroY} width={W + 4} height={Math.max(0, H - zeroY)} /></clipPath>
+          </defs>
+          {ticks.map((t) => (
+            <g key={t} className="viz-grid">
+              <line x1={0} x2={plotW} y1={y(t)} y2={y(t)} className={t === 0 && min < 0 ? 'zero' : ''} />
+              <text x={0} y={y(t) - 5}>{axisLabel(t)}</text>
+            </g>
+          ))}
+          {band && <path d={band} fill="var(--s1)" opacity={0.07} />}
+          {single && <path d={area} fill={`url(#${uid}p)`} clipPath={`url(#${uid}up)`} />}
+          {single && <path d={area} fill={`url(#${uid}n)`} clipPath={`url(#${uid}dn)`} />}
+          {events.map((e) => {
+            const ex = x(e.index);
+            const anchor = ex < 40 ? 'start' : ex > plotW - 40 ? 'end' : 'middle';
+            return (
+              <g key={e.label + e.index} className="viz-event">
+                <line x1={ex} x2={ex} y1={padT - 8} y2={H - padB} />
+                <circle cx={ex} cy={padT - 8} r={2.5} />
+                <text x={ex + (anchor === 'start' ? -2 : anchor === 'end' ? 2 : 0)} y={10} textAnchor={anchor}>{e.label}</text>
+              </g>
+            );
+          })}
+          {series.map((s, si) => (
+            <path key={s.label} className="draw" pathLength={1} d={line(s.values)} fill="none" stroke={SERIES[si % SERIES.length]} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+          ))}
+          {single && s0.length > 2 && minIdx > 0 && minIdx < s0.length - 1 && (
+            <g className="viz-callout">
+              <circle cx={x(minIdx)} cy={y(s0[minIdx])} r={4} fill="var(--solid)" stroke="var(--s1)" strokeWidth={2} />
+              <text x={lowX} y={lowAbove ? y(s0[minIdx]) - 11 : y(s0[minIdx]) + 18} textAnchor="middle">{lowLabel} {axisLabel(s0[minIdx])}</text>
+            </g>
+          )}
+          {series.map((s, si) => (
+            <circle key={s.label} cx={x(s.values.length - 1)} cy={y(s.values[s.values.length - 1])} r={4.5} fill={SERIES[si % SERIES.length]} stroke="var(--solid)" strokeWidth={2} />
+          ))}
+          {single && (
+            <text className="viz-end" x={plotW} y={y(s0[s0.length - 1]) - 10} textAnchor="end">{axisLabel(s0[s0.length - 1])}</text>
+          )}
+          {hov !== null && (
+            <g className="viz-cross">
+              <line x1={x(hov)} x2={x(hov)} y1={padT - 4} y2={H - padB} />
+              {series.map((s, si) => (
+                <circle key={s.label} cx={x(hov)} cy={y(at(s.values, hov))} r={4.5} fill={SERIES[si % SERIES.length]} stroke="var(--solid)" strokeWidth={2} />
+              ))}
+            </g>
+          )}
+          {xLabels?.map((l, i) => (i % labelEvery === 0 ? <text key={i} className="viz-x" x={x(i)} y={H - 4} textAnchor={i === 0 ? 'start' : 'middle'}>{l}</text> : null))}
+          <rect x={0} y={0} width={W} height={H} fill="transparent" />
+        </svg>
+        {hov !== null && (
+          <Tooltip
+            x={(x(hov) / W) * 100}
+            title={xLabels?.[hov] ?? `Month ${hov + 1}`}
+            rows={series.map((s, si) => ({ color: SERIES[si % SERIES.length], value: inr(at(s.values, hov)), label: s.label }))}
+          />
+        )}
+      </div>
+    </div>
   );
 }
 
-/** Proportional ribbon with direct value labels. Use `hatch` for locked/illiquid parts. */
+/** One whole split into parts: a thin rounded bar with 2px gaps, the legend carries names and numbers. */
 export interface RibbonPart {
   label: string;
   value: number;
@@ -125,33 +236,38 @@ export interface RibbonPart {
   hatch?: boolean;
   note?: string;
 }
-export function Ribbon({ parts, total, format = inrCompact, legend = true, height = 44, onDark = false }: { parts: RibbonPart[]; total?: number; format?: (n: number) => string; legend?: boolean; height?: number; onDark?: boolean }) {
+export function Ribbon({ parts, total, format = inrCompact, legend = true, height = 10 }: { parts: RibbonPart[]; total?: number; format?: (n: number) => string; legend?: boolean; height?: number; onDark?: boolean }) {
+  const [hover, setHover] = useState<string | null>(null);
   const clean = parts.filter((p) => p.value > 0);
   const sum = total ?? clean.reduce((s, p) => s + p.value, 0);
-  if (sum <= 0) return <div className="skeleton" style={{ height }} />;
-  const colors = onDark ? ['var(--s1)', 'var(--s2)', 'var(--s4)', 'var(--s3)', 'var(--faint)', 'var(--rain)'] : PALETTE;
+  const h = Math.min(height, 12);
+  if (sum <= 0) return <div className="skeleton" style={{ height: h }} />;
+  const color = (p: RibbonPart, i: number) => p.color ?? SERIES[i % SERIES.length];
+  const share = (v: number) => Math.round((v / sum) * 100);
+  const hp = clean.find((p) => p.label === hover);
   return (
-    <div>
-      <div className="ribbon" style={{ height }} role="img" aria-label={clean.map((p) => `${p.label} ${format(p.value)}`).join(', ')}>
-        {clean.map((p, i) => {
-          const c = p.color ?? colors[i % colors.length];
-          const share = p.value / sum;
-          const dark = ['var(--seg-1)', 'var(--rain)', 'var(--act)', 'var(--accent)', 'var(--s1)', 'var(--s2)', 'var(--midnight)'].includes(c);
-          return (
-            <div key={p.label} className={p.hatch ? 'hatch' : ''} style={{ flex: `${p.value} 1 0`, background: c, animationDelay: `${i * 70}ms` }}>
-              {share >= 0.12 && <span style={{ position: 'absolute', left: 10, bottom: 7, fontSize: 11, fontWeight: 700, color: dark ? '#fff' : '#0d1b2a', background: p.hatch ? c : 'transparent', borderRadius: 4, padding: p.hatch ? '0 3px' : 0 }}>{Math.round(share * 100)}%</span>}
-            </div>
-          );
-        })}
+    <div className="viz">
+      <div className="seg" style={{ height: h }} role="img" aria-label={clean.map((p) => `${p.label} ${format(p.value)}, ${share(p.value)}%`).join('; ')}>
+        {clean.map((p, i) => (
+          <div
+            key={p.label}
+            className={`seg-part ${p.hatch ? 'hatch' : ''} ${hover && hover !== p.label ? 'dim' : ''}`}
+            style={{ flex: `${p.value} 1 0`, background: color(p, i), animationDelay: `${i * 60}ms` }}
+            onPointerEnter={() => setHover(p.label)}
+            onPointerLeave={() => setHover(null)}
+            title={`${p.label}: ${format(p.value)} (${share(p.value)}%)`}
+          />
+        ))}
       </div>
+      {hp && !legend && <div className="seg-read"><b>{format(hp.value)}</b> {hp.label} · {share(hp.value)}%</div>}
       {legend && (
-        <div className="ribbon-legend">
+        <div className="seg-legend">
           {clean.map((p, i) => (
-            <div key={p.label} className="rl">
-              <span className={`sw ${p.hatch ? 'hatch' : ''}`} style={{ background: p.color ?? colors[i % colors.length], boxShadow: onDark ? 'none' : 'inset 0 0 0 1px rgba(17,18,16,0.12)' }} />
+            <div key={p.label} className={`seg-row ${hover === p.label ? 'on' : ''}`} onPointerEnter={() => setHover(p.label)} onPointerLeave={() => setHover(null)}>
+              <i className={p.hatch ? 'hatch' : ''} style={{ background: color(p, i) }} />
               <span>{p.label}{p.note && <span className="caption"> · {p.note}</span>}</span>
-              <span className="strong num">{format(p.value)}</span>
-              <span className="caption num" style={{ width: 34, textAlign: 'right' }}>{Math.round((p.value / sum) * 100)}%</span>
+              <b className="num">{format(p.value)}</b>
+              <span className="caption num">{share(p.value)}%</span>
             </div>
           ))}
         </div>
@@ -160,30 +276,30 @@ export function Ribbon({ parts, total, format = inrCompact, legend = true, heigh
   );
 }
 
-/** Kept for existing call sites: a two-or-three part ribbon. */
+/** Kept for existing call sites: a two-or-three part split. */
 export function SplitBar({ parts }: { parts: Array<{ label: string; value: number }> }) {
-  return <Ribbon parts={parts} legend height={22} />;
+  return <Ribbon parts={parts} legend />;
 }
 
-/** Months of cover as a row of month-cells. Each cell is one month of essential spending. */
-export function Runway({ months, target, light = false }: { months: number; target: number; light?: boolean }) {
+/** Months of cover as a segmented meter: one segment per month of the target, filled to today's cover. */
+export function Runway({ months, target }: { months: number; target: number; light?: boolean }) {
   const cells = Math.max(1, Math.min(12, Math.round(target)));
+  const met = months >= target;
   return (
-    <div className={`runway ${light ? 'light' : ''}`} role="img" aria-label={`${months.toFixed(1)} months of cover against a ${target}-month target`}>
-      <div className="cells">
+    <div className="meter" role="img" aria-label={`${months.toFixed(1)} months of cover against a ${target}-month target`}>
+      <div className="meter-cells">
         {Array.from({ length: cells }).map((_, i) => {
           const f = Math.max(0, Math.min(1, months - i));
           return (
-            <div key={i} className="cell">
-              {f > 0 && <i style={{ transform: `scaleX(${f})`, animationDelay: `${i * 70}ms` }} />}
+            <div key={i} className="meter-cell">
+              {f > 0 && <i style={{ transform: `scaleX(${f})`, animationDelay: `${i * 60}ms` }} />}
             </div>
           );
         })}
       </div>
-      <div className="ticks">
-        {Array.from({ length: cells }).map((_, i) => (
-          <span key={i}>{i === 0 || i === cells - 1 || (cells > 6 && i % 3 === 0) ? `${i + 1}${i === cells - 1 ? ' mo' : ''}` : ''}</span>
-        ))}
+      <div className="meter-ticks">
+        <span>Today</span>
+        <span>{met ? `Target of ${target} months met` : `${target}-month target`}</span>
       </div>
     </div>
   );
@@ -195,10 +311,14 @@ export interface DotRow {
   lowerIsBetter?: boolean;
   values: Array<{ key: string; value: number | null; display: string; feasible?: boolean }>;
 }
-/** Strip plot: one row per metric, one dot per option on a shared scale. The best dot is ringed. */
+const keyColor = (key: string) => SERIES[Math.max(0, key.charCodeAt(0) - 65) % 3];
+
+/** Strip plot: one row per metric, one dot per option on a shared scale. The better option stays bright; the rest step back. */
 export function DotPlot({ rows }: { rows: DotRow[] }) {
+  const keys = Array.from(new Set(rows.flatMap((r) => r.values.map((v) => v.key))));
   return (
     <div className="dotplot">
+      <LineLegend items={keys.map((k) => ({ label: `Option ${k}`, color: keyColor(k) }))} />
       {rows.map((r) => {
         const nums = r.values.filter((v) => v.value !== null) as Array<{ key: string; value: number; display: string; feasible?: boolean }>;
         if (nums.length === 0) return null;
@@ -212,18 +332,23 @@ export function DotPlot({ rows }: { rows: DotRow[] }) {
           <div key={r.label} className="dp-row">
             <div className="dp-head">
               <b>{r.label}</b>
-              <span>{bestV ? `Best: ${bestV.key} · ${bestV.display}` : spread === 0 ? 'Same in all' : ''}</span>
+              <span>{bestV ? <>Better: <strong>{bestV.key}</strong> · {bestV.display}</> : spread === 0 ? 'Same for all' : ''}</span>
             </div>
             <div className="dp-track">
               {nums.map((v) => (
-                <div key={v.key} className={`dp-dot ${v.key === best ? 'best' : ''} ${v.feasible === false ? 'off' : ''}`} style={{ left: `${spread === 0 ? 50 : ((v.value - lo) / spread) * 100}%` }} title={`${v.key}: ${v.display}`}>
+                <div
+                  key={v.key}
+                  className={`dp-dot ${v.key === best ? 'best' : best ? 'rest' : ''} ${v.feasible === false ? 'off' : ''}`}
+                  style={{ left: `${spread === 0 ? 50 : ((v.value - lo) / spread) * 100}%`, background: v.feasible === false ? undefined : keyColor(v.key) }}
+                  title={`${v.key}: ${v.display}`}
+                >
                   {v.key}
                 </div>
               ))}
             </div>
             <div className="dp-vals">
               {r.values.map((v) => (
-                <span key={v.key} style={{ opacity: v.feasible === false ? 0.55 : 1 }}><b>{v.key}</b>{v.display}</span>
+                <span key={v.key} style={{ opacity: v.feasible === false ? 0.55 : 1 }}><i style={{ background: keyColor(v.key) }} /><b>{v.key}</b>{v.display}</span>
               ))}
             </div>
           </div>
@@ -233,74 +358,109 @@ export function DotPlot({ rows }: { rows: DotRow[] }) {
   );
 }
 
-/** Diverging monthly net cash-flow bars: blue above zero, red below. */
+/** Diverging monthly net cash flow: thin columns rounded at the data end, blue above zero, red below. */
 export function CashflowBars({ values, labels, height = 150 }: { values: number[]; labels?: string[]; height?: number }) {
+  const [hov, setHov] = useState<number | null>(null);
   if (values.length === 0) return <div className="skeleton" style={{ height }} />;
   const W = 360;
-  const padT = 14;
-  const padB = 18;
-  const max = Math.max(...values, 1);
-  const min = Math.min(...values, 0);
-  const span = max - min || 1;
-  const zeroY = padT + (max / span) * (height - padT - padB);
-  const bw = Math.min(18, (W / values.length) * 0.62);
+  const padT = 18;
+  const padB = 22;
+  const ticks = niceTicks(Math.min(...values, 0), Math.max(...values, 1), 2);
+  const max = ticks[ticks.length - 1];
+  const min = ticks[0];
+  const y = (v: number) => padT + (1 - (v - min) / (max - min || 1)) * (height - padT - padB);
+  const zeroY = y(0);
   const step = W / values.length;
-  const every = Math.ceil(values.length / 6);
+  const bw = Math.min(12, step * 0.56);
+  const r = Math.min(3, bw / 2);
+  const every = Math.ceil(values.length / 5);
+  const bar = (cx: number, v: number) => {
+    const top = y(Math.max(v, 0));
+    const bot = y(Math.min(v, 0));
+    const hgt = Math.max(2, bot - top);
+    const x0 = cx - bw / 2;
+    return v >= 0
+      ? `M${x0},${top + hgt} V${top + r} Q${x0},${top} ${x0 + r},${top} H${x0 + bw - r} Q${x0 + bw},${top} ${x0 + bw},${top + r} V${top + hgt} Z`
+      : `M${x0},${zeroY} V${zeroY + hgt - r} Q${x0},${zeroY + hgt} ${x0 + r},${zeroY + hgt} H${x0 + bw - r} Q${x0 + bw},${zeroY + hgt} ${x0 + bw},${zeroY + hgt - r} V${zeroY} Z`;
+  };
   return (
-    <svg className="chart" viewBox={`0 0 ${W} ${height}`} role="img" aria-label="Monthly net cash flow">
-      <line x1={0} x2={W} y1={zeroY} y2={zeroY} stroke="var(--ink)" strokeWidth={1.2} />
-      {values.map((v, i) => {
-        const h = Math.max(2, (Math.abs(v) / span) * (height - padT - padB));
-        const cx = step * i + step / 2;
-        return (
-          <g key={i}>
-            <rect x={cx - bw / 2} y={v >= 0 ? zeroY - h : zeroY} width={bw} height={h} rx={Math.min(7, bw / 2)} fill={v >= 0 ? 'var(--accent)' : 'var(--act)'} stroke="none" strokeWidth={v >= 0 ? 1 : 0}>
-              <title>{inr(v)}</title>
-            </rect>
-            {labels && i % every === 0 && <text x={cx} y={height - 4} textAnchor="middle">{labels[i]}</text>}
-          </g>
-        );
-      })}
-      <text x={0} y={10}>{axisLabel(max)}</text>
-      {min < 0 && <text x={0} y={height - padB - 2}>{axisLabel(min)}</text>}
-    </svg>
+    <div className="viz">
+      <div className="viz-plot">
+        <svg className="chart" viewBox={`0 0 ${W} ${height}`} role="img" aria-label="Monthly net cash flow" onPointerLeave={() => setHov(null)}>
+          {ticks.map((t) => (
+            <g key={t} className="viz-grid">
+              <line x1={0} x2={W} y1={y(t)} y2={y(t)} className={t === 0 ? 'zero' : ''} />
+              <text x={0} y={y(t) - 5}>{axisLabel(t)}</text>
+            </g>
+          ))}
+          {values.map((v, i) => {
+            const cx = step * i + step / 2;
+            return (
+              <g key={i} onPointerEnter={() => setHov(i)}>
+                <rect x={step * i} y={padT} width={step} height={height - padT - padB} fill="transparent" />
+                <path d={bar(cx, v)} fill={v >= 0 ? 'var(--s1)' : 'var(--act)'} opacity={hov === null || hov === i ? 1 : 0.35} style={{ transition: 'opacity 0.15s' }} />
+                {labels && i % every === 0 && <text className="viz-x" x={cx} y={height - 4} textAnchor="middle">{labels[i]}</text>}
+              </g>
+            );
+          })}
+        </svg>
+        {hov !== null && (
+          <Tooltip x={((step * hov + step / 2) / W) * 100} title={labels?.[hov] ?? `Month ${hov + 1}`} rows={[{ color: values[hov] >= 0 ? 'var(--s1)' : 'var(--act)', value: inr(values[hov]), label: values[hov] >= 0 ? 'Surplus' : 'Shortfall' }]} />
+        )}
+      </div>
+    </div>
   );
 }
 
-/** Goal path: today's savings to target, with the pace needed and the pace planned. */
-export function PathToTarget({ saved, target, months, planned, required, height = 190 }: { saved: number; target: number; months: number; planned: number | null; required: number | null; height?: number }) {
+/** Goal path: today's savings to the target, the pace you plan against the pace you need. */
+export function PathToTarget({ saved, target, months, planned, required, height = 180 }: { saved: number; target: number; months: number; planned: number | null; required: number | null; height?: number }) {
+  const uid = useId().replace(/:/g, '');
   const W = 360;
-  const padL = 4;
-  const padR = 62;
   const padT = 22;
   const padB = 22;
+  const padR = 6;
   const horizon = Math.max(months, 1);
-  const top = target * 1.06;
-  const x = (m: number) => padL + (m / horizon) * (W - padL - padR);
+  const top = target * 1.08;
+  const x = (m: number) => (m / horizon) * (W - padR);
   const y = (v: number) => padT + (1 - v / top) * (height - padT - padB);
   const plannedEnd = planned === null ? null : Math.min(top, saved + planned * horizon);
   const reachM = planned && planned > 0 ? Math.min(horizon, Math.max(0, (target - saved) / planned)) : null;
   const endM = reachM !== null && plannedEnd !== null && plannedEnd >= target ? reachM : horizon;
   const endV = plannedEnd !== null && plannedEnd >= target ? target : plannedEnd;
   return (
-    <svg className="chart" viewBox={`0 0 ${W} ${height}`} role="img" aria-label="Path to goal target">
-      <line x1={padL} x2={W - padR + 6} y1={y(target)} y2={y(target)} stroke="var(--ink)" strokeDasharray="2 4" />
-      <text x={W - padR + 10} y={y(target) + 3} className="lbl-strong">{axisLabel(target)}</text>
-      <text x={padL} y={y(target) - 6}>Target</text>
-      {required !== null && <line x1={x(0)} y1={y(saved)} x2={x(horizon)} y2={y(target)} stroke="var(--ink)" strokeWidth={2} strokeDasharray="6 5" />}
-      {endV !== null && <polyline className="draw" pathLength={1} points={`${x(0)},${y(saved)} ${x(endM)},${y(endV)}`} fill="none" stroke="var(--accent)" strokeWidth={4.5} strokeLinecap="round" />}
-      {endV !== null && <circle cx={x(endM)} cy={y(endV)} r={6} fill="var(--accent-bright)" stroke="var(--ink)" strokeWidth={2.5} />}
-      <circle cx={x(0)} cy={y(saved)} r={6} fill="var(--ink)" />
-      <text x={x(0) + 2} y={y(saved) + 22} className="lbl-strong">Today {axisLabel(saved)}</text>
-      <text x={x(horizon)} y={height - 5} textAnchor="end">{months} mo</text>
-      <text x={padL} y={height - 5}>Now</text>
-      {required !== null && <text x={W - padR + 10} y={y(target) + 20} style={{ fontWeight: 600 }}>Needs {axisLabel(required)}/mo</text>}
-      {planned !== null && <text x={W - padR + 10} y={y(target) + 33} style={{ fill: 'var(--accent-ink)', fontWeight: 600 }}>Plan {axisLabel(planned)}/mo</text>}
-    </svg>
+    <div className="viz">
+      <LineLegend
+        items={[
+          ...(planned !== null ? [{ label: `Your plan ${axisLabel(planned)}/mo`, color: 'var(--s1)' }] : []),
+          ...(required !== null ? [{ label: `Needed ${axisLabel(required)}/mo`, color: 'var(--ink-3)', dashed: true }] : []),
+        ]}
+      />
+      <svg className="chart" viewBox={`0 0 ${W} ${height}`} role="img" aria-label={`Path to goal: ${axisLabel(saved)} saved of ${axisLabel(target)}`}>
+        <defs>
+          <linearGradient id={`${uid}w`} x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--s1)" stopOpacity="0.16" />
+            <stop offset="100%" stopColor="var(--s1)" stopOpacity="0.02" />
+          </linearGradient>
+        </defs>
+        <g className="viz-grid">
+          <line x1={0} x2={W - padR} y1={y(target)} y2={y(target)} />
+          <line x1={0} x2={W - padR} y1={y(0)} y2={y(0)} />
+        </g>
+        <text className="viz-end" x={W - padR} y={y(target) - 7} textAnchor="end">Target {axisLabel(target)}</text>
+        {endV !== null && <polygon points={`${x(0)},${y(0)} ${x(0)},${y(saved)} ${x(endM)},${y(endV)} ${x(endM)},${y(0)}`} fill={`url(#${uid}w)`} />}
+        {required !== null && <line x1={x(0)} y1={y(saved)} x2={x(horizon)} y2={y(target)} stroke="var(--ink-3)" strokeOpacity={0.55} strokeWidth={1.5} strokeDasharray="4 4" strokeLinecap="round" />}
+        {endV !== null && <polyline className="draw" pathLength={1} points={`${x(0)},${y(saved)} ${x(endM)},${y(endV)}`} fill="none" stroke="var(--s1)" strokeWidth={2} strokeLinecap="round" />}
+        {endV !== null && <circle cx={x(endM)} cy={y(endV)} r={4.5} fill="var(--s1)" stroke="var(--solid)" strokeWidth={2} />}
+        <circle cx={x(0) + 5} cy={y(saved)} r={4.5} fill="var(--ink)" stroke="var(--solid)" strokeWidth={2} />
+        <text className="viz-end" x={x(0)} y={Math.min(y(saved) + 20, height - 26)}>Today {axisLabel(saved)}</text>
+        <text className="viz-x" x={0} y={height - 4}>Now</text>
+        <text className="viz-x" x={W - padR} y={height - 4} textAnchor="end">{months} months</text>
+      </svg>
+    </div>
   );
 }
 
-/** Net worth line drawn straight on the sky. */
+/** Net worth line drawn straight on the sky, with a soft wash and the current point marked. */
 export function HeroSparkline({ values, height = 84 }: { values: number[]; height?: number }) {
   const uid = useId().replace(/:/g, '');
   if (values.length < 2) return null;
@@ -308,29 +468,32 @@ export function HeroSparkline({ values, height = 84 }: { values: number[]; heigh
   const min = Math.min(...values);
   const max = Math.max(...values);
   const span = max - min || 1;
-  const x = (i: number) => (i / (values.length - 1)) * W;
+  const x = (i: number) => 4 + (i / (values.length - 1)) * (W - 12);
   const y = (v: number) => 8 + (1 - (v - min) / span) * (height - 16);
-  const pts = values.map((v, i) => `${x(i)},${y(v)}`).join(' ');
+  const d = smooth(values.map((v, i) => [x(i), y(v)] as [number, number]));
+  const last = values.length - 1;
   return (
-    <svg className="chart" viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" style={{ height }} aria-hidden="true">
+    <svg className="chart" viewBox={`0 0 ${W} ${height}`} aria-hidden="true">
       <defs>
         <linearGradient id={uid} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--s1)" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="var(--s1)" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <polyline className="draw" pathLength={1} points={pts} fill="none" stroke="var(--accent)" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+      <path d={`${d} L${x(last)},${height} L${x(0)},${height} Z`} fill={`url(#${uid})`} />
+      <path className="draw" pathLength={1} d={d} fill="none" stroke="var(--s1)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={x(last)} cy={y(values[last])} r={4.5} fill="var(--s1)" stroke="var(--solid)" strokeWidth={2} />
     </svg>
   );
 }
 
-/** Horizontal ranked bars with direct values. */
+/** Horizontal ranked bars: thin, one colour, value at the end. */
 export function BarList({ items, total }: { items: Array<{ label: string; value: number; sub?: string }>; total?: number }) {
   const max = total ?? Math.max(1, ...items.map((i) => i.value));
   return (
-    <div className="stack">
+    <div className="bar-list">
       {items.map((i) => (
-        <div key={i.label} className="bar-row">
+        <div key={i.label} className="bar-row" title={`${i.label}: ${inr(i.value)}`}>
           <span>{i.label} {i.sub && <span className="caption">· {i.sub}</span>}</span>
           <span className="num strong">{inrCompact(i.value)}</span>
           <div className="bar"><div style={{ width: `${Math.max(1.5, (i.value / max) * 100)}%` }} /></div>

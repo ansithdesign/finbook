@@ -1,11 +1,8 @@
-// Authored SVG scenes in the Sky language: a window of the current sky (it follows the time of day through
-// the --sky-* tokens), a sun glow, soft clouds, and decisions drawn as white contrails between midnight nodes.
-// On the full twilight screens the window is dropped and the drawing floats on the sky itself.
+// Product glimpses: instead of drawn scenes, the first screens show the product doing its job,
+// as a small stack of frosted cards floating on the sky. Figures are illustrative examples.
 
-import { useId, type SVGProps } from 'react';
-
-const MIDNIGHT = '#0f2238';
-const FONT = "'Figtree Variable', Figtree, -apple-system, sans-serif";
+import { Check, ChevronRight, Lock, MessageSquareText } from '@/components/icons';
+import { Car, HandCoins, PiggyBank } from '@/components/icons';
 
 /** App mark: one source branching into three outcomes. */
 export function BrandMark({ size = 28, color = 'currentColor' }: { size?: number; color?: string }) {
@@ -20,105 +17,100 @@ export function BrandMark({ size = 28, color = 'currentColor' }: { size?: number
   );
 }
 
-/** Sky window: gradient from the live sky tokens, a sun glow and a few soft clouds. */
-function SkyWindow({ w, h, sun = [0.82, 0.18], clouds = [] as Array<[number, number, number]> }: { w: number; h: number; sun?: [number, number]; clouds?: Array<[number, number, number]> }) {
-  const id = useId().replace(/:/g, '');
+/** A small smooth line for glimpse cards. */
+function MiniLine({ values, w = 150, h = 40 }: { values: number[]; w?: number; h?: number }) {
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const x = (i: number) => 3 + (i / (values.length - 1)) * (w - 10);
+  const y = (v: number) => 4 + (1 - (v - min) / (max - min || 1)) * (h - 10);
+  const d = values.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const last = values.length - 1;
   return (
-    <g className="scene-bg">
-      <defs>
-        <linearGradient id={`${id}s`} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="var(--sky-1)" />
-          <stop offset="60%" stopColor="var(--sky-2)" />
-          <stop offset="100%" stopColor="var(--sky-3)" />
-        </linearGradient>
-        <radialGradient id={`${id}g`} cx={sun[0]} cy={sun[1]} r="0.55">
-          <stop offset="0%" stopColor="var(--sun)" />
-          <stop offset="100%" stopColor="var(--sun)" stopOpacity="0" />
-        </radialGradient>
-        <filter id={`${id}b`} x="-30%" y="-60%" width="160%" height="220%">
-          <feGaussianBlur stdDeviation="6" />
-        </filter>
-        <clipPath id={`${id}c`}>
-          <rect width={w} height={h} rx="26" />
-        </clipPath>
-      </defs>
-      <g clipPath={`url(#${id}c)`}>
-        <rect width={w} height={h} fill={`url(#${id}s)`} />
-        <rect width={w} height={h} fill={`url(#${id}g)`} />
-        {clouds.map(([cx, cy, rx], i) => (
-          <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={rx * 0.28} fill="#fff" opacity="var(--cloud-a)" filter={`url(#${id}b)`} />
+    <svg width="100%" viewBox={`0 0 ${w} ${h}`} aria-hidden="true" className="g-line">
+      <path d={`${d} L${x(last)},${h} L${x(0)},${h} Z`} className="g-line-wash" />
+      <path d={d} fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="g-line-stroke" />
+      <circle cx={x(last)} cy={y(values[last])} r="3.5" className="g-line-dot" />
+    </svg>
+  );
+}
+
+/** Welcome and completion: a question, the options it opens up, and what each one does to savings. */
+export function DecisionGlimpse() {
+  return (
+    <div className="glimpse" aria-hidden="true">
+      <div className="g-card g-ask">
+        <MessageSquareText size={16} />
+        <span>Can I afford a ₹12 lakh car?</span>
+      </div>
+      <div className="g-card g-options">
+        <div className="g-title">Your options</div>
+        {[
+          { k: 'A', icon: Car, name: 'Buy now', level: 'prepare', word: 'Tight' },
+          { k: 'B', icon: PiggyBank, name: 'Save for 8 months', level: 'ok', word: 'Safe' },
+          { k: 'C', icon: HandCoins, name: 'Smaller loan', level: 'ok', word: 'Safe' },
+        ].map((o, i) => (
+          <div key={o.k} className={`g-opt ${i === 1 ? 'on' : ''}`}>
+            <span className="g-key" style={{ background: `var(--s${i + 1})` }}>{o.k}</span>
+            <span className="g-opt-name">{o.name}</span>
+            <span className={`level ${o.level}`}>{o.word}</span>
+          </div>
         ))}
-      </g>
-    </g>
+      </div>
+      <div className="g-card g-trend">
+        <div className="g-title">Savings with option B</div>
+        <div className="g-figure">₹3.9 lakh</div>
+        <MiniLine values={[3.5, 3.1, 3.3, 3.4, 3.6, 3.7, 3.9]} />
+      </div>
+    </div>
   );
 }
 
-/** Welcome / completion: a path climbing from where you are toward the sun. */
-export function SunriseScene(props: SVGProps<SVGSVGElement>) {
+/** Onboarding intro: what the overview will show once your numbers are in. */
+export function OverviewGlimpse() {
   return (
-    <svg className="scene" viewBox="0 0 360 230" aria-hidden="true" {...props}>
-      <SkyWindow w={360} h={230} sun={[0.86, 0.2]} clouds={[[90, 70, 70], [250, 150, 90]]} />
-      <circle cx="318" cy="46" r="16" fill="#fff" opacity="0.95" />
-      <circle cx="318" cy="46" r="30" fill="none" stroke="#fff" strokeOpacity="0.45" />
-      <circle cx="318" cy="46" r="46" fill="none" stroke="#fff" strokeOpacity="0.2" />
-      <path d="M40 196 C110 196 120 166 190 166 C250 166 272 138 318 120" fill="none" stroke="#fff" strokeOpacity="0.55" strokeWidth="2" strokeDasharray="2 7" strokeLinecap="round" />
-      <path className="draw" pathLength={1} d="M40 196 C120 196 132 150 192 140 C252 130 268 74 318 52" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
-      <circle cx="40" cy="196" r="9" fill={MIDNIGHT} stroke="#fff" strokeWidth="3" />
-      <circle cx="192" cy="140" r="5" fill="#fff" />
-      <circle cx="318" cy="120" r="6" fill="#fff" fillOpacity="0.6" />
-    </svg>
+    <div className="glimpse" aria-hidden="true">
+      <div className="g-card g-net">
+        <div className="g-title">Net worth</div>
+        <div className="g-figure big">₹6.25 lakh</div>
+        <MiniLine values={[4.9, 5.1, 5.2, 5.4, 5.3, 5.6, 5.8, 6.0, 6.25]} w={200} h={44} />
+      </div>
+      <div className="g-card g-flow">
+        <div className="g-title">Left this month</div>
+        <div className="g-figure">₹35,000</div>
+        <div className="seg" style={{ height: 8, marginTop: 10 }}>
+          <div className="seg-part" style={{ flex: '48 1 0', background: 'var(--s1)' }} />
+          <div className="seg-part" style={{ flex: '13 1 0', background: 'var(--s2)' }} />
+          <div className="seg-part" style={{ flex: '39 1 0', background: 'var(--s3)' }} />
+        </div>
+      </div>
+      <div className="g-card g-runway">
+        <div className="g-title">Safety net</div>
+        <div className="g-figure">8.8 months</div>
+        <div className="meter-cells" style={{ marginTop: 10 }}>
+          {[1, 1, 1, 1, 1, 1].map((_, i) => <div key={i} className="meter-cell"><i /></div>)}
+        </div>
+      </div>
+    </div>
   );
 }
 
-/** Onboarding intro: months rising like light columns, a trend line riding over them. */
-export function GrowthScene(props: SVGProps<SVGSVGElement>) {
-  const bars = [34, 52, 44, 70, 62, 92, 84, 118];
+/** Consent: exactly what a connection can see, and that it can be withdrawn. */
+export function ConsentGlimpse() {
   return (
-    <svg className="scene" viewBox="0 0 360 220" aria-hidden="true" {...props}>
-      <SkyWindow w={360} h={220} sun={[0.84, 0.16]} clouds={[[70, 48, 60], [230, 36, 80]]} />
-      {bars.map((h, i) => (
-        <rect key={i} x={36 + i * 38} y={200 - h} width="24" height={h} rx="12" fill="#fff" fillOpacity={i === bars.length - 1 ? 0.95 : 0.32 + i * 0.04} />
-      ))}
-      <polyline className="draw" pathLength={1} points={bars.map((h, i) => `${48 + i * 38},${188 - h}`).join(' ')} fill="none" stroke={MIDNIGHT} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="314" cy="70" r="8" fill={MIDNIGHT} stroke="#fff" strokeWidth="3" />
-    </svg>
-  );
-}
-
-/** Consent / privacy: a lock held in the calm centre of the sky, with soft halos. */
-export function ShieldScene(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg className="scene" viewBox="0 0 360 200" aria-hidden="true" {...props}>
-      <SkyWindow w={360} h={200} sun={[0.5, 0.5]} clouds={[[70, 150, 70], [300, 50, 60]]} />
-      {[88, 64, 44].map((r, i) => <circle key={r} cx="180" cy="100" r={r} fill="#fff" fillOpacity={0.1 + i * 0.08} />)}
-      <circle cx="180" cy="100" r="30" fill="#fff" />
-      <rect x="167" y="98" width="26" height="20" rx="6" fill={MIDNIGHT} />
-      <path d="M172 98v-6a8 8 0 0 1 16 0v6" fill="none" stroke={MIDNIGHT} strokeWidth="4" strokeLinecap="round" />
-      <circle cx="180" cy="107" r="2.6" fill="#fff" />
-    </svg>
-  );
-}
-
-/** Decide landing: a question splitting into three routes; one is chosen. */
-export function PathsScene(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg className="scene" viewBox="0 0 360 170" aria-hidden="true" {...props}>
-      <SkyWindow w={360} h={170} sun={[0.9, 0.12]} clouds={[[120, 30, 70], [260, 150, 80]]} />
-      <path d="M52 85 C110 85 120 40 180 40 H300" fill="none" stroke="#fff" strokeOpacity="0.7" strokeWidth="2" strokeDasharray="2 7" strokeLinecap="round" />
-      <path d="M52 85 C110 85 120 130 180 130 H300" fill="none" stroke="#fff" strokeOpacity="0.7" strokeWidth="2" strokeDasharray="2 7" strokeLinecap="round" />
-      <path className="draw" pathLength={1} d="M52 85 H300" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
-      <circle cx="52" cy="85" r="13" fill="#fff" />
-      <text x="52" y="90" textAnchor="middle" style={{ fontSize: 14, fontWeight: 800, fill: MIDNIGHT, fontFamily: FONT }}>?</text>
-      {(['A', 'B', 'C'] as const).map((l, i) => {
-        const y = 40 + i * 45;
-        const on = l === 'B';
-        return (
-          <g key={l}>
-            <circle cx="300" cy={y} r="14" fill={on ? MIDNIGHT : '#fff'} fillOpacity={on ? 1 : 0.85} />
-            <text x="300" y={y + 4.5} textAnchor="middle" style={{ fontSize: 12.5, fontWeight: 750, fill: on ? '#fff' : MIDNIGHT, fontFamily: FONT }}>{l}</text>
-          </g>
-        );
-      })}
-    </svg>
+    <div className="glimpse short" aria-hidden="true">
+      <div className="g-card g-consent">
+        <div className="row" style={{ gap: 10 }}>
+          <span className="g-badge"><Lock size={16} weight="duotone" /></span>
+          <span className="flex-1">
+            <span className="g-strong">Sample Bank A · Savings</span>
+            <span className="g-sub">Consent until Nov 2027</span>
+          </span>
+          <ChevronRight size={14} />
+        </div>
+        {['Read balances and transactions', 'Never moves money', 'Withdraw consent any time'].map((t) => (
+          <div key={t} className="g-check"><Check size={13} /> {t}</div>
+        ))}
+      </div>
+    </div>
   );
 }

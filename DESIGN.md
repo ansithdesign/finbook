@@ -44,9 +44,9 @@ colors:
   est-ink: "#4a3cb8"
   est-tint: "rgba(106, 91, 216, 0.13)"
   seg-1: "#1c3557"
-  series-2: "#8b7cf0"
-  series-3: "#f2a33a"
-  series-4: "#93a3b5"
+  series-2: "#e46aa6"
+  series-3: "#c9922a"
+  series-4: "#9aa8b8"
   ok: "#23915c"
   ok-ink: "#15693f"
   ok-tint: "rgba(35, 145, 92, 0.14)"
@@ -283,7 +283,7 @@ A sky palette (blue, gold, lilac, navy) under midnight ink, with one deep sky bl
 
 ### Tertiary
 - **Estimate Violet** (est-ink on est-tint): anything estimated or assumed: the default banner, dashed estimate tags. It never signals risk.
-- **Data series** (seg-1 Deep Harbour Navy, series-2 Soft Violet, series-3 Sun Gold, series-4 Cloud Grey): categorical chart colours. Series one is accent. Series four, hatched, means locked or illiquid.
+- **Data series** (series-1 Sky #1f6fd6, series-2 Dusk Rose #e46aa6, series-3 Sun Gold #c9922a; night #3f8fe8, #d4649e, #a8831f; series-4 neutral Cloud Grey for "other"): categorical chart colours, validated for colour-vision deficiency across all pairs in light and night. Assign in this fixed order and never reuse a bulletin colour as a series. Series four, hatched, means locked or illiquid.
 
 ### Neutral
 - **Ink** (ink, ink-2, ink-3): text tiers. **Slate Muted** (muted) for labels and captions, **Faint Slate** (faint) for placeholders, chevrons and disabled text.
@@ -400,10 +400,10 @@ Strong glass, 24px radius, rows 60px minimum with 13px by 16px padding. Leading 
 The screen background on every light screen. Top-level screens get a 620px sky (sky-1 to sky-2 at 250px, sky-3 at 440px, haze at 620px) with a radial sun glow and three blurred clouds drifting over 70 to 110 seconds. Sub-screens get the soft 360px sky with no clouds. Night adds a faint starfield and drops clouds. Key moments (welcome, completion) use a full twilight gradient with white type.
 
 ### Illustrations
-Authored SVG sky windows (26px radius) that read the live sky tokens, a sun glow and soft clouds. Decisions are drawn as white contrail paths, dashed for the options not taken and solid for the chosen route, between midnight and white nodes. Labels inside use Figtree. On twilight screens the window drops away and the drawing floats on the sky.
+Product glimpses, not drawings. Key moments (welcome, onboarding intro, consent, completion) show the product doing its job as a small stack of frosted cards floating on the sky: a question, its options with their levels, a savings line. Cards never overlap content, float gently (paused under Reduce Motion), and use illustrative figures. Drawn scenes, contour lines, blobs and dot grids are retired.
 
 ### Charts
-Authored SVG, labelled directly. The primary line is accent at 3px with an accent area fading to clear; values below zero shade act. Comparisons add dashed secondary series and a rain-blue range band. Event and low-point flags are midnight pills with white text. Ribbons are rounded 10px segments with in-bar percentages; hatching marks locked money. Runways are month cells filled with a rain to accent gradient.
+Quiet chrome, loud data. Solid 1px hairline grid at clean tick values (never dashed), 2px smooth monotone lines that never overshoot the data, a 10 to 16% wash under a single series (red below zero), and a faint band for the range between options. Markers are 9px with a 2px surface ring. Labels are sparing and in text tokens: the end value, the low point, and event names as text above a hairline (no pills). Two or more series always get a line-key legend. Every plot has a crosshair and tooltip (values lead, line keys, pointer and arrow keys). Part-to-whole is a thin 8 to 10px segmented bar with 2px gaps and the legend carrying numbers; months of cover is a segmented meter whose track is a lighter step of the fill; option comparison is a strip plot that keeps the better option bright and steps the rest back.
 
 ## Do's and Don'ts
 

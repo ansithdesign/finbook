@@ -48,7 +48,7 @@ export function NetWorthDetails() {
         <div className="display-num mt-8" style={{ fontSize: 52 }}><Money value={f.netWorth.value} animate /></div>
         <CalcNote missing={f.netWorth.missing} estimated={f.netWorth.estimated} />
         <div className="mt-16">
-          <Ribbon onDark height={30} legend={false} parts={[{ label: 'Assets', value: f.assets.value ?? 0, color: 'var(--s1)' }, { label: 'Liabilities', value: f.liabilities.value ?? 0, color: 'var(--seg-1)' }]} />
+          <Ribbon onDark height={30} legend={false} parts={[{ label: 'Assets', value: f.assets.value ?? 0, color: 'var(--s1)' }, { label: 'Liabilities', value: f.liabilities.value ?? 0, color: 'var(--s2)' }]} />
           <div className="row-between caption mt-8">
             <span>Assets <b>{inr(f.assets.value)}</b></span>
             <span>Liabilities <b>{inr(f.liabilities.value)}</b></span>
@@ -148,7 +148,7 @@ export function IncomeBreakdown() {
       <Section title="Additional income">{extra.length ? <List>{extra.map(row)}</List> : <p className="caption">None recorded.</p>}</Section>
       <Section title="Income history">
         {state.data.history.length >= 2 ? (
-          <BarList items={state.data.history.map((h) => ({ label: h.month, value: h.income }))} />
+          <BarList items={state.data.history.map((h) => ({ label: new Date(`${h.month}-01T00:00:00`).toLocaleDateString('en-IN', { month: 'short', year: '2-digit' }), value: h.income }))} />
         ) : (
           <Banner tone="outline">Not enough history yet. Month-by-month income appears once at least two months are recorded.</Banner>
         )}
@@ -171,7 +171,7 @@ export function ExpenseBreakdown() {
         <div className="label">Total monthly expenditure</div>
         <div className="big-number"><Money value={f.expenses.value} /></div>
         <CalcNote missing={f.expenses.missing} estimated={f.expenses.estimated} />
-        <div className="mt-12"><Ribbon height={34} parts={[{ label: 'Essential', value: ess, color: 'var(--seg-1)' }, { label: 'Discretionary', value: disc, color: 'var(--s2)' }]} /></div>
+        <div className="mt-12"><Ribbon height={34} parts={[{ label: 'Essential', value: ess, color: 'var(--s1)' }, { label: 'Discretionary', value: disc, color: 'var(--s2)' }]} /></div>
         <p className="caption mt-8">Loan EMIs ({inr(f.emi.value ?? 0)}) are tracked under liabilities and not included here, to avoid double-counting.</p>
       </div>
       {prev && f.expenses.value !== null ? (

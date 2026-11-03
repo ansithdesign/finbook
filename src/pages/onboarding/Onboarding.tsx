@@ -8,7 +8,7 @@ import { KV, List, ListRow, Section } from '@/components/cards/Cards';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner, Money, ProgressBar, SourceTag } from '@/components/feedback/States';
 import { Checkbox, MoneyField, NumberField, OptionList, Segmented, SelectField, TextField } from '@/components/forms/Fields';
-import { GrowthScene, ShieldScene, SunriseScene } from '@/components/illustrations/Illustrations';
+import { OverviewGlimpse, ConsentGlimpse, DecisionGlimpse } from '@/components/illustrations/Illustrations';
 import { Screen } from '@/components/layout/Screen';
 import { profileCompleteness } from '@/calculations/validation/completeness';
 import { useApp } from '@/hooks/useAppState';
@@ -163,7 +163,7 @@ function Intro() {
       }
     >
       <div className="stack-lg" style={{ paddingTop: 24 }}>
-        <div className="reveal"><GrowthScene /></div>
+        <div className="reveal"><OverviewGlimpse /></div>
         <h1 className="h1">Your money has possibilities. Understand them.</h1>
         <p className="muted">Bring your financial life together, explore different possibilities and make decisions with greater confidence.</p>
         <Banner tone="outline">
@@ -841,7 +841,7 @@ function ConnectStep() {
   return (
     <OnbScreen step="connect" title="Connect accounts" continueLabel={mode === 'done' ? 'Continue' : 'Continue manually'} onContinue={nav.next}>
       <div className="stack">
-        <ShieldScene />
+        <ConsentGlimpse />
         <h2 className="h2">Keep your numbers up to date automatically</h2>
         <p className="muted">
           Where available, you can connect supported financial accounts through a consent-based integration. You choose which accounts, what data, and for how long, and you can revoke access at any time.
@@ -965,10 +965,10 @@ function CompleteStep() {
       }
     >
       <div className="stack-lg" style={{ paddingTop: 0 }}>
-        <div className="reveal"><SunriseScene /></div>
+        <div className="reveal"><DecisionGlimpse /></div>
         <h1 className="h1">Your financial picture is taking shape.</h1>
         {understood.length ? (
-          <div className="card" style={{ background: 'var(--ink-2)', border: '1px solid rgba(255,255,255,.08)' }}>
+          <div className="card">
             <p className="label mb-8">Here's what we understood (from your entries):</p>
             {understood.map(([k, v]) => (
               <KV key={k} k={k} v={v} />
