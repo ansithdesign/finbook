@@ -4,7 +4,7 @@
 import { useId, type ReactNode } from 'react';
 import { inr, inrCompact } from '@/utils/format';
 
-const PALETTE = ['var(--seg-1)', 'var(--accent-bright)', 'var(--rain)', 'var(--act)', 'var(--faint)', 'var(--accent)', 'var(--line)'];
+const PALETTE = ['var(--seg-1)', 'var(--rain)', 'var(--accent-bright)', 'var(--s2)', 'var(--act)', 'var(--faint)', 'var(--s3)'];
 const LINE_COLORS = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)'];
 const LINE_DASH = ['', '5 5', '2 5', '8 3 2 3'];
 
@@ -93,7 +93,7 @@ export function LineChart({ series, height = 190, xLabels, events = [], zeroLine
       {events.map((e) => (
         <g key={e.label + e.index}>
           <line x1={x(e.index)} x2={x(e.index)} y1={padT - 4} y2={H - padB} stroke="var(--ink)" strokeDasharray="2 3" opacity={0.55} />
-          <rect x={Math.min(Math.max(x(e.index) - e.label.length * 2.9 - 6, 0), W - padR - e.label.length * 5.8 - 12)} y={2} width={e.label.length * 5.8 + 12} height={16} rx={8} fill="var(--storm)" />
+          <rect x={Math.min(Math.max(x(e.index) - e.label.length * 2.9 - 6, 0), W - padR - e.label.length * 5.8 - 12)} y={2} width={e.label.length * 5.8 + 12} height={16} rx={8} fill="var(--midnight)" />
           <text x={Math.min(Math.max(x(e.index), e.label.length * 2.9 + 6), W - padR - e.label.length * 2.9 - 6)} y={13} textAnchor="middle" style={{ fill: '#fff', fontWeight: 600 }}>{e.label}</text>
         </g>
       ))}
@@ -103,7 +103,7 @@ export function LineChart({ series, height = 190, xLabels, events = [], zeroLine
       {series.length === 1 && s0.length > 2 && (
         <g>
           <circle cx={x(minIdx)} cy={y(s0[minIdx])} r={5} fill="var(--paper)" stroke="var(--ink)" strokeWidth={2.5} />
-          <rect x={lowX - 38} y={lowAbove ? y(s0[minIdx]) - 30 : y(s0[minIdx]) + 11} width={76} height={19} rx={9.5} fill="var(--storm)" />
+          <rect x={lowX - 38} y={lowAbove ? y(s0[minIdx]) - 30 : y(s0[minIdx]) + 11} width={76} height={19} rx={9.5} fill="var(--midnight)" />
           <text x={lowX} y={(lowAbove ? y(s0[minIdx]) - 30 : y(s0[minIdx]) + 11) + 13} textAnchor="middle" style={{ fill: '#fff', fontWeight: 600 }}>{lowLabel} {axisLabel(s0[minIdx])}</text>
         </g>
       )}
@@ -129,17 +129,17 @@ export function Ribbon({ parts, total, format = inrCompact, legend = true, heigh
   const clean = parts.filter((p) => p.value > 0);
   const sum = total ?? clean.reduce((s, p) => s + p.value, 0);
   if (sum <= 0) return <div className="skeleton" style={{ height }} />;
-  const colors = onDark ? ['var(--accent-bright)', '#ffffff', '#6aa9de', '#f0715f', '#9fc1ca', '#2f9fb4'] : PALETTE;
+  const colors = onDark ? ['var(--s1)', 'var(--s2)', 'var(--s4)', 'var(--act)', 'var(--faint)', 'var(--rain)'] : PALETTE;
   return (
     <div>
       <div className="ribbon" style={{ height }} role="img" aria-label={clean.map((p) => `${p.label} ${format(p.value)}`).join(', ')}>
         {clean.map((p, i) => {
           const c = p.color ?? colors[i % colors.length];
           const share = p.value / sum;
-          const dark = ['var(--seg-1)', 'var(--storm)', 'var(--rain)', 'var(--act)', 'var(--accent)', '#6aa9de', '#f0715f', '#2f9fb4'].includes(c);
+          const dark = ['var(--seg-1)', 'var(--rain)', 'var(--act)', 'var(--accent)', 'var(--s1)', 'var(--s2)', 'var(--midnight)'].includes(c);
           return (
             <div key={p.label} className={p.hatch ? 'hatch' : ''} style={{ flex: `${p.value} 1 0`, background: c, animationDelay: `${i * 70}ms` }}>
-              {share >= 0.12 && <span style={{ position: 'absolute', left: 10, bottom: 7, fontSize: 11, fontWeight: 700, color: dark ? '#fff' : '#06222b', background: p.hatch ? c : 'transparent', borderRadius: 4, padding: p.hatch ? '0 3px' : 0 }}>{Math.round(share * 100)}%</span>}
+              {share >= 0.12 && <span style={{ position: 'absolute', left: 10, bottom: 7, fontSize: 11, fontWeight: 700, color: dark ? '#fff' : '#0d1b2a', background: p.hatch ? c : 'transparent', borderRadius: 4, padding: p.hatch ? '0 3px' : 0 }}>{Math.round(share * 100)}%</span>}
             </div>
           );
         })}
@@ -300,7 +300,7 @@ export function PathToTarget({ saved, target, months, planned, required, height 
   );
 }
 
-/** Lime line on ink tiles. */
+/** Net worth line drawn straight on the sky. */
 export function HeroSparkline({ values, height = 84 }: { values: number[]; height?: number }) {
   const uid = useId().replace(/:/g, '');
   if (values.length < 2) return null;
@@ -315,12 +315,11 @@ export function HeroSparkline({ values, height = 84 }: { values: number[]; heigh
     <svg className="chart" viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" style={{ height }} aria-hidden="true">
       <defs>
         <linearGradient id={uid} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="var(--accent-bright)" stopOpacity="0.4" />
-          <stop offset="100%" stopColor="var(--accent-bright)" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.28" />
+          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <polygon points={`0,${height} ${pts} ${W},${height}`} fill={`url(#${uid})`} />
-      <polyline className="draw" pathLength={1} points={pts} fill="none" stroke="var(--accent-bright)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+      <polyline className="draw" pathLength={1} points={pts} fill="none" stroke="var(--accent)" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }

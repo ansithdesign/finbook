@@ -1,11 +1,10 @@
 // SIM-03 Configure variables + SIM-04 Projection, SIM-06 Cash flow, SIM-07 Liquidity, SIM-08 Goal impact, SIM-09 Assumptions, SIM-10 Save.
 
-import { Bookmark, BookmarkCheck, GitCompare, LineChart as LineIcon, RotateCcw, Trash2 } from 'lucide-react';
+import { Bookmark, BookmarkCheck, GitCompare, LineChart as LineIcon, RotateCcw, Trash2 } from '@/components/icons';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Expandable, KV, List, ListRow, Section } from '@/components/cards/Cards';
 import { CashflowBars, LineChart } from '@/components/charts/Charts';
-import { ContourArt } from '@/components/illustrations/Illustrations';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner, EmptyState, Money } from '@/components/feedback/States';
 import { SliderField, TextField } from '@/components/forms/Fields';
@@ -155,7 +154,6 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
         {sc.fromDecisionId && <Banner tone="outline">Created from a decision. <Link to={`/decide/${sc.fromDecisionId}`}><u>Open decision</u></Link></Banner>}
 
         <div className="tile ink reveal">
-          <ContourArt seed={4} />
           <div className="row-between">
             <span className="label">Liquid funds after {tenure(sc.vars.horizonMonths)}</span>
             <span className={`delta ${s.stability === 'At risk' ? 'neg' : ''}`}>{s.stability}</span>

@@ -1,4 +1,4 @@
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from '@/components/icons';
 import { useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/hooks/useAppState';
@@ -33,6 +33,17 @@ export function Screen({ title, back, onBack, large, actions, footer, children, 
   const toneClass = tone === 'light' ? '' : `tone-${tone}`;
   return (
     <div className={`screen-view ${toneClass}`}>
+      {tone === 'light' && (
+        <div className={`sky-layer ${large ? '' : 'soft'}`} aria-hidden="true">
+          {large && (
+            <>
+              <i className="cloud c1" />
+              <i className="cloud c2" />
+              <i className="cloud c3" />
+            </>
+          )}
+        </div>
+      )}
       <header className={`screen-header ${large ? 'large' : ''} ${scrolled && tone === 'light' ? 'scrolled' : ''}`}>
         {!large && (
           <div>

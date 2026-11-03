@@ -1,10 +1,11 @@
-// Abstract, authored SVG assets: dot-grid fields, branching decision paths and topographic contours.
-// Everything is self-contained on an ink tile so it reads on any background.
+// Authored SVG scenes in the Sky language: a window of the current sky (it follows the time of day through
+// the --sky-* tokens), a sun glow, soft clouds, and decisions drawn as white contrails between midnight nodes.
+// On the full twilight screens the window is dropped and the drawing floats on the sky itself.
 
-import type { SVGProps } from 'react';
+import { useId, type SVGProps } from 'react';
 
-const INK = '#0c3a47';
-const BRIGHT = '#6fd5e3';
+const MIDNIGHT = '#0f2238';
+const FONT = "'Figtree Variable', Figtree, -apple-system, sans-serif";
 
 /** App mark: one source branching into three outcomes. */
 export function BrandMark({ size = 28, color = 'currentColor' }: { size?: number; color?: string }) {
@@ -19,115 +20,105 @@ export function BrandMark({ size = 28, color = 'currentColor' }: { size?: number
   );
 }
 
-function wobble(cx: number, cy: number, r: number, seed: number): string {
-  const pts: string[] = [];
-  const n = 48;
-  for (let i = 0; i <= n; i++) {
-    const a = (i / n) * Math.PI * 2;
-    const k = 1 + 0.12 * Math.sin(a * 3 + seed) + 0.07 * Math.sin(a * 5 - seed * 1.7);
-    pts.push(`${(cx + Math.cos(a) * r * k * 1.35).toFixed(1)},${(cy + Math.sin(a) * r * k * 0.8).toFixed(1)}`);
-  }
-  return `M${pts.join('L')}Z`;
-}
-
-/** Topographic contours as a tile background. Pass to a `.tile` as its first child. */
-export function ContourArt({ seed = 1, opacity = 1 }: { seed?: number; opacity?: number }) {
+/** Sky window: gradient from the live sky tokens, a sun glow and a few soft clouds. */
+function SkyWindow({ w, h, sun = [0.82, 0.18], clouds = [] as Array<[number, number, number]> }: { w: number; h: number; sun?: [number, number]; clouds?: Array<[number, number, number]> }) {
+  const id = useId().replace(/:/g, '');
   return (
-    <svg className="tile-art" viewBox="0 0 360 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" style={{ opacity }}>
-      {Array.from({ length: 9 }).map((_, i) => (
-        <path key={i} d={wobble(290, 40, 20 + i * 20, seed + i * 0.15)} fill="none" stroke={BRIGHT} strokeOpacity={0.5 - i * 0.045} strokeWidth="1.2" />
-      ))}
-    </svg>
-  );
-}
-
-function DotGrid({ id, w, h, color = '#2c6677' }: { id: string; w: number; h: number; color?: string }) {
-  return (
-    <>
+    <g className="scene-bg">
       <defs>
-        <pattern id={id} width="16" height="16" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1.1" fill={color} />
-        </pattern>
+        <linearGradient id={`${id}s`} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="var(--sky-1)" />
+          <stop offset="60%" stopColor="var(--sky-2)" />
+          <stop offset="100%" stopColor="var(--sky-3)" />
+        </linearGradient>
+        <radialGradient id={`${id}g`} cx={sun[0]} cy={sun[1]} r="0.55">
+          <stop offset="0%" stopColor="var(--sun)" />
+          <stop offset="100%" stopColor="var(--sun)" stopOpacity="0" />
+        </radialGradient>
+        <filter id={`${id}b`} x="-30%" y="-60%" width="160%" height="220%">
+          <feGaussianBlur stdDeviation="6" />
+        </filter>
+        <clipPath id={`${id}c`}>
+          <rect width={w} height={h} rx="26" />
+        </clipPath>
       </defs>
-      <rect width={w} height={h} fill={`url(#${id})`} />
-    </>
+      <g clipPath={`url(#${id}c)`}>
+        <rect width={w} height={h} fill={`url(#${id}s)`} />
+        <rect width={w} height={h} fill={`url(#${id}g)`} />
+        {clouds.map(([cx, cy, rx], i) => (
+          <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={rx * 0.28} fill="#fff" opacity="var(--cloud-a)" filter={`url(#${id}b)`} />
+        ))}
+      </g>
+    </g>
   );
 }
 
-/** Welcome / completion scene: one source forking into outcomes across a dot grid. */
+/** Welcome / completion: a path climbing from where you are toward the sun. */
 export function SunriseScene(props: SVGProps<SVGSVGElement>) {
   return (
     <svg className="scene" viewBox="0 0 360 230" aria-hidden="true" {...props}>
-      <rect width="360" height="230" rx="30" fill={INK} />
-      <DotGrid id="g-sun" w={360} h={230} />
-      <path d="M40 200 C110 200 120 150 180 140 C240 130 250 80 322 56" fill="none" stroke="#2c6677" strokeWidth="2" strokeDasharray="3 6" />
-      <path d="M40 200 C110 200 120 170 190 170 C250 170 270 140 322 128" fill="none" stroke="#2c6677" strokeWidth="2" strokeDasharray="3 6" />
-      <path className="draw" pathLength={1} d="M40 200 C120 200 130 150 190 140 C250 130 262 70 322 40" fill="none" stroke={BRIGHT} strokeWidth="4" strokeLinecap="round" />
-      <circle cx="40" cy="200" r="9" fill="#fff" />
-      <circle cx="322" cy="128" r="7" fill="#2c6677" stroke="#9fc1ca" strokeWidth="2" />
-      <circle cx="322" cy="56" r="7" fill="#2c6677" stroke="#9fc1ca" strokeWidth="2" />
-      <circle cx="322" cy="40" r="12" fill={BRIGHT} />
-      <circle cx="322" cy="40" r="22" fill="none" stroke={BRIGHT} strokeOpacity="0.35" />
-      <circle cx="322" cy="40" r="34" fill="none" stroke={BRIGHT} strokeOpacity="0.15" />
-      <rect x="56" y="38" width="86" height="30" rx="15" fill="rgba(255,255,255,0.08)" />
-      <circle cx="73" cy="53" r="5" fill={BRIGHT} />
-      <rect x="84" y="49" width="46" height="8" rx="4" fill="rgba(255,255,255,0.3)" />
+      <SkyWindow w={360} h={230} sun={[0.86, 0.2]} clouds={[[90, 70, 70], [250, 150, 90]]} />
+      <circle cx="318" cy="46" r="16" fill="#fff" opacity="0.95" />
+      <circle cx="318" cy="46" r="30" fill="none" stroke="#fff" strokeOpacity="0.45" />
+      <circle cx="318" cy="46" r="46" fill="none" stroke="#fff" strokeOpacity="0.2" />
+      <path d="M40 196 C110 196 120 166 190 166 C250 166 272 138 318 120" fill="none" stroke="#fff" strokeOpacity="0.55" strokeWidth="2" strokeDasharray="2 7" strokeLinecap="round" />
+      <path className="draw" pathLength={1} d="M40 196 C120 196 132 150 192 140 C252 130 268 74 318 52" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx="40" cy="196" r="9" fill={MIDNIGHT} stroke="#fff" strokeWidth="3" />
+      <circle cx="192" cy="140" r="5" fill="#fff" />
+      <circle cx="318" cy="120" r="6" fill="#fff" fillOpacity="0.6" />
     </svg>
   );
 }
 
-/** Onboarding intro: stacked bars resolving into a trend. */
+/** Onboarding intro: months rising like light columns, a trend line riding over them. */
 export function GrowthScene(props: SVGProps<SVGSVGElement>) {
   const bars = [34, 52, 44, 70, 62, 92, 84, 118];
   return (
     <svg className="scene" viewBox="0 0 360 220" aria-hidden="true" {...props}>
-      <rect width="360" height="220" rx="30" fill={INK} />
-      <DotGrid id="g-gro" w={360} h={220} />
+      <SkyWindow w={360} h={220} sun={[0.84, 0.16]} clouds={[[70, 48, 60], [230, 36, 80]]} />
       {bars.map((h, i) => (
-        <rect key={i} x={36 + i * 38} y={190 - h} width="24" height={h} rx="8" fill={i === bars.length - 1 ? BRIGHT : '#1a4c5b'} stroke={i === bars.length - 1 ? 'none' : '#2c6677'} />
+        <rect key={i} x={36 + i * 38} y={200 - h} width="24" height={h} rx="12" fill="#fff" fillOpacity={i === bars.length - 1 ? 0.95 : 0.32 + i * 0.04} />
       ))}
-      <polyline className="draw" pathLength={1} points={bars.map((h, i) => `${48 + i * 38},${180 - h}`).join(' ')} fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="314" cy="62" r="8" fill="#fff" stroke={BRIGHT} strokeWidth="4" />
-      <rect x="36" y="28" width="92" height="26" rx="13" fill="rgba(255,255,255,0.08)" />
-      <circle cx="51" cy="41" r="5" fill={BRIGHT} />
-      <rect x="62" y="37" width="52" height="8" rx="4" fill="rgba(255,255,255,0.3)" />
+      <polyline className="draw" pathLength={1} points={bars.map((h, i) => `${48 + i * 38},${188 - h}`).join(' ')} fill="none" stroke={MIDNIGHT} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="314" cy="70" r="8" fill={MIDNIGHT} stroke="#fff" strokeWidth="3" />
     </svg>
   );
 }
 
-/** Consent / privacy: concentric rings around a key. */
+/** Consent / privacy: a lock held in the calm centre of the sky, with soft halos. */
 export function ShieldScene(props: SVGProps<SVGSVGElement>) {
   return (
     <svg className="scene" viewBox="0 0 360 200" aria-hidden="true" {...props}>
-      <rect width="360" height="200" rx="30" fill={INK} />
-      <DotGrid id="g-shd" w={360} h={200} />
-      {[92, 68, 46].map((r, i) => <circle key={r} cx="180" cy="100" r={r} fill="none" stroke={BRIGHT} strokeOpacity={0.15 + i * 0.12} strokeWidth="1.5" strokeDasharray={i === 0 ? '3 6' : undefined} />)}
-      <circle cx="180" cy="100" r="30" fill={BRIGHT} />
-      <rect x="166" y="98" width="28" height="22" rx="6" fill={INK} />
-      <path d="M171 98v-6a9 9 0 0 1 18 0v6" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
-      <circle cx="180" cy="108" r="3" fill={BRIGHT} />
-      <circle cx="82" cy="60" r="4" fill="#fff" /><circle cx="286" cy="140" r="4" fill="#fff" /><circle cx="262" cy="44" r="3" fill={BRIGHT} />
+      <SkyWindow w={360} h={200} sun={[0.5, 0.5]} clouds={[[70, 150, 70], [300, 50, 60]]} />
+      {[88, 64, 44].map((r, i) => <circle key={r} cx="180" cy="100" r={r} fill="#fff" fillOpacity={0.1 + i * 0.08} />)}
+      <circle cx="180" cy="100" r="30" fill="#fff" />
+      <rect x="167" y="98" width="26" height="20" rx="6" fill={MIDNIGHT} />
+      <path d="M172 98v-6a8 8 0 0 1 16 0v6" fill="none" stroke={MIDNIGHT} strokeWidth="4" strokeLinecap="round" />
+      <circle cx="180" cy="107" r="2.6" fill="#fff" />
     </svg>
   );
 }
 
-/** Decide landing: a question branching into compared options. */
+/** Decide landing: a question splitting into three routes; one is chosen. */
 export function PathsScene(props: SVGProps<SVGSVGElement>) {
   return (
     <svg className="scene" viewBox="0 0 360 170" aria-hidden="true" {...props}>
-      <rect width="360" height="170" rx="30" fill={INK} />
-      <DotGrid id="g-pth" w={360} h={170} />
-      <path d="M52 85 C110 85 120 40 180 40 H300" fill="none" stroke="#2c6677" strokeWidth="2" strokeDasharray="3 6" />
-      <path d="M52 85 C110 85 120 130 180 130 H300" fill="none" stroke="#2c6677" strokeWidth="2" strokeDasharray="3 6" />
-      <path className="draw" pathLength={1} d="M52 85 H300" fill="none" stroke={BRIGHT} strokeWidth="4" strokeLinecap="round" />
-      <circle cx="52" cy="85" r="12" fill="#fff" />
-      <text x="52" y="90" textAnchor="middle" style={{ fontSize: 14, fontWeight: 800, fill: INK, fontFamily: 'Geist, sans-serif' }}>?</text>
-      {[['A', 40, '#2c6677'], ['B', 85, BRIGHT], ['C', 130, '#2c6677']].map(([l, y, c]) => (
-        <g key={String(l)}>
-          <circle cx="300" cy={Number(y)} r="13" fill={String(c)} stroke={c === BRIGHT ? 'none' : '#9fc1ca'} strokeWidth="1.5" />
-          <text x="300" y={Number(y) + 4} textAnchor="middle" style={{ fontSize: 12, fontWeight: 800, fill: c === BRIGHT ? INK : '#fff', fontFamily: 'Geist, sans-serif' }}>{String(l)}</text>
-        </g>
-      ))}
+      <SkyWindow w={360} h={170} sun={[0.9, 0.12]} clouds={[[120, 30, 70], [260, 150, 80]]} />
+      <path d="M52 85 C110 85 120 40 180 40 H300" fill="none" stroke="#fff" strokeOpacity="0.7" strokeWidth="2" strokeDasharray="2 7" strokeLinecap="round" />
+      <path d="M52 85 C110 85 120 130 180 130 H300" fill="none" stroke="#fff" strokeOpacity="0.7" strokeWidth="2" strokeDasharray="2 7" strokeLinecap="round" />
+      <path className="draw" pathLength={1} d="M52 85 H300" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx="52" cy="85" r="13" fill="#fff" />
+      <text x="52" y="90" textAnchor="middle" style={{ fontSize: 14, fontWeight: 800, fill: MIDNIGHT, fontFamily: FONT }}>?</text>
+      {(['A', 'B', 'C'] as const).map((l, i) => {
+        const y = 40 + i * 45;
+        const on = l === 'B';
+        return (
+          <g key={l}>
+            <circle cx="300" cy={y} r="14" fill={on ? MIDNIGHT : '#fff'} fillOpacity={on ? 1 : 0.85} />
+            <text x="300" y={y + 4.5} textAnchor="middle" style={{ fontSize: 12.5, fontWeight: 750, fill: on ? '#fff' : MIDNIGHT, fontFamily: FONT }}>{l}</text>
+          </g>
+        );
+      })}
     </svg>
   );
 }

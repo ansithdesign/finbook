@@ -1,4 +1,4 @@
-import { Compass, Home, LineChart, Target, User } from 'lucide-react';
+import { Compass, Home, LineChart, Target, User } from '@/components/icons';
 import { NavLink, useLocation } from 'react-router-dom';
 
 // Decide is the product's core action, so it takes the raised centre slot.
@@ -21,10 +21,10 @@ export function BottomNav() {
           <NavLink key={t.to} to={t.to} className={`${active ? 'active' : ''} ${t.hub ? 'hub' : ''}`} aria-current={active ? 'page' : undefined}>
             {t.hub ? (
               <span className="hub-btn">
-                <Icon size={26} strokeWidth={2} />
+                <Icon size={22} weight={active ? 'fill' : 'bold'} />
               </span>
             ) : (
-              <Icon size={24} strokeWidth={active ? 2.2 : 1.7} />
+              <Icon size={25} weight={active ? 'fill' : 'regular'} />
             )}
             {t.label}
           </NavLink>

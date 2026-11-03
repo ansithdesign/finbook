@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { HashRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
-import { DeviceFrame, useDeviceScale } from '@/components/device/DeviceFrame';
+import { DeviceFrame, skyFor, useDeviceScale } from '@/components/device/DeviceFrame';
 import { FeedbackProvider } from '@/components/feedback/FeedbackProvider';
 import { BottomNav } from '@/components/navigation/BottomNav';
 import { DevPanel } from '@/components/navigation/DevPanel';
@@ -174,7 +174,7 @@ function Stage() {
   return (
     <div className="stage" style={{ paddingLeft: panelOpen ? 290 : 0 }}>
       <DevPanel open={panelOpen} onToggle={() => setPanelOpen((o) => !o)} />
-      <DeviceFrame scale={scale} appearance={state.dev.appearance}>
+      <DeviceFrame scale={scale} sky={state.dev.appearance === 'dark' ? 'night' : !state.dev.sky || state.dev.sky === 'auto' ? skyFor(new Date().getHours()) : state.dev.sky}>
         <AppRoutes />
       </DeviceFrame>
       <div className="stage-note">Low-fidelity prototype · all figures illustrative · no real financial connections</div>

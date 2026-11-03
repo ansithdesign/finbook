@@ -1,6 +1,6 @@
 // Development-only screen navigator, rendered OUTSIDE the device. Not part of the app UI.
 
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { PanelLeftClose, PanelLeftOpen } from '@/components/icons';
 import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DEMO_PROFILES } from '@/data/mock-data/demoProfiles';
@@ -142,6 +142,9 @@ export function DevPanel({ open, onToggle }: { open: boolean; onToggle: () => vo
         <div className="stack-sm">
           <button className={`dp-btn ${state.dev.appearance === 'dark' ? 'on' : ''}`} onClick={() => actions.setDev({ appearance: state.dev.appearance === 'dark' ? 'light' : 'dark' })}>
             Appearance: {state.dev.appearance}
+          </button>
+          <button className="dp-btn" onClick={() => { const order = ['auto', 'morning', 'day', 'evening'] as const; actions.setDev({ sky: order[(order.indexOf(state.dev.sky ?? 'auto') + 1) % order.length] }); }}>
+            Sky: {state.dev.sky ?? 'auto'}
           </button>
           <button className={`dp-btn ${state.dev.offline ? 'on' : ''}`} onClick={() => actions.setDev({ offline: !state.dev.offline })}>
             Offline mode: {state.dev.offline ? 'on' : 'off'}

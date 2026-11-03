@@ -1,6 +1,6 @@
 // PROF-01 … PROF-10 and SYS-06 Incomplete financial profile.
 
-import { Banknote, Bell, Building2, CircleHelp, Lock, LogOut, Plus, Settings, ShieldCheck, User, Wallet, ClipboardList, Link2 } from 'lucide-react';
+import { Banknote, Bell, Building2, CircleHelp, Lock, LogOut, Plus, Settings, ShieldCheck, User, Wallet, ClipboardList, Link2 } from '@/components/icons';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Expandable, KV, List, ListRow, Section } from '@/components/cards/Cards';

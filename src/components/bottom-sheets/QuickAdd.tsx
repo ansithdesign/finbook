@@ -1,4 +1,4 @@
-import { Banknote, CalendarClock, Landmark, PiggyBank, Receipt, Target } from 'lucide-react';
+import { Banknote, CalendarClock, Landmark, PiggyBank, Receipt, Target } from '@/components/icons';
 import { useNavigate } from 'react-router-dom';
 import { List, ListRow } from '@/components/cards/Cards';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';

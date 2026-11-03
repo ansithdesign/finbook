@@ -1,6 +1,6 @@
 // SIM-01 Scenario landing, SIM-02 Create scenario, SIM-05 Scenario comparison.
 
-import { Bookmark, Check, GitCompare, LineChart as LineIcon, Plus } from 'lucide-react';
+import { Bookmark, Check, GitCompare, LineChart as LineIcon, Plus } from '@/components/icons';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Expandable, List, ListRow, Section, SectionLink } from '@/components/cards/Cards';

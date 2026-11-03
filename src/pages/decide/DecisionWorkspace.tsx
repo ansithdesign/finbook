@@ -1,6 +1,6 @@
 // DEC-05 Decision workspace (also DEC-10 when reopened), DEC-06 Alternatives, DEC-07 Explanation.
 
-import { Bookmark, BookmarkCheck, Check, LineChart as LineIcon, SlidersHorizontal, Target, Trash2 } from 'lucide-react';
+import { Bookmark, BookmarkCheck, Check, LineChart as LineIcon, SlidersHorizontal, Target, Trash2 } from '@/components/icons';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Expandable, KV, List, ListRow, Section } from '@/components/cards/Cards';

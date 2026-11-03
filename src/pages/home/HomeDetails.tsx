@@ -1,12 +1,11 @@
 // HOME-02 … HOME-10 detail screens.
 
-import { Banknote, CalendarClock, CheckCircle2, Circle, Landmark, Lightbulb, PiggyBank, Plus, Receipt } from 'lucide-react';
+import { Banknote, CalendarClock, CheckCircle2, Circle, Landmark, Lightbulb, PiggyBank, Plus, Receipt } from '@/components/icons';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { BarList, Ribbon, Runway } from '@/components/charts/Charts';
 import { KV, List, ListRow, Section } from '@/components/cards/Cards';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner, CalcNote, EmptyState, Money, SourceTag } from '@/components/feedback/States';
-import { ContourArt } from '@/components/illustrations/Illustrations';
 import { Screen } from '@/components/layout/Screen';
 import { liabilityEmi, monthlyExpenseOf, monthlyIncomeOf, toMonthly } from '@/calculations/financial/overview';
 import { useApp } from '@/hooks/useAppState';
@@ -45,15 +44,14 @@ export function NetWorthDetails() {
   return (
     <Screen title="Net worth" back>
       <div className="tile ink reveal">
-        <ContourArt seed={2} />
         <div className="label">Net worth = assets − liabilities</div>
         <div className="display-num mt-8" style={{ fontSize: 52 }}><Money value={f.netWorth.value} animate /></div>
         <CalcNote missing={f.netWorth.missing} estimated={f.netWorth.estimated} />
         <div className="mt-16">
-          <Ribbon onDark height={30} legend={false} parts={[{ label: 'Assets', value: f.assets.value ?? 0, color: 'var(--accent-bright)' }, { label: 'Liabilities', value: f.liabilities.value ?? 0, color: '#f0715f' }]} />
+          <Ribbon onDark height={30} legend={false} parts={[{ label: 'Assets', value: f.assets.value ?? 0, color: 'var(--s1)' }, { label: 'Liabilities', value: f.liabilities.value ?? 0, color: 'var(--act)' }]} />
           <div className="row-between caption mt-8">
-            <span>Assets <b style={{ color: '#fff' }}>{inr(f.assets.value)}</b></span>
-            <span>Liabilities <b style={{ color: '#fff' }}>{inr(f.liabilities.value)}</b></span>
+            <span>Assets <b>{inr(f.assets.value)}</b></span>
+            <span>Liabilities <b>{inr(f.liabilities.value)}</b></span>
           </div>
         </div>
       </div>
@@ -65,9 +63,9 @@ export function NetWorthDetails() {
               <div className="label mb-8">How accessible is it?</div>
               <Ribbon
                 parts={[
-                  { label: 'Liquid', value: f.byLiquidity.liquid.value ?? 0, color: 'var(--accent-bright)', note: 'usable within days' },
-                  { label: 'Market-linked', value: f.byLiquidity.market.value ?? 0, color: 'var(--seg-1)', note: 'value fluctuates' },
-                  { label: 'Locked', value: f.byLiquidity.locked.value ?? 0, color: 'var(--line)', hatch: true, note: 'property, retirement' },
+                  { label: 'Liquid', value: f.byLiquidity.liquid.value ?? 0, color: 'var(--s1)', note: 'usable within days' },
+                  { label: 'Market-linked', value: f.byLiquidity.market.value ?? 0, color: 'var(--s2)', note: 'value fluctuates' },
+                  { label: 'Locked', value: f.byLiquidity.locked.value ?? 0, color: 'var(--s4)', hatch: true, note: 'property, retirement' },
                 ]}
               />
             </div>
@@ -173,7 +171,7 @@ export function ExpenseBreakdown() {
         <div className="label">Total monthly expenditure</div>
         <div className="big-number"><Money value={f.expenses.value} /></div>
         <CalcNote missing={f.expenses.missing} estimated={f.expenses.estimated} />
-        <div className="mt-12"><Ribbon height={34} parts={[{ label: 'Essential', value: ess, color: 'var(--seg-1)' }, { label: 'Discretionary', value: disc, color: 'var(--accent-bright)' }]} /></div>
+        <div className="mt-12"><Ribbon height={34} parts={[{ label: 'Essential', value: ess, color: 'var(--seg-1)' }, { label: 'Discretionary', value: disc, color: 'var(--s2)' }]} /></div>
         <p className="caption mt-8">Loan EMIs ({inr(f.emi.value ?? 0)}) are tracked under liabilities and not included here, to avoid double-counting.</p>
       </div>
       {prev && f.expenses.value !== null ? (
@@ -297,7 +295,6 @@ export function LiquidityDetails() {
   return (
     <Screen title="Liquidity" back>
       <div className="tile ink reveal">
-        <ContourArt seed={5} />
         <div className="label">Total liquid funds</div>
         <div className="display-num mt-8" style={{ fontSize: 52 }}><Money value={f.liquid.value} animate /></div>
         {f.coverage.value !== null && <div className="mt-16"><Runway months={f.coverage.value} target={target} /></div>}

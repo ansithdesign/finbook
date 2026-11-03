@@ -1,6 +1,6 @@
 // HOME-11 Add financial record / HOME-12 Edit financial record (income, expense, asset, liability, commitment).
 
-import { Trash2 } from 'lucide-react';
+import { Trash2 } from '@/components/icons';
 import { useMemo, useState } from 'react';
 import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';

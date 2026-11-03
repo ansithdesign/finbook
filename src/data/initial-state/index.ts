@@ -33,7 +33,7 @@ export function createInitialState(): AppState {
       notify: { reminders: true, insights: true, product: false, email: false },
       analyticsConsent: false,
     },
-    dev: { offline: false, failConnections: false, appearance: 'light' },
+    dev: { offline: false, failConnections: false, appearance: 'light', sky: 'auto' },
     demoProfile: null,
   };
 }

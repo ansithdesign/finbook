@@ -1,4 +1,4 @@
-import { MailCheck } from 'lucide-react';
+import { MailCheck } from '@/components/icons';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';

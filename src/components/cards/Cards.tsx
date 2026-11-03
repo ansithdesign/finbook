@@ -1,4 +1,4 @@
-import { ChevronRight, type LucideIcon } from 'lucide-react';
+import { ChevronRight, type LucideIcon } from '@/components/icons';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -39,7 +39,7 @@ export function ListRow({ icon: Icon, title, sub, value, to, onClick, chevron }:
     <>
       {Icon && (
         <span className="icon-box">
-          <Icon size={18} />
+          <Icon size={19} weight="duotone" />
         </span>
       )}
       <span className="main">

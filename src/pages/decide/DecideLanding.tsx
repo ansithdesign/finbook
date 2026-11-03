@@ -1,6 +1,6 @@
 // DEC-01 Decision landing, DEC-08 Saved decisions, DEC-09 Decision history.
 
-import { Bookmark, Compass, History, MessageSquareText, Lightbulb } from 'lucide-react';
+import { Bookmark, Compass, History, MessageSquareText, Lightbulb } from '@/components/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { List, ListRow, Section, SectionLink } from '@/components/cards/Cards';
 import { EmptyState } from '@/components/feedback/States';

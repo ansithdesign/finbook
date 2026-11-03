@@ -316,6 +316,7 @@ export interface DevFlags {
   offline: boolean;
   failConnections: boolean;
   appearance: 'light' | 'dark';
+  sky: 'auto' | 'morning' | 'day' | 'evening';
 }
 
 export interface AppState {

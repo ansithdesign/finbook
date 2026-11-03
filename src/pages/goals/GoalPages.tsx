@@ -1,6 +1,6 @@
 // GOAL-01 … GOAL-06.
 
-import { Plus, Target, Trash2 } from 'lucide-react';
+import { Plus, Target, Trash2 } from '@/components/icons';
 import { useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { KV, List, ListRow, Section } from '@/components/cards/Cards';
@@ -8,7 +8,6 @@ import { LineChart, PathToTarget } from '@/components/charts/Charts';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner, EmptyState, Money, ProgressBar } from '@/components/feedback/States';
 import { DateField, MoneyField, NumberField, Segmented, SelectField, TextField } from '@/components/forms/Fields';
-import { ContourArt } from '@/components/illustrations/Illustrations';
 import { Screen } from '@/components/layout/Screen';
 import { allocateToGoals, calculateGoalContribution, calculateGoalProgress, goalSaved, monthsToReach, sortGoals } from '@/calculations/financial/goals';
 import { baselineGoalCapacity, impactsFromSaved } from '@/features/goals/impact';
@@ -246,7 +245,6 @@ export function GoalDetail() {
       footer={<button className="btn block" onClick={addContribution}><Plus size={18} /> Add contribution</button>}
     >
       <div className="tile ink reveal">
-        <ContourArt seed={3} />
         <div className="row-between">
           <span className="label">{GOAL_TYPE_LABEL[g.type]} · {g.priority} priority</span>
           <span className="delta">{p.progress === null ? 'No target' : pct(p.progress)}</span>

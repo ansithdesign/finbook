@@ -1,6 +1,6 @@
 // Toasts, bottom sheets and confirmation dialogs, rendered inside the device screen.
 
-import { CheckCircle2, AlertTriangle, X } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, X } from '@/components/icons';
 import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react';
 
 interface ToastItem {

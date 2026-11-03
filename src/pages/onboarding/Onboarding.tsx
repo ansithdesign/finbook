@@ -1,7 +1,7 @@
 // ONB-01 … ONB-12. Progressive, adaptive onboarding. Every step saves on Continue, Back and Skip,
 // so users can leave and resume. Empty fields stay unknown (null), never zero.
 
-import { Building2, Link2, Plus, ShieldCheck, Trash2 } from 'lucide-react';
+import { Building2, Link2, Plus, ShieldCheck, Trash2 } from '@/components/icons';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { KV, List, ListRow, Section } from '@/components/cards/Cards';

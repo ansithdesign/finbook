@@ -1,12 +1,11 @@
 // HOME-01 Financial overview. Every number is derived from the user's records via useFinance().
 
-import { ArrowUpRight, Banknote, Bell, Compass, Eye, EyeOff, Inbox, Landmark, Lightbulb, PiggyBank, Plus, Receipt, Search, Target } from 'lucide-react';
+import { ArrowUpRight, Banknote, Bell, Compass, Eye, EyeOff, Inbox, Landmark, Lightbulb, PiggyBank, Plus, Receipt, Search, Target } from '@/components/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { List, ListRow, Section, SectionLink } from '@/components/cards/Cards';
 import { HeroSparkline, Ribbon, Runway } from '@/components/charts/Charts';
 import { useQuickAdd } from '@/components/bottom-sheets/QuickAdd';
 import { Banner, EmptyState, Money } from '@/components/feedback/States';
-import { ContourArt } from '@/components/illustrations/Illustrations';
 import { Screen } from '@/components/layout/Screen';
 import { useApp } from '@/hooks/useAppState';
 import { useFinance } from '@/hooks/useFinance';
@@ -24,7 +23,7 @@ export function HomeHeaderActions({ onAdd }: { onAdd?: () => void }) {
   return (
     <>
       {onAdd && (
-        <button className="icon-btn" aria-label="Quick add" onClick={onAdd} style={{ background: 'var(--storm)', color: 'var(--accent-bright)', width: 38, height: 38, margin: '3px 4px 0 0' }}>
+        <button className="icon-btn" aria-label="Quick add" onClick={onAdd} style={{ background: 'var(--midnight)', color: '#fff', width: 38, height: 38, margin: '3px 4px 0 0' }}>
           <Plus size={20} />
         </button>
       )}
@@ -85,7 +84,6 @@ export function HomeOverview() {
     >
       {!f.hasData ? (
         <div className="tile ink mt-12">
-          <ContourArt />
           <EmptyState
             icon={Inbox}
             title="No financial information yet"
@@ -102,7 +100,6 @@ export function HomeOverview() {
         <div className="bento mt-8">
           {/* Net worth */}
           <Link to="/home/net-worth" className="tile ink span-2 reveal">
-            <ContourArt />
             <div className="row-between">
               <span className="label">Net worth</span>
               <span className="on-dark-chip">Details <ArrowUpRight size={13} /></span>
@@ -129,12 +126,12 @@ export function HomeOverview() {
                 parts={[
                   { label: 'Liquid', value: f.byLiquidity.liquid.value ?? 0 },
                   { label: 'Market-linked', value: f.byLiquidity.market.value ?? 0 },
-                  { label: 'Locked', value: f.byLiquidity.locked.value ?? 0, hatch: true, color: '#7aa3ae' },
+                  { label: 'Locked', value: f.byLiquidity.locked.value ?? 0, hatch: true, color: 'var(--s4)' },
                 ]}
               />
               <div className="lg3 caption mt-8">
-                <span><i className="lg-sw" style={{ background: 'var(--accent-bright)' }} />Liquid<b><Money value={f.byLiquidity.liquid.value} compact /></b></span>
-                <span><i className="lg-sw" style={{ background: '#ffffff' }} />Market<b><Money value={f.byLiquidity.market.value} compact /></b></span>
+                <span><i className="lg-sw" style={{ background: 'var(--s1)' }} />Liquid<b><Money value={f.byLiquidity.liquid.value} compact /></b></span>
+                <span><i className="lg-sw" style={{ background: 'var(--s2)' }} />Market<b><Money value={f.byLiquidity.market.value} compact /></b></span>
                 <span><i className="lg-sw hatch-sw" />Locked<b><Money value={f.byLiquidity.locked.value} compact /></b></span>
               </div>
             </div>

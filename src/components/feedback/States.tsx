@@ -1,4 +1,4 @@
-import { AlertTriangle, Info, type LucideIcon } from 'lucide-react';
+import { AlertTriangle, Info, type LucideIcon } from '@/components/icons';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useApp } from '@/hooks/useAppState';
 import type { Source } from '@/types';

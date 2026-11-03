@@ -1,6 +1,6 @@
 // iPhone-style device mockup (prototype dimensions: 440 × 956 CSS px viewport, not official specs).
 
-import { BatteryFull, Signal, Wifi } from 'lucide-react';
+import { BatteryFull, Signal, Wifi } from '@/components/icons';
 import { useEffect, useState, type ReactNode } from 'react';
 
 const DEVICE_W = 468;
@@ -32,12 +32,19 @@ export function useDeviceScale(reservedLeft: number) {
   return scale;
 }
 
-export function DeviceFrame({ children, scale, appearance = 'light' }: { children: ReactNode; scale: number; appearance?: 'light' | 'dark' }) {
+export type Sky = 'morning' | 'day' | 'evening' | 'night';
+
+/** The sky follows the clock: morning until 10, day until 17, evening after. Night is the dark appearance. */
+export function skyFor(hour: number): Exclude<Sky, 'night'> {
+  return hour >= 5 && hour < 10 ? 'morning' : hour >= 10 && hour < 17 ? 'day' : 'evening';
+}
+
+export function DeviceFrame({ children, scale, sky = 'day' }: { children: ReactNode; scale: number; sky?: Sky }) {
   const time = useClock();
   return (
     <div className="device-slot" style={{ width: DEVICE_W * scale, height: DEVICE_H * scale }}>
       <div className="device" style={{ transform: `scale(${scale})` }} aria-label="iPhone 18 Pro Max prototype frame">
-        <div className="screen" id="device-screen" data-theme={appearance}>
+        <div className="screen" id="device-screen" data-sky={sky}>
           <div className="statusbar" aria-hidden="true">
             <span>{time}</span>
             <span className="icons">

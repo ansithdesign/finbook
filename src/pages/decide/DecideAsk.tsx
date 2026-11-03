@@ -1,6 +1,6 @@
 // DEC-02 Ask a question → intent recognition → creates a draft decision.
 
-import { Compass, LineChart } from 'lucide-react';
+import { Compass, LineChart } from '@/components/icons';
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { List, ListRow } from '@/components/cards/Cards';

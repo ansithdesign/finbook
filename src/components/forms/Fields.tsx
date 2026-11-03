@@ -1,4 +1,4 @@
-import { Check, Eye, EyeOff } from 'lucide-react';
+import { Check, Eye, EyeOff } from '@/components/icons';
 import { useEffect, useState, type ReactNode } from 'react';
 import { groupDigits } from '@/utils/format';
 

@@ -1,6 +1,6 @@
 // SYS-01 Global search, SYS-02 Notifications.
 
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search } from '@/components/icons';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { List, ListRow, Section } from '@/components/cards/Cards';

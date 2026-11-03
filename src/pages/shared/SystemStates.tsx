@@ -1,6 +1,6 @@
 // SYS-04, SYS-05, SYS-07, SYS-08, SYS-09, SYS-10 reusable system states.
 
-import { Inbox, KeyRound, Lock, PlugZap, WifiOff } from 'lucide-react';
+import { Inbox, KeyRound, Lock, PlugZap, WifiOff } from '@/components/icons';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner, EmptyState, Loading } from '@/components/feedback/States';

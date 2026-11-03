@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { Compass } from 'lucide-react';
+import { Compass } from '@/components/icons';
 import { useMemo } from 'react';
 import { EmptyState } from '@/components/feedback/States';
 import { Screen } from '@/components/layout/Screen';

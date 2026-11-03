@@ -1,6 +1,6 @@
 // DEC-03 Decision clarification and DEC-04 Financial context review.
 
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from '@/components/icons';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { List, ListRow } from '@/components/cards/Cards';
