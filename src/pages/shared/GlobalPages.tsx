@@ -72,7 +72,7 @@ export function NotificationsPage() {
           ))}
         </List>
       )}
-      <p className="caption mt-12">Manage what you receive in Profile → Notifications.</p>
+      <p className="caption mt-12">Choose what you receive from Notifications in Profile.</p>
     </Screen>
   );
 }

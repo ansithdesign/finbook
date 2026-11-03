@@ -44,7 +44,7 @@ export function ProfileOverview() {
       <Link to="/profile/completeness" className="card mt-16" style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
         <div className="row-between"><span className="strong">Profile completeness</span><span className="strong">{pct(f.completeness.score)}</span></div>
         <div className="mt-8"><ProgressBar value={f.completeness.score} /></div>
-        <div className="caption mt-8">{f.missing.length ? `${f.missing.length} item(s) missing — see what's affected` : 'All core sections complete'}</div>
+        <div className="caption mt-8">{f.missing.length ? `${f.missing.length} item(s) missing. See what's affected.` : 'All core sections complete'}</div>
       </Link>
       <Section title="Financial summary">
         <div className="card outline">
@@ -154,7 +154,7 @@ export function FinancialProfilePage() {
         <Segmented
           label="Emergency reserve target"
           value={String(state.prefs.emergencyMonthsTarget)}
-          onChange={(v) => (actions.updatePrefs({ emergencyMonthsTarget: Number(v) }), toast('Target updated — insights recalculated'))}
+          onChange={(v) => (actions.updatePrefs({ emergencyMonthsTarget: Number(v) }), toast('Target updated. Insights recalculated.'))}
           options={[{ value: '3', label: '3 months' }, { value: '6', label: '6 months' }, { value: '9', label: '9 months' }, { value: '12', label: '12 months' }]}
         />
         <Link to="/onboarding/review" className="btn ghost">Review all onboarding answers</Link>
@@ -240,7 +240,7 @@ export function ConnectedAccountDetail() {
           <KV k="Status" v={c.status} />
           <KV k="Source" v="Consent-based integration (illustrative)" />
           <KV k="Consent given" v={fmtDate(c.consentGivenAt)} />
-          <KV k="Last synchronisation" v={c.lastSync ? relativeTime(c.lastSync) : 'Never — prototype'} />
+          <KV k="Last synchronisation" v={c.lastSync ? relativeTime(c.lastSync) : 'Never (prototype)'} />
         </div>
         <Section title="Permissions">
           <List>{c.permissions.map((p) => <ListRow key={p} icon={Lock} title={p} sub="Read-only" />)}</List>
@@ -288,7 +288,7 @@ export function PrivacyConsent() {
           </List>
           <div className="mt-8">
             <List>
-              {state.connections.length ? state.connections.map((c) => <ListRow key={c.id} title={`${c.institution} — data sharing`} sub={`Given ${fmtDate(c.consentGivenAt)}`} to={`/profile/accounts/${c.id}`} />) : <ListRow title="No account-sharing consents" />}
+              {state.connections.length ? state.connections.map((c) => <ListRow key={c.id} title={`${c.institution}: data sharing`} sub={`Given ${fmtDate(c.consentGivenAt)}`} to={`/profile/accounts/${c.id}`} />) : <ListRow title="No account-sharing consents" />}
             </List>
           </div>
         </Section>
@@ -372,7 +372,7 @@ export function HelpSupport() {
       <Section title="Contact">
         <List>
           <ListRow title="Email support" sub="support@example.com (placeholder)" />
-          <ListRow title="Request a callback" sub="Placeholder — not active in prototype" />
+          <ListRow title="Request a callback" sub="Not active in this prototype" />
         </List>
       </Section>
     </Screen>

@@ -188,7 +188,7 @@ export function analyzeCar(data: FinancialData, inputs: Inputs, emergencyTarget 
     findings,
     options,
     assumptions: [
-      `Interest rate ${rate}% per year (assumption — confirm with lenders).`,
+      `Interest rate ${rate}% per year (an assumption; confirm with your lender).`,
       `Loan tenure ${tenure} months, fixed EMI, no processing fees or insurance included.`,
       'Down payment comes from liquid funds (savings, current account, cash, FDs). Investments are not sold.',
       'Income and expenses stay at current levels. No inflation or salary increase is assumed.',

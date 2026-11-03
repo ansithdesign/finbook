@@ -130,7 +130,7 @@ export function scenarioFromOption(d: Decision, opt: DecisionOption, state: AppS
   }
   return {
     id: uid('scn'),
-    name: `${d.title} — ${opt.label.split(':')[0]}`,
+    name: `${d.title}: ${opt.label.split(':')[0]}`,
     template: d.intent === 'car' ? 'car' : d.intent === 'prepay' ? 'prepay' : d.intent === 'safe-spend' ? 'variable-income' : 'custom',
     vars,
     saved: false,

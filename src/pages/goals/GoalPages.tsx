@@ -1,9 +1,10 @@
 // GOAL-01 … GOAL-06.
 
 import { Plus, Target, Trash2 } from '@/components/icons';
+import { GOAL_ICON } from '@/components/topicIcons';
 import { useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { KV, List, ListRow, Section } from '@/components/cards/Cards';
+import { KV, List, ListRow, Section, Shift } from '@/components/cards/Cards';
 import { LineChart, PathToTarget } from '@/components/charts/Charts';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner, EmptyState, Money, ProgressBar } from '@/components/feedback/States';
@@ -52,24 +53,23 @@ export function GoalsOverview() {
   const suggestions = (Object.keys(GOAL_TYPE_LABEL) as GoalType[]).filter((t) => t !== 'other' && !goals.some((g) => g.type === t));
   return (
     <Screen large title="Goals" actions={<Link to="/goals/new" className="icon-btn" aria-label="Create goal"><Plus size={24} /></Link>}>
-      <div className="card">
-        <div className="grid-2">
-          <div>
-            <div className="label">Planned for goals</div>
-            <div className="mid-number"><Money value={totalNeeded} /></div>
-            <div className="caption">per month</div>
-          </div>
-          <div>
-            <div className="label">Available after SIPs</div>
-            <div className="mid-number"><Money value={capacity} /></div>
-            <div className="caption">estimated surplus</div>
-          </div>
+      <p className="lede">What you're saving toward, and whether this month's surplus keeps every goal on pace.</p>
+      <div className="stat-grid mt-16">
+        <div className="stat">
+          <div className="label">Planned each month</div>
+          <div className="v"><Money value={totalNeeded} /></div>
+          <div className="caption">across {goals.length} {goals.length === 1 ? 'goal' : 'goals'}</div>
         </div>
-        {capacity !== null && totalNeeded > capacity && <p className="caption warn-text mt-8">Planned contributions exceed your available surplus by {inr(totalNeeded - capacity)}. Lower-priority goals may be underfunded.</p>}
-        {capacity === null && <p className="caption mt-8">Add income and expenses to see what's available for goals.</p>}
+        <div className="stat">
+          <div className="label">Free after SIPs</div>
+          <div className="v"><Money value={capacity} /></div>
+          <div className="caption">estimated monthly surplus</div>
+        </div>
       </div>
+      {capacity !== null && totalNeeded > capacity && <div className="mt-12"><span className="level prepare">Be prepared</span><p className="caption mt-4">You've planned {inr(totalNeeded - capacity)} a month more than you have free. Lower-priority goals will fall behind first.</p></div>}
+      {capacity === null && <p className="caption mt-8">Add income and expenses to see what's free for goals.</p>}
 
-      <Section title="Active goals">
+      <Section title="Your goals">
         {goals.length === 0 ? (
           <EmptyState icon={Target} title="No goals yet" body="Goals help you see whether decisions keep you on track." action={<Link to="/goals/new" className="btn sm">Create a goal</Link>} />
         ) : (
@@ -79,20 +79,21 @@ export function GoalsOverview() {
               const req = calculateGoalContribution(g);
               const a = alloc.find((x) => x.goalId === g.id);
               return (
-                <Link key={g.id} to={`/goals/${g.id}`} className="card outline" style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
-                  <div className="row-between">
-                    <span className="strong">{g.name}</span>
-                    <span className="tag">{g.priority} priority</span>
+                <Link key={g.id} to={`/goals/${g.id}`} className="card goal-card" style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
+                  <div className="row" style={{ gap: 12 }}>
+                    <span className="topic-badge">{(() => { const I = GOAL_ICON[g.type]; return <I size={20} weight="duotone" />; })()}</span>
+                    <span className="flex-1" style={{ minWidth: 0 }}>
+                      <span className="strong truncate" style={{ display: 'block' }}>{g.name}</span>
+                      <span className="caption">{g.targetDate ? `By ${fmtMonth(g.targetDate)}` : 'No target date'} · {g.priority} priority</span>
+                    </span>
+                    {a && a.onTrack === false ? <span className="level prepare">Behind</span> : p.progress !== null ? <span className="level ok">On pace</span> : null}
                   </div>
-                  <div className="row-between mt-8" style={{ fontSize: 14 }}>
-                    <span><Money value={p.saved} compact /> of {p.target === null ? <span className="tag warn">No target</span> : <Money value={p.target} compact />}</span>
-                    <span className="strong">{p.progress === null ? '—' : pct(p.progress)}</span>
+                  <div className="row-between mt-16" style={{ alignItems: 'baseline' }}>
+                    <span className="mid-number" style={{ fontSize: 24 }}><Money value={p.saved} compact /></span>
+                    <span className="caption">of {p.target === null ? 'no target yet' : <Money value={p.target} compact />} · <b className="num">{p.progress === null ? '—' : pct(p.progress)}</b></span>
                   </div>
                   <div className="mt-8"><ProgressBar value={p.progress} /></div>
-                  <div className="caption mt-8">
-                    {g.targetDate ? `Target ${fmtMonth(g.targetDate)}` : 'No target date'} · {req.required === null ? req.reason : `Needs ${inr(req.required)}/mo`}
-                    {a && a.onTrack === false && ' · Underfunded'}
-                  </div>
+                  <div className="caption mt-8">{req.required === null ? req.reason : `Needs ${inr(req.required)} a month`}</div>
                 </Link>
               );
             })}
@@ -100,11 +101,11 @@ export function GoalsOverview() {
         )}
       </Section>
       {suggestions.length > 0 && (
-        <Section title="Suggested goals">
+        <Section title="Add a goal">
           <div className="chips">
             {suggestions.map((t) => (
               <button key={t} className="chip" onClick={() => navigate(`/goals/new?type=${t}`)}>
-                <Plus size={14} /> {GOAL_TYPE_LABEL[t]}
+                {(() => { const I = GOAL_ICON[t]; return <I size={17} weight="duotone" />; })()} {GOAL_TYPE_LABEL[t]}
               </button>
             ))}
           </div>
@@ -213,7 +214,7 @@ export function GoalForm() {
           </button>
         )}
         {g.monthlyContribution !== null && req.required !== null && g.monthlyContribution < req.required && (
-          <Banner tone="warn">At {inr(g.monthlyContribution)} a month, you'd reach the target in about {tenure(monthsToReach(draftGoal, g.monthlyContribution))} — later than planned.</Banner>
+          <Banner tone="warn">At {inr(g.monthlyContribution)} a month, you'd reach the target in about {tenure(monthsToReach(draftGoal, g.monthlyContribution))}, later than planned.</Banner>
         )}
         {capacity !== null && <p className="caption">Your current estimated surplus after SIPs is {inr(capacity)} a month. No investment returns are assumed for goal savings.</p>}
       </div>
@@ -391,8 +392,8 @@ export function GoalImpact() {
                     ? `If you go ahead with this, your monthly contribution towards ${g.name} may need to decrease from ${inr(r.before.funded)} to ${inr(r.after.funded)}.`
                     : `This keeps your contribution towards ${g.name} at ${inr(r.after.funded)} a month.`}
                 </p>
-                <KV k="Available for goals" v={`${inr(i.before)} → ${inr(i.after)}`} />
-                <KV k="Funded for this goal" v={`${inr(r.before.funded)} → ${inr(r.after.funded)}`} />
+                <KV k="Available for goals" v={<Shift from={inr(i.before)} to={inr(i.after)} />} />
+                <KV k="Funded for this goal" v={<Shift from={inr(r.before.funded)} to={inr(r.after.funded)} />} />
                 <KV k="Time to reach target" v={`${tenure(r.before.monthsToTarget)} → ${r.after.monthsToTarget === null ? 'Not reachable at this rate' : tenure(r.after.monthsToTarget)}`} />
                 {r.delayMonths !== null && r.delayMonths > 0 && <span className="tag warn" style={{ alignSelf: 'flex-start' }}>About {r.delayMonths} months later</span>}
                 <Link to={i.kind === 'decision' ? `/decide/${i.id}` : `/simulate/${i.id}`} className="link-btn" style={{ alignSelf: 'flex-start' }}>Open {i.kind}</Link>

@@ -1,4 +1,4 @@
-import { ChevronRight, type LucideIcon } from '@/components/icons';
+import { ArrowRight, ChevronRight, type LucideIcon } from '@/components/icons';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -104,5 +104,16 @@ export function Expandable({ title, children, defaultOpen }: { title: ReactNode;
       </summary>
       <div className="expand-body">{children}</div>
     </details>
+  );
+}
+
+/** A value changing from one figure to another, with a drawn arrow between them. */
+export function Shift({ from, to }: { from: ReactNode; to: ReactNode }) {
+  return (
+    <span className="shift">
+      <span>{from}</span>
+      <ArrowRight size={12} />
+      <span>{to}</span>
+    </span>
   );
 }

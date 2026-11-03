@@ -3,7 +3,7 @@
 import { Banknote, CalendarClock, CheckCircle2, Circle, Landmark, Lightbulb, PiggyBank, Plus, Receipt } from '@/components/icons';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { BarList, Ribbon, Runway } from '@/components/charts/Charts';
-import { KV, List, ListRow, Section } from '@/components/cards/Cards';
+import { KV, List, ListRow, Section, Shift } from '@/components/cards/Cards';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner, CalcNote, EmptyState, Money, SourceTag } from '@/components/feedback/States';
 import { Screen } from '@/components/layout/Screen';
@@ -176,7 +176,7 @@ export function ExpenseBreakdown() {
       </div>
       {prev && f.expenses.value !== null ? (
         <Banner tone="outline">
-          Compared with recorded {prev.month}: {inr(prev.expenses)} → {inr(f.expenses.value)} ({f.expenses.value >= prev.expenses ? '+' : ''}{pct((f.expenses.value - prev.expenses) / prev.expenses, 1)}).
+          Compared with {new Date(`${prev.month}-01T00:00:00`).toLocaleDateString('en-IN', { month: 'long' })}: <Shift from={inr(prev.expenses)} to={inr(f.expenses.value)} /> ({f.expenses.value >= prev.expenses ? '+' : ''}{pct((f.expenses.value - prev.expenses) / prev.expenses, 1)}).
         </Banner>
       ) : (
         <Banner tone="outline">Monthly comparison appears once history exists.</Banner>

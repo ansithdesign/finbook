@@ -111,7 +111,7 @@ export function analyzeSafeSpend(data: FinancialData, inputs: Inputs, emergencyT
 
   const options: DecisionOption[] = [
     mk('average', 'Average-income months', `Every month brings ${inr(avg)}.`, avg, scenarioSummaries.average, ['Reflects a typical month.'], ['Overstates safety if low months cluster together.']),
-    mk('low', 'Low-income months', low === null ? 'Lowest-month income unknown.' : `Every month brings only ${inr(low)} — a stress test.`, low, scenarioSummaries.low,
+    mk('low', 'Low-income months', low === null ? 'Lowest-month income unknown.' : `Every month brings only ${inr(low)} . A stress test.`, low, scenarioSummaries.low,
       ['Shows how long reserves last in a prolonged slow period.'], scenarioSummaries.low.negativeMonths ? [`Cash flow is negative every month at this spending level.`] : []),
     mk('high', 'High-income months', `Every month brings ${inr(high)}.`, high, scenarioSummaries.high, ['Shows how quickly reserves can be rebuilt in good months.'], ['Not a safe basis for regular spending.']),
     mk('unexpected', 'Unexpected expense', `Typical months with a low month every third month, plus a ${inr(unexpected)} expense in month 2.`, avg, scenarioSummaries.unexpected,
@@ -120,9 +120,9 @@ export function analyzeSafeSpend(data: FinancialData, inputs: Inputs, emergencyT
 
   const findings: string[] = [];
   if (conservative === null) {
-    findings.push(`Without a figure for your lowest typical month, a reliable safe-spending estimate cannot be calculated. In an average month, about ${inr(typical)} remains for discretionary spending — but that is not a safe figure for lean months.`);
+    findings.push(`Without a figure for your lowest typical month, a reliable safe-spending estimate cannot be calculated. In an average month, about ${inr(typical)} remains for discretionary spending, but that is not a safe figure for lean months.`);
   } else if (low !== null && low < essentialCore) {
-    findings.push(`In a low month (${inr(low)}), income does not cover essential commitments of ${inr(essentialCore)} — the ${inr(essentialCore - low)} gap comes from reserves. Discretionary spending is only safe in average months, up to about ${inr(typical)}.`);
+    findings.push(`In a low month (${inr(low)}), income does not cover essential commitments of ${inr(essentialCore)}. The ${inr(essentialCore - low)} gap comes from reserves. Discretionary spending is only safe in average months, up to about ${inr(typical)}.`);
   } else {
     findings.push(`A safe discretionary spending range is about ${inr(conservative)} (based on a low month) to ${inr(typical)} (based on an average month).`);
   }
@@ -161,7 +161,7 @@ export function analyzeSafeSpend(data: FinancialData, inputs: Inputs, emergencyT
       { label: 'Typical safe spend', formula: 'Average income − essential commitments − reserve top-up' },
       { label: 'Projection', formula: 'Liquid(m) = Liquid(m−1) + income(m) − expenses − EMIs − one-off(m)' },
     ],
-    limitations: low === null ? ['Lowest-month income not provided — only the typical figure is shown.'] : [],
+    limitations: low === null ? ['Lowest-month income not provided, so only the typical figure is shown.'] : [],
     extras: { essentialCore, reserveTarget, reserveGap, reserveTopUp, conservative, typical, scenarioSummaries, scenarioRows },
   };
 }

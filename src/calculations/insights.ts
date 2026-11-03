@@ -40,8 +40,8 @@ export function generateInsights(data: FinancialData, emergencyTargetMonths = 6,
     out.push({
       id: 'emergency',
       severity: coverage.value < 3 ? 'attention' : 'info',
-      title: 'Your emergency reserves may be insufficient',
-      observation: `Your eligible reserves cover about ${months(coverage.value)} of essential spending.`,
+      title: 'Your safety net is thin',
+      observation: `Your reserves would cover about ${months(coverage.value)} of essential spending if income stopped.`,
       why: `You have set a target of ${emergencyTargetMonths} months of essential expenses (essential expenses + EMIs + fixed commitments).`,
       data: [
         { label: 'Eligible reserves', value: inr(reserves.value) },
@@ -50,7 +50,7 @@ export function generateInsights(data: FinancialData, emergencyTargetMonths = 6,
         { label: `Gap to ${emergencyTargetMonths}-month target`, value: inr(Math.max(0, gap)) },
       ],
       implications: 'A large expense or income disruption could require selling investments or borrowing.',
-      action: { label: 'Create an emergency fund goal', to: '/goals/new?type=emergency' },
+      action: { label: 'Start an emergency fund', to: '/goals/new?type=emergency' },
     });
   }
 
@@ -62,8 +62,8 @@ export function generateInsights(data: FinancialData, emergencyTargetMonths = 6,
     out.push({
       id: 'fixed-ratio',
       severity: ratio.value >= 0.45 ? 'attention' : 'info',
-      title: 'Your fixed monthly obligations are significant',
-      observation: `${pct(ratio.value)} of your monthly income goes to EMIs and fixed commitments.`,
+      title: `EMIs and fixed bills take ${pct(ratio.value)} of your income`,
+      observation: 'That leaves less room to absorb a bad month or take on a new loan.',
       why: 'This is shown when fixed obligations are 30% or more of income. Higher ratios leave less room for new loans or income changes.',
       data: [
         { label: 'Fixed obligations', value: inr(calculateFixedObligations(data).value) },
@@ -83,7 +83,7 @@ export function generateInsights(data: FinancialData, emergencyTargetMonths = 6,
     out.push({
       id: 'variable-income',
       severity: lowGap < 0 ? 'attention' : 'info',
-      title: lowGap < 0 ? 'A low-income month may not cover essentials' : 'Your income varies month to month',
+      title: lowGap < 0 ? 'A lean month would not cover essentials' : 'Your income moves month to month',
       observation:
         lowGap < 0
           ? `In a low month (${inr(range.low)}), essentials of ${inr(essential.value)} would exceed income by ${inr(-lowGap)}.`
@@ -99,7 +99,10 @@ export function generateInsights(data: FinancialData, emergencyTargetMonths = 6,
     });
   }
 
-  // 4. Trend insights — only with history
+  /** '2026-10' to 'October'. */
+const monthName = (m: string) => new Date(`${m}-01T00:00:00`).toLocaleDateString('en-IN', { month: 'long' });
+
+// 4. Trend insights — only with history
   const hist = [...data.history].sort((a, b) => a.month.localeCompare(b.month));
   if (hist.length >= 2 && s.expenses.value !== null) {
     const prev = hist[hist.length - 1];
@@ -108,15 +111,15 @@ export function generateInsights(data: FinancialData, emergencyTargetMonths = 6,
       out.push({
         id: 'expenses-up',
         severity: 'info',
-        title: 'Your expenses have increased',
-        observation: `Monthly expenses are ${pct(change)} higher than your recorded figure for ${prev.month}.`,
+        title: `Spending is up ${pct(change)} since ${monthName(prev.month)}`,
+        observation: 'Worth a look before it becomes the new normal.',
         why: 'Compared with the last monthly snapshot stored in the app.',
         data: [
-          { label: `Recorded (${prev.month})`, value: inr(prev.expenses) },
+          { label: `Recorded (${monthName(prev.month)})`, value: inr(prev.expenses) },
           { label: 'Current', value: inr(s.expenses.value) },
         ],
         implications: 'Higher expenses reduce your monthly surplus and the amount available for goals.',
-        action: { label: 'View expense breakdown', to: '/home/expenses' },
+        action: { label: 'See where it went', to: '/home/expenses' },
       });
     }
     const prevSurplus = prev.income - prev.expenses;
@@ -125,11 +128,11 @@ export function generateInsights(data: FinancialData, emergencyTargetMonths = 6,
       out.push({
         id: 'surplus-down',
         severity: 'info',
-        title: 'Your monthly surplus is decreasing',
-        observation: `Income minus expenses is ${inr(curSurplus)}, down from ${inr(prevSurplus)} in ${prev.month}.`,
+        title: 'You are keeping less each month',
+        observation: `${inr(curSurplus)} left after spending, down from ${inr(prevSurplus)} in ${monthName(prev.month)}.`,
         why: 'Compared with the last monthly snapshot (before EMIs, for like-for-like comparison).',
         data: [
-          { label: `Previous (${prev.month})`, value: inr(prevSurplus) },
+          { label: `Previous (${monthName(prev.month)})`, value: inr(prevSurplus) },
           { label: 'Current', value: inr(curSurplus) },
         ],
         implications: 'Less surplus means slower progress on goals.',
@@ -143,8 +146,8 @@ export function generateInsights(data: FinancialData, emergencyTargetMonths = 6,
     out.push({
       id: 'negative-surplus',
       severity: 'attention',
-      title: 'Your outgoings exceed your income',
-      observation: `Estimated monthly surplus is ${inr(s.surplus.value)}.`,
+      title: 'You are spending more than you earn',
+      observation: `On current numbers you are short by ${inr(Math.abs(s.surplus.value ?? 0))} a month.`,
       why: 'Income minus expenses, EMIs and commitments is below zero.',
       data: [
         { label: 'Income', value: inr(s.income.value) },
@@ -181,12 +184,12 @@ export function generateInsights(data: FinancialData, emergencyTargetMonths = 6,
     out.push({
       id: 'incomplete',
       severity: 'info',
-      title: 'Some financial information is incomplete',
-      observation: `${missing.length} item${missing.length > 1 ? 's are' : ' is'} missing, which limits some calculations.`,
+      title: 'A few details are missing',
+      observation: `Adding ${missing.length} more item${missing.length > 1 ? 's' : ''} makes every answer more accurate.`,
       why: 'Missing values are never treated as zero, so affected numbers are estimates or unavailable.',
       data: missing.slice(0, 4).map((m) => ({ label: m.label, value: m.affects[0] })),
       implications: 'Results that depend on these values are marked as incomplete.',
-      action: { label: 'Complete my profile', to: '/profile/completeness' },
+      action: { label: 'Fill in the gaps', to: '/profile/completeness' },
     });
   }
   return out;

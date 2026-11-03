@@ -4,6 +4,26 @@
 
 import type { ComponentType, CSSProperties } from 'react';
 import {
+  AirplaneTilt,
+  ArrowRight as PArrowRight,
+  ArrowsSplit,
+  Briefcase as PBriefcase,
+  CalendarCheck,
+  CarProfile,
+  ClockClockwise,
+  Coins as PCoins,
+  Confetti,
+  GraduationCap as PGraduationCap,
+  HandCoins as PHandCoins,
+  HouseLine,
+  Lifebuoy as PLifebuoy,
+  Scales as PScales,
+  ShoppingBagOpen,
+  Sparkle as PSparkle,
+  SunHorizon as PSunHorizon,
+  TrendDown as PTrendDown,
+  TrendUp as PTrendUp,
+  Waves as PWaves,
   ArrowCounterClockwise,
   ArrowDown as PArrowDown,
   ArrowUp as PArrowUp,
@@ -135,3 +155,25 @@ export const Wallet = icon(PWallet);
 export const Wifi = icon(WifiHigh, 'bold');
 export const WifiOff = icon(WifiSlash);
 export const X = icon(PX);
+
+// Topic icons: one real object per thing, so lists read at a glance.
+export const ArrowRight = icon(PArrowRight, 'bold');
+export const Car = icon(CarProfile);
+export const House2 = icon(HouseLine);
+export const Plane = icon(AirplaneTilt);
+export const Lifebuoy = icon(PLifebuoy);
+export const Rings = icon(Confetti);
+export const GraduationCap = icon(PGraduationCap);
+export const SunHorizon = icon(PSunHorizon);
+export const TrendUp = icon(PTrendUp);
+export const TrendDown = icon(PTrendDown);
+export const HandCoins = icon(PHandCoins);
+export const ShoppingBag = icon(ShoppingBagOpen);
+export const Waves = icon(PWaves);
+export const Coins = icon(PCoins);
+export const Scales = icon(PScales);
+export const Split = icon(ArrowsSplit);
+export const Sparkle = icon(PSparkle);
+export const Briefcase = icon(PBriefcase);
+export const CalendarCheck2 = icon(CalendarCheck);
+export const Recurring = icon(ClockClockwise);

@@ -3,7 +3,7 @@
 import { Bookmark, BookmarkCheck, Check, LineChart as LineIcon, SlidersHorizontal, Target, Trash2 } from '@/components/icons';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Expandable, KV, List, ListRow, Section } from '@/components/cards/Cards';
+import { Expandable, KV, List, ListRow, Section, Shift } from '@/components/cards/Cards';
 import { DotPlot, LineChart } from '@/components/charts/Charts';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner, Loading } from '@/components/feedback/States';
@@ -66,7 +66,7 @@ function useDecisionActions(decision: Decision) {
           decision={decision}
           onApply={(inputs) => {
             actions.upsertDecision({ ...decision, inputs });
-            toast('Assumptions updated — results recalculated');
+            toast('Assumptions updated. Results recalculated.');
             close();
           }}
           questions={[...visibleQuestions(allQuestions(decision, state), decision.inputs), ...alternativeSettings(decision.intent)]}
@@ -247,9 +247,9 @@ function WorkspaceView({ decision, analysis }: { decision: Decision; analysis: D
             {decision.intent === 'safe-spend' && <SafeSpendPanel decision={decision} analysis={analysis} />}
 
             <Section title="Primary assumptions" action={<button className="link-btn" onClick={act.editAssumptions}><SlidersHorizontal size={14} /> Edit</button>}>
-              <div className="card outline">
-                {analysis.assumptions.slice(0, 3).map((a) => <p key={a} className="caption" style={{ padding: '4px 0' }}>• {a}</p>)}
-              </div>
+              <ul className="assumptions">
+                {analysis.assumptions.slice(0, 3).map((a) => <li key={a}>{a}</li>)}
+              </ul>
             </Section>
 
             {decision.intent !== 'safe-spend' && focus && (
@@ -276,7 +276,7 @@ function WorkspaceView({ decision, analysis }: { decision: Decision; analysis: D
               <List>
                 <ListRow icon={LineIcon} title="Open in simulator" sub={`Explore ${focus.label.split(':')[0]} month by month`} onClick={() => openInSim(decision, focus)} />
                 {focus.goalSeed && <ListRow icon={Target} title="Convert to a goal" sub={`${focus.goalSeed.name}: ${inr(focus.goalSeed.target)}`} onClick={() => act.toGoal(focus)} />}
-                <ListRow icon={Check} title={decision.status === 'completed' ? 'Reopen decision' : 'Mark as decided'} sub="No money is moved — this only records your choice" onClick={act.complete} />
+                <ListRow icon={Check} title={decision.status === 'completed' ? 'Reopen decision' : 'Mark as decided'} sub="No money moves. This only records your choice." onClick={act.complete} />
                 <ListRow icon={SlidersHorizontal} title="Review context and answers" to={`/decide/${decision.id}/context`} />
               </List>
             </Section>
@@ -371,7 +371,7 @@ function AlternativesView({ decision, analysis, hidden }: { decision: Decision; 
           </table>
         </div>
         </Expandable>
-        {opts.some((o) => !o.feasible) && <p className="caption">* Not feasible with current liquid funds — shown for comparison.</p>}
+        {opts.some((o) => !o.feasible) && <p className="caption">* Not possible with your current liquid funds. Shown for comparison.</p>}
 
         {opts.map((o) => (
           <div key={o.key} id={o.key} className={`card outline stack-sm ${decision.chosenOption === o.key ? 'selected' : ''}`}>
@@ -383,7 +383,7 @@ function AlternativesView({ decision, analysis, hidden }: { decision: Decision; 
             {!o.feasible && <p className="caption warn-text">{o.infeasibleReason}</p>}
             {o.goalImpact.length > 0 && (
               <div className="caption">
-                Goals: {o.goalImpact.map((g) => `${g.name} ${inr(g.before.funded)}→${inr(g.after.funded)}/mo${g.delayMonths && g.delayMonths > 0 ? ` (+${tenure(g.delayMonths)})` : ''}`).join('; ')}
+                Goals: {o.goalImpact.map((g, gi) => <span key={g.name}>{gi > 0 && '; '}{g.name} <Shift from={inr(g.before.funded)} to={`${inr(g.after.funded)}/mo`} />{g.delayMonths && g.delayMonths > 0 ? ` (+${tenure(g.delayMonths)})` : ''}</span>)}
               </div>
             )}
             <div className="row wrap" style={{ gap: 6 }}>
@@ -433,8 +433,8 @@ function ExplanationView({ decision, analysis }: { decision: Decision; analysis:
             {analysis.options.map((o) => (
               <Expandable key={o.key} title={<span>{o.label}{!o.feasible && <span className="tag warn" style={{ marginLeft: 6 }}>Not feasible</span>}</span>}>
                 <div className="stack-sm" style={{ fontSize: 14 }}>
-                  <div><div className="label">Advantages</div><ul style={{ margin: '4px 0', paddingLeft: 18 }}>{o.advantages.length ? o.advantages.map((a) => <li key={a}>{a}</li>) : <li>—</li>}</ul></div>
-                  <div><div className="label">Disadvantages</div><ul style={{ margin: '4px 0', paddingLeft: 18 }}>{o.disadvantages.length ? o.disadvantages.map((a) => <li key={a}>{a}</li>) : <li>—</li>}</ul></div>
+                  <div><div className="label">Advantages</div><ul style={{ margin: '4px 0', paddingLeft: 18 }}>{o.advantages.length ? o.advantages.map((a) => <li key={a}>{a}</li>) : <li>None</li>}</ul></div>
+                  <div><div className="label">Disadvantages</div><ul style={{ margin: '4px 0', paddingLeft: 18 }}>{o.disadvantages.length ? o.disadvantages.map((a) => <li key={a}>{a}</li>) : <li>None</li>}</ul></div>
                 </div>
               </Expandable>
             ))}

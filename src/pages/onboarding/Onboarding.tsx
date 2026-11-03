@@ -167,7 +167,7 @@ function Intro() {
         <h1 className="h1">Your money has possibilities. Understand them.</h1>
         <p className="muted">Bring your financial life together, explore different possibilities and make decisions with greater confidence.</p>
         <Banner tone="outline">
-          Next, a few short questions{state.session.user?.name ? `, ${state.session.user.name.split(' ')[0]}` : ''}. Approximate answers are fine and you can skip anything optional — everything can be edited later.
+          Next, a few short questions{state.session.user?.name ? `, ${state.session.user.name.split(' ')[0]}` : ''}. Approximate answers are fine and you can skip anything optional. You can edit everything later.
         </Banner>
       </div>
     </Screen>
@@ -300,7 +300,7 @@ function IncomeStep() {
 
   const patch = (list: IncomeDraft[], set: (l: IncomeDraft[]) => void, i: number, p: Partial<IncomeDraft>) => set(list.map((d, j) => (j === i ? { ...d, ...p } : d)));
   const labels = {
-    fixed: { amount: 'Monthly take-home salary', help: 'After tax and deductions — what reaches your bank account.' },
+    fixed: { amount: 'Monthly take-home salary', help: 'After tax and deductions: what reaches your bank account.' },
     'variable-salary': { amount: 'Average monthly take-home', help: 'Including typical incentives or commission.' },
     freelance: { amount: 'Typical monthly income', help: 'What a normal month looks like, after business expenses.' },
     business: { amount: 'Average monthly personal income', help: 'What you take out of the business for personal use.' },
@@ -433,7 +433,7 @@ const EXPENSE_CATS: Array<{ category: ExpenseCategory; name: string; essential: 
   { category: 'healthcare', name: 'Healthcare', essential: true },
   { category: 'education', name: 'Education', essential: true },
   { category: 'family', name: 'Family responsibilities', essential: true, hint: 'Support to parents, household help' },
-  { category: 'insurance', name: 'Insurance', essential: true, hint: 'Premiums — choose yearly if paid annually' },
+  { category: 'insurance', name: 'Insurance', essential: true, hint: 'Premiums. Choose yearly if you pay annually.' },
   { category: 'subscriptions', name: 'Subscriptions', essential: false },
   { category: 'other', name: 'Other', essential: false },
 ];
@@ -494,7 +494,7 @@ function ExpensesStep() {
     <OnbScreen step="expenses" title="Monthly expenses" onSave={save}>
       <div className="stack">
         <h2 className="h2">What do you usually spend?</h2>
-        <p className="muted">Estimates are fine. Leave blank anything you don't know — blanks are not counted as zero. Don't include loan EMIs here; we ask about loans separately.</p>
+        <p className="muted">Estimates are fine. Leave blank anything you don't know. Blanks are not counted as zero. Don't include loan EMIs here; we ask about loans separately.</p>
         <div className="card row-between" style={{ position: 'sticky', top: 0, zIndex: 2 }}>
           <div>
             <div className="label">Estimated monthly total</div>
@@ -610,7 +610,7 @@ function AssetStep({ step }: { step: 'savings' | 'investments' }) {
         <h2 className="h2">{step === 'savings' ? 'How much do you have readily available?' : 'What do you own or invest in?'}</h2>
         {step === 'savings' ? (
           <Banner>
-            <strong>Liquid funds</strong> are money you can use within days — bank balances, cash and FDs. <strong>Long-term investments</strong> like mutual funds, stocks and property are counted in net worth, but not as cash you can spend immediately.
+            <strong>Liquid funds</strong> are money you can use within days: bank balances, cash and FDs. <strong>Long-term investments</strong> like mutual funds, stocks and property are counted in net worth, but not as cash you can spend immediately.
           </Banner>
         ) : (
           <Banner>
@@ -685,7 +685,7 @@ function LoansStep() {
     <OnbScreen step="loans" title="Loans and liabilities" onSave={save}>
       <div className="stack">
         <h2 className="h2">Do you have any loans or dues?</h2>
-        <p className="muted">Select all that apply. Skip any detail you don't know — we'll mark it as missing rather than assume.</p>
+        <p className="muted">Select all that apply. Skip any detail you don't know. We'll mark it as missing rather than guess.</p>
         <OptionList multi value={selected} onChange={toggle} options={LOAN_TYPES} />
         <button className={`option-card ${none && loans.length === 0 ? 'on' : ''}`} onClick={() => (setLoans([]), setNone(true))}>
           <span className="check round" /> I don't have any loans
@@ -752,7 +752,7 @@ function GoalsStep() {
     <OnbScreen step="goals" title="Goals" onSave={save}>
       <div className="stack">
         <h2 className="h2">What are you working towards?</h2>
-        <p className="muted">Optional. Select any that apply — you can add details now or later.</p>
+        <p className="muted">Optional. Select any that apply. You can add details now or later.</p>
         <div className="chips">
           {GOAL_OPTIONS.map((o) => {
             const on = sel.includes(o.value);
@@ -778,7 +778,7 @@ function GoalsStep() {
 }
 
 // ONB-10 ----------------------------------------------------------------------
-const INSTITUTIONS = ['Sample Bank A — Savings', 'Sample Bank B — Credit card', 'Sample AMC — Mutual funds'];
+const INSTITUTIONS = ['Sample Bank A · Savings', 'Sample Bank B · Credit card', 'Sample AMC · Mutual funds'];
 
 function ConnectStep() {
   const { state, actions } = useApp();
@@ -799,7 +799,7 @@ function ConnectStep() {
       }
       actions.mutate((s) => {
         for (const p of picked) {
-          s.connections.push({ id: uid('conn'), institution: p.split(' — ')[0], accountType: p.split(' — ')[1], status: 'illustrative', consentGivenAt: nowISO(), lastSync: null, permissions: ['Account balance', 'Transaction summary (12 months)'] });
+          s.connections.push({ id: uid('conn'), institution: p.split(' · ')[0], accountType: p.split(' · ')[1], status: 'illustrative', consentGivenAt: nowISO(), lastSync: null, permissions: ['Account balance', 'Transaction summary (12 months)'] });
         }
       });
       setMode('done');
@@ -830,9 +830,9 @@ function ConnectStep() {
             <KV k="Data retention" v="Until you revoke consent" />
           </div>
           <span className="h3 mt-8">Choose accounts</span>
-          <OptionList multi value={picked} onChange={setPicked} options={INSTITUTIONS.map((i) => ({ value: i, label: i.split(' — ')[0], sub: i.split(' — ')[1] }))} />
+          <OptionList multi value={picked} onChange={setPicked} options={INSTITUTIONS.map((i) => ({ value: i, label: i.split(' · ')[0], sub: i.split(' · ')[1] }))} />
           <Checkbox checked={agree} onChange={setAgree}>
-            I consent to sharing the data above for the stated purpose. I can revoke this anytime from Profile → Privacy and consent.
+            I consent to sharing the data above for the stated purpose. I can withdraw it at any time from Privacy and consent in Profile.
           </Checkbox>
         </div>
       </Screen>
@@ -844,7 +844,7 @@ function ConnectStep() {
         <ShieldScene />
         <h2 className="h2">Keep your numbers up to date automatically</h2>
         <p className="muted">
-          Where available, you can connect supported financial accounts through a consent-based integration. You choose which accounts, what data, and for how long — and you can revoke access anytime.
+          Where available, you can connect supported financial accounts through a consent-based integration. You choose which accounts, what data, and for how long, and you can revoke access at any time.
         </p>
         <div className="card stack-sm">
           <div className="row"><ShieldCheck size={18} /> <span>Read-only. We can never move money.</span></div>
@@ -854,7 +854,7 @@ function ConnectStep() {
         {mode === 'done' ? (
           <>
             <Banner tone="outline">
-              {state.connections.length} illustrative connection{state.connections.length === 1 ? '' : 's'} created. In this prototype, no data is imported — your figures remain the ones you entered.
+              {state.connections.length} illustrative connection{state.connections.length === 1 ? '' : 's'} created. In this prototype, no data is imported. Your figures stay as you entered them.
             </Banner>
             <List>
               {state.connections.map((c) => (
@@ -921,7 +921,7 @@ function ReviewStep() {
                   <div className="caption">Affects: {m.affects.join(', ')}</div>
                 </Banner>
               ))}
-              <p className="caption">You can continue now — incomplete information won't block you. Results that depend on it will be marked.</p>
+              <p className="caption">You can continue now. Missing information won't block you. Results that depend on it will be marked.</p>
             </div>
           </Section>
         )}

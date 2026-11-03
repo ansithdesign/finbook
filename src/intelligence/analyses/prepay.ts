@@ -126,13 +126,13 @@ export function analyzePrepay(data: FinancialData, inputs: Inputs, emergencyTarg
       ['Money stays invested and can be withdrawn if needed.', 'Benefits if markets return more than the loan rate over time.'],
       ['Returns are uncertain and can be negative in some years.', `Pays the full contractual interest of ${inr(paths.A.totalInterest)}.`]),
     option('B', 'B: Increase loan prepayment', `Use the full ${inr(extra)} a month to prepay the loan.`,
-      [`Saves ${inr(baseInterest - paths.B.totalInterest)} in interest — a contractual saving.`, `Loan closes ${tenure(horizon - paths.B.loanMonths)} earlier.`],
+      [`Saves ${inr(baseInterest - paths.B.totalInterest)} in interest. This saving is guaranteed by the loan terms.`, `Loan closes ${tenure(horizon - paths.B.loanMonths)} earlier.`],
       ['Money paid into the loan cannot easily be withdrawn.', 'Less invested in the early years.', 'Check for any prepayment terms with your lender.']),
     option('C', `C: Split ${Math.round(split * 100)}/${Math.round((1 - split) * 100)}`, `Prepay ${inr(extra * split)} and invest ${inr(extra * (1 - split))} each month.`,
       ['Balances a certain interest saving with some market exposure.', 'Keeps part of the money accessible.'],
       ['Smaller benefit than either extreme if one clearly outperforms.']),
     option('D', 'D: Build liquidity first', reserveGap > 0 ? `Hold the ${inr(extra)} as cash for ${holdMonths} months to reach a ${emergencyTarget}-month reserve, then split.` : `Your reserves already meet the ${emergencyTarget}-month target, so this matches option C.`,
-      reserveGap > 0 ? [`Closes the reserve gap of ${inr(reserveGap)} first.`, 'Lowers the risk of needing to borrow in an emergency.'] : ['No change from C — reserves are sufficient.'],
+      reserveGap > 0 ? [`Closes the reserve gap of ${inr(reserveGap)} first.`, 'Lowers the risk of needing to borrow in an emergency.'] : ['No change from C, because reserves are already sufficient.'],
       reserveGap > 0 ? ['Delays both prepayment and investing.', 'Cash may earn less than the loan rate.'] : []),
   ];
 
@@ -143,9 +143,9 @@ export function analyzePrepay(data: FinancialData, inputs: Inputs, emergencyTarg
     headline: `Prepaying is a guaranteed ${rate}% saving; investing could earn more or less than that.`,
     findings: [
       `Prepaying ${inr(extra)} a month saves ${inr(bSaved)} in interest and closes the loan ${tenure(horizon - paths.B.loanMonths)} earlier. This saving is contractual.`,
-      `Investing the same amount is projected at ${inr(Math.round(paths.A.investAt(ret)))} by the original loan end, assuming ${ret}% a year — but could be ${inr(Math.round(paths.A.investAt(low)))} at ${low}%.`,
+      `Investing the same amount is projected at ${inr(Math.round(paths.A.investAt(ret)))} by the original loan end, assuming ${ret}% a year. It could also be ${inr(Math.round(paths.A.investAt(low)))} at ${low}%.`,
       ret > rate
-        ? `Your return assumption (${ret}%) is above the loan rate (${rate}%), so investing projects higher — but only if that return is achieved.`
+        ? `Your return assumption (${ret}%) is above the loan rate (${rate}%), so investing projects higher, but only if that return is achieved.`
         : `Your return assumption (${ret}%) is not above the loan rate (${rate}%), so prepayment projects at least as well, with less uncertainty.`,
       reserveGap > 0
         ? `Your emergency reserves are ${inr(reserveGap)} short of a ${emergencyTarget}-month target, which matters before locking money into the loan.`
@@ -162,7 +162,7 @@ export function analyzePrepay(data: FinancialData, inputs: Inputs, emergencyTarg
     ],
     risks: [
       'Market-linked investments can fall in value, especially over short periods.',
-      'Money used to prepay is illiquid — you cannot withdraw it in an emergency.',
+      'Money used to prepay is locked in. You cannot withdraw it in an emergency.',
       'A floating loan rate may rise or fall, changing the interest saved.',
     ],
     whatCouldChange: [

@@ -62,7 +62,7 @@ function build(intent: DecisionIntent, amount: number | null, confidence: 'high'
         amount,
         title: 'Safe spending with variable income',
         understanding:
-          "Your income varies. I'll estimate a safe spending range using your lowest typical month, essential costs and reserve target — not just the average.",
+          "Your income varies. I'll estimate a safe spending range using your lowest typical month, essential costs and reserve target, not just the average.",
       };
     default:
       return {

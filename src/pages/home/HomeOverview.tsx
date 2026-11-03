@@ -1,6 +1,7 @@
 // HOME-01 Financial overview. Every number is derived from the user's records via useFinance().
 
-import { ArrowDown, ArrowUp, ArrowUpRight, Banknote, Bell, Compass, Eye, EyeOff, Inbox, Landmark, Lightbulb, PiggyBank, Plus, Receipt, Search, Target } from '@/components/icons';
+import { ArrowDown, ArrowUp, ArrowUpRight, Bell, ChevronRight, Eye, EyeOff, Inbox, Lightbulb, Plus, Search, Split, Target } from '@/components/icons';
+import { INTENT_ICON, RECORD_ICON } from '@/components/topicIcons';
 import { Link, useNavigate } from 'react-router-dom';
 import { List, ListRow, Section, SectionLink } from '@/components/cards/Cards';
 import { HeroSparkline, Ribbon, Runway } from '@/components/charts/Charts';
@@ -109,7 +110,7 @@ export function HomeOverview() {
             </div>
             <div className="row wrap mt-12" style={{ gap: 8 }}>
               {nwDelta !== null && !state.prefs.hideBalances ? (
-                <span className={`delta ${nwDelta < 0 ? 'neg prepare' : ''}`}>{nwDelta >= 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />} {inr(Math.abs(nwDelta))} since {lastNW?.month}</span>
+                <span className={`delta ${nwDelta < 0 ? 'neg prepare' : ''}`}>{nwDelta >= 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />} {inr(Math.abs(nwDelta))} since {lastNW ? new Date(`${lastNW.month}-01T00:00:00`).toLocaleDateString('en-IN', { month: 'long' }) : ''}</span>
               ) : (
                 <span className="caption">Change appears once monthly history exists</span>
               )}
@@ -118,7 +119,7 @@ export function HomeOverview() {
               <div style={{ marginTop: 14 }} aria-hidden="true"><HeroSparkline values={nwSeries} height={52} /></div>
             )}
             <div style={{ marginTop: 20 }}>
-              <div className="label mb-8">Where it sits</div>
+              <div className="label mb-8">Where your money is</div>
               <Ribbon
                 onDark
                 height={36}
@@ -151,12 +152,12 @@ export function HomeOverview() {
           {flowParts.length > 0 && (
             <Link to="/home/expenses" className="tile span-2 reveal d1">
               <div className="row-between">
-                <span className="label">Where this month's income goes</span>
-                <span className="caption">per month</span>
+                <span className="label">Left this month</span>
+                <span className="caption">after spending and EMIs</span>
               </div>
               <div className="row-between mt-8" style={{ alignItems: 'flex-end' }}>
                 <div className="display-num" style={{ fontSize: 40 }}><Money value={left} compact animate /></div>
-                <span className="caption" style={{ paddingBottom: 6 }}>{left !== null && left < 0 ? 'over your income' : 'left over'} of <Money value={income} compact /></span>
+                <span className="caption" style={{ paddingBottom: 6 }}>{left !== null && left < 0 ? 'more than you earn' : 'of'} <Money value={income} compact /> {left !== null && left < 0 ? '' : 'income'}</span>
               </div>
               <div className="mt-16">
                 <Ribbon parts={flowParts} total={Math.max(income ?? 0, flowParts.reduce((s, p) => s + p.value, 0))} height={34} legend={false} />
@@ -164,12 +165,12 @@ export function HomeOverview() {
               <div className="chips mt-12" style={{ gap: 6 }}>
                 {flowParts.map((p) => (
                   <span key={p.label} className="tag" style={{ background: 'transparent', padding: 0, gap: 6 }}>
-                    <i style={{ width: 9, height: 9, borderRadius: 3, background: p.color, display: 'inline-block', boxShadow: 'inset 0 0 0 1px rgba(17,18,16,.15)' }} />
+                    <i style={{ width: 9, height: 9, borderRadius: 3, background: p.color, display: 'inline-block', boxShadow: 'inset 0 0 0 0.5px var(--line)' }} />
                     {p.label} <b className="num"><Money value={p.value} compact /></b>
                   </span>
                 ))}
               </div>
-              {f.sip > 0 && <p className="caption mt-8">SIPs of {inr(f.sip)} are invested from what's left.</p>}
+              {f.sip > 0 && <p className="caption mt-8">Your {inr(f.sip)} of SIPs come out of this.</p>}
             </Link>
           )}
 
@@ -184,7 +185,7 @@ export function HomeOverview() {
             ) : (
               <>
                 <div className="display-num mt-8" style={{ fontSize: 40 }}>{months(f.coverage.value)}</div>
-                <p className="caption mt-4">of essential spending (incl. EMIs) covered by <Money value={f.reserves.value} compact /> of reserves</p>
+                <p className="caption mt-4">How long <Money value={f.reserves.value} compact /> of reserves would cover essentials and EMIs</p>
                 <div className="mt-16"><Runway months={f.coverage.value} target={target} light /></div>
               </>
             )}
@@ -198,7 +199,7 @@ export function HomeOverview() {
           <Link to="/home/income" className="tile reveal d3">
             <span className="label">Monthly income</span>
             <div className="display-num mt-8" style={{ fontSize: 30 }}><Money value={f.income.value} compact animate /></div>
-            <p className="caption mt-8">{f.range.variable ? `Varies ${inr(f.range.low)}–${inr(f.range.high)}` : 'Normalised per month'}</p>
+            <p className="caption mt-8">{f.range.variable ? `Varies ${inr(f.range.low)}–${inr(f.range.high)}` : 'Averaged per month'}</p>
           </Link>
         </div>
       )}
@@ -218,7 +219,7 @@ export function HomeOverview() {
                       {i.severity === 'attention' && <span className="level prepare" style={{ marginBottom: 6 }}>Be prepared</span>}
                       <span className="strong" style={{ display: 'block' }}>{i.title}</span>
                       <span className="caption" style={{ display: 'block', marginTop: 3 }}>{i.observation}</span>
-                      <span className="caption strong" style={{ display: 'block', marginTop: 6, color: 'var(--ink)' }}>Why am I seeing this? ›</span>
+                      <span className="see-why">See why <ChevronRight size={14} /></span>
                     </span>
                   </Link>
                 ))}
@@ -227,7 +228,7 @@ export function HomeOverview() {
           </Section>
           )}
 
-          <Section title="Explore a decision" action={<SectionLink to="/decide">All</SectionLink>}>
+          <Section title="Questions to explore" action={<SectionLink to="/decide">All</SectionLink>}>
             <div className="stack-sm">
               {(f.range.variable
                 ? ['My income changes every month. How much can I safely spend?', 'Can I afford to buy a car worth ₹8 lakh?']
@@ -235,8 +236,10 @@ export function HomeOverview() {
                   ? ['Should I prepay my home loan or continue investing through SIPs?', 'Can I afford to buy a car worth ₹12 lakh?']
                   : ['Can I afford to buy a car worth ₹12 lakh?', 'Should I prepay my home loan or continue investing through SIPs?']
               ).map((q) => (
-                <button key={q} className="chip-btn row" onClick={() => navigate(`/decide/ask?q=${encodeURIComponent(q)}`)}>
-                  <Compass size={16} /> {q}
+                <button key={q} className="chip-btn row" style={{ gap: 12 }} onClick={() => navigate(`/decide/ask?q=${encodeURIComponent(q)}`)}>
+                  {(() => { const I = INTENT_ICON[q.includes('car') ? 'car' : q.includes('prepay') ? 'prepay' : 'safe-spend']; return <span className="topic-badge" style={{ width: 34, height: 34 }}><I size={18} weight="duotone" /></span>; })()}
+                  <span className="flex-1">{q}</span>
+                  <ChevronRight size={16} className="chev" />
                 </button>
               ))}
             </div>
@@ -246,17 +249,17 @@ export function HomeOverview() {
             {upcoming.length === 0 ? (
               <Banner tone="outline" action={<Link className="link-btn" to="/records/new/commitment">Add</Link>}>No upcoming commitments recorded.</Banner>
             ) : (
-              <div className="stack-sm">
+              <div className="list">
                 {upcoming.map((c) => {
                   const d = new Date(c.nextDue);
                   return (
-                    <Link key={c.id} to={`/records/commitment/${c.id}`} className="card tight row" style={{ textDecoration: 'none', gap: 14 }}>
+                    <Link key={c.id} to={`/records/commitment/${c.id}`} className="list-row" style={{ gap: 14 }}>
                       <span className="datebox"><b>{d.getDate()}</b><small>{d.toLocaleDateString('en-IN', { month: 'short' })}</small></span>
-                      <span className="flex-1">
-                        <span className="strong" style={{ display: 'block' }}>{c.name}</span>
-                        <span className="caption">{c.recurrence} · {c.type === 'sip' ? 'investing' : c.status}</span>
+                      <span className="main">
+                        <span className="title" style={{ display: 'block' }}>{c.name}</span>
+                        <span className="sub" style={{ display: 'block', textTransform: 'capitalize' }}>{c.recurrence} · {c.type === 'sip' ? 'investing' : c.status}</span>
                       </span>
-                      <strong className="num"><Money value={c.amount} /></strong>
+                      <span className="value"><Money value={c.amount} /></span>
                     </Link>
                   );
                 })}
@@ -278,18 +281,18 @@ export function HomeOverview() {
         </>
       )}
 
-      <Section title="Quick actions">
-        <div className="grid-3">
+      <Section title="Add">
+        <div className="quick-grid">
           {[
-            { label: 'Income', icon: Banknote, to: '/records/new/income' },
-            { label: 'Expense', icon: Receipt, to: '/records/new/expense' },
-            { label: 'Asset', icon: PiggyBank, to: '/records/new/asset' },
-            { label: 'Liability', icon: Landmark, to: '/records/new/liability' },
-            { label: 'Decision', icon: Compass, to: '/decide/ask' },
+            { label: 'Income', icon: RECORD_ICON.income, to: '/records/new/income' },
+            { label: 'Expense', icon: RECORD_ICON.expense, to: '/records/new/expense' },
+            { label: 'Asset', icon: RECORD_ICON.asset, to: '/records/new/asset' },
+            { label: 'Loan', icon: RECORD_ICON.liability, to: '/records/new/liability' },
+            { label: 'Decision', icon: Split, to: '/decide/ask' },
             { label: 'Goal', icon: Target, to: '/goals/new' },
           ].map((q) => (
-            <Link key={q.label} to={q.to} className="card tight center" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 600 }}>
-              <span className="avatar" style={{ width: 36, height: 36, borderRadius: 12 }}><q.icon size={18} /></span>
+            <Link key={q.label} to={q.to} className="quick-item">
+              <span className="topic-badge"><q.icon size={22} weight="duotone" /></span>
               {q.label}
             </Link>
           ))}

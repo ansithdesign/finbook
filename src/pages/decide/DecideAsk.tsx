@@ -1,6 +1,7 @@
 // DEC-02 Ask a question → intent recognition → creates a draft decision.
 
-import { Compass, LineChart } from '@/components/icons';
+import { LineChart } from '@/components/icons';
+import { INTENT_ICON } from '@/components/topicIcons';
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { List, ListRow } from '@/components/cards/Cards';
@@ -66,7 +67,7 @@ export function DecideAsk() {
           <h2 className="h3">Closest decision types</h2>
           <List>
             {INTENT_TEMPLATES.map((t) => (
-              <ListRow key={t.intent} icon={Compass} title={t.title} onClick={() => create(t.intent, text.trim())} />
+              <ListRow key={t.intent} icon={INTENT_ICON[t.intent]} title={t.title} onClick={() => create(t.intent, text.trim())} />
             ))}
             <ListRow icon={LineChart} title="Build a custom scenario instead" to="/simulate/new?template=custom" />
           </List>
@@ -88,7 +89,7 @@ export function DecideAsk() {
           ))}
         </div>
         <Banner tone="outline">
-          The prototype understands car purchases, loan prepayment vs investing, and safe spending with variable income. Answers come from your data and fixed formulas — not from a live AI model. <Link to="/profile/help"><u>How it works</u></Link>
+          The prototype understands car purchases, loan prepayment vs investing, and safe spending with variable income. Answers come from your data and fixed formulas, not from a live AI model. <Link to="/profile/help"><u>How it works</u></Link>
         </Banner>
       </div>
     </Screen>

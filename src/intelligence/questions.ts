@@ -125,7 +125,7 @@ export function questionsFor(intent: DecisionIntent, data: FinancialData): Quest
     if (!hl || hl.outstanding === null) qs.push({ key: 'outstanding', label: 'Outstanding home loan amount', kind: 'money', required: true });
     if (!hl || hl.rate === null) qs.push({ key: 'rate', label: 'Home loan interest rate (per year)', kind: 'percent', required: true, min: 0, max: 20 });
     if (!hl || hl.remainingMonths === null) qs.push({ key: 'remainingMonths', label: 'Remaining tenure (months)', kind: 'months', required: true, min: 1, max: 360 });
-    if (!hl || hl.emi === null) qs.push({ key: 'emi', label: 'Current EMI', help: 'Optional — calculated from the loan details if left blank.', kind: 'money', required: false });
+    if (!hl || hl.emi === null) qs.push({ key: 'emi', label: 'Current EMI', help: 'Optional. Leave blank and we calculate it from the loan details.', kind: 'money', required: false });
     if (calculateMonthlySip(data) === 0) qs.push({ key: 'currentSip', label: 'Current monthly SIP contribution', help: 'Enter 0 if you do not invest through SIPs.', kind: 'money', required: true });
     qs.push({ key: 'extraMonthly', label: 'How much additional money can you put aside each month?', help: 'This is the amount we compare: prepay, invest, split, or hold as cash.', kind: 'money', required: true, min: 1000 });
     qs.push({ key: 'expectedReturn', label: 'Expected investment return (per year)', help: 'Assumption, not a guarantee. Market-linked returns can be lower or negative.', kind: 'percent', required: true, assumption: true, min: 0, max: 20 });

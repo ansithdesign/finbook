@@ -1,10 +1,10 @@
 // DEC-01 Decision landing, DEC-08 Saved decisions, DEC-09 Decision history.
 
-import { Bookmark, Compass, History, MessageSquareText, Lightbulb } from '@/components/icons';
+import { ArrowRight, Bookmark, History, Lightbulb, MessageSquareText, TrendDown, TrendUp } from '@/components/icons';
+import { INTENT_ICON } from '@/components/topicIcons';
 import { Link, useNavigate } from 'react-router-dom';
 import { List, ListRow, Section, SectionLink } from '@/components/cards/Cards';
 import { EmptyState } from '@/components/feedback/States';
-import { PathsScene } from '@/components/illustrations/Illustrations';
 import { Screen } from '@/components/layout/Screen';
 import { INTENT_TEMPLATES } from '@/intelligence';
 import { useApp } from '@/hooks/useAppState';
@@ -13,8 +13,8 @@ import { fmtDate, relativeTime } from '@/utils/format';
 import { STATUS_LABEL } from '@/features/decisions/shared';
 
 const MORE_TEMPLATES = [
-  { title: 'Can I increase my monthly investment?', to: '/simulate/new?template=invest-more' },
-  { title: 'What if my income decreases?', to: '/simulate/new?template=income-drop' },
+  { title: 'Can I invest more each month?', sub: 'See the effect on monthly cash in Simulate', icon: TrendUp, to: '/simulate/new?template=invest-more' },
+  { title: 'What if my income drops?', sub: 'See how long savings would last in Simulate', icon: TrendDown, to: '/simulate/new?template=income-drop' },
 ];
 
 export function DecideLanding() {
@@ -26,49 +26,41 @@ export function DecideLanding() {
   const nextSteps = f.insights.filter((i) => i.severity === 'attention').slice(0, 2);
   return (
     <Screen large title="Decide">
-      <div className="card" style={{ background: 'var(--green-tint)', padding: '8px 16px 16px' }}>
-        <PathsScene />
-        <p style={{ fontSize: 15, fontWeight: 600, textAlign: 'center' }}>Turn a financial question into a clear comparison of options.</p>
-      </div>
-      <button className="card outline mt-16" style={{ width: '100%', textAlign: 'left', display: 'flex', gap: 10, alignItems: 'center', minHeight: 64 }} onClick={() => navigate('/decide/ask')}>
+      <p className="lede">Ask a money question. You get your options side by side, with the trade-offs spelled out.</p>
+      <button className="ask-bar mt-16" onClick={() => navigate('/decide/ask')}>
         <MessageSquareText size={22} />
-        <span className="muted flex-1">What financial decision are you thinking about?</span>
+        <span className="flex-1">What are you deciding?</span>
+        <span className="ask-go"><ArrowRight size={16} /></span>
       </button>
 
-      <Section title="Start from a template">
+      <Section title="Common questions">
         <List>
           {INTENT_TEMPLATES.map((t) => (
-            <ListRow key={t.intent} icon={Compass} title={t.title} sub={t.question} to={`/decide/ask?q=${encodeURIComponent(t.question)}`} />
+            <ListRow key={t.intent} icon={INTENT_ICON[t.intent]} title={t.title} sub={t.question} to={`/decide/ask?q=${encodeURIComponent(t.question)}`} />
           ))}
           {MORE_TEMPLATES.map((t) => (
-            <ListRow key={t.title} icon={Compass} title={t.title} sub="Opens a scenario in Simulate" to={t.to} />
+            <ListRow key={t.title} icon={t.icon} title={t.title} sub={t.sub} to={t.to} />
           ))}
         </List>
       </Section>
 
       {nextSteps.length > 0 && (
-        <Section title="Suggested next actions">
-          <div className="stack-sm">
+        <Section title="Worth deciding soon">
+          <List>
             {nextSteps.map((i) => (
-              <Link key={i.id} to={i.action.to} className="card outline tight row" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Lightbulb size={18} />
-                <span className="flex-1">
-                  <span className="strong" style={{ display: 'block' }}>{i.action.label}</span>
-                  <span className="caption">Because: {i.title.toLowerCase()}</span>
-                </span>
-              </Link>
+              <ListRow key={i.id} icon={Lightbulb} title={i.action.label} sub={`Because ${i.title.charAt(0).toLowerCase()}${i.title.slice(1)}`} to={i.action.to} />
             ))}
-          </div>
+          </List>
         </Section>
       )}
 
       <Section title="Continue where you left off" action={<SectionLink to="/decide/history">History</SectionLink>}>
         {inProgress.length === 0 ? (
-          <p className="caption">No decisions in progress.</p>
+          <p className="caption">Nothing in progress. Questions you start will wait here.</p>
         ) : (
           <List>
             {inProgress.map((d) => (
-              <ListRow key={d.id} title={d.title} sub={`${STATUS_LABEL[d.status]} · ${relativeTime(d.updatedAt)}`} to={d.status === 'draft' ? `/decide/${d.id}/clarify` : `/decide/${d.id}`} />
+              <ListRow key={d.id} icon={INTENT_ICON[d.intent]} title={d.title} sub={`${STATUS_LABEL[d.status]} · ${relativeTime(d.updatedAt)}`} to={d.status === 'draft' ? `/decide/${d.id}/clarify` : `/decide/${d.id}`} />
             ))}
           </List>
         )}
@@ -85,7 +77,7 @@ export function DecideLanding() {
           </List>
         )}
       </Section>
-      <p className="caption mt-24">Results are calculated from your own information and stated assumptions. This is not regulated financial advice.</p>
+      <p className="caption mt-24">Answers come from your own numbers and the assumptions shown with each result. This is not regulated financial advice.</p>
     </Screen>
   );
 }

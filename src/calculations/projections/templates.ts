@@ -13,14 +13,14 @@ import {
 } from '../financial/overview';
 
 export const TEMPLATE_INFO: Record<ScenarioTemplate, { title: string; description: string }> = {
-  car: { title: 'Buying a car', description: 'Down payment, car loan EMI and the effect on liquidity.' },
-  'invest-more': { title: 'Increasing investments', description: 'Raise your monthly SIP and see the cash-flow trade-off.' },
-  prepay: { title: 'Prepaying a loan', description: 'Extra monthly prepayment on your largest loan.' },
-  'income-drop': { title: 'Income reduction', description: 'What happens if income falls by 30%?' },
-  'expense-increase': { title: 'Increasing monthly expenses', description: 'A new recurring cost, like higher rent.' },
-  'save-purchase': { title: 'Saving for a major purchase', description: 'Set aside a fixed amount every month.' },
-  'variable-income': { title: 'Variable income months', description: 'Typical income with a low month every third month.' },
-  custom: { title: 'Custom scenario', description: 'Start from your current numbers and change anything.' },
+  car: { title: 'Buy a car', description: 'Down payment, EMI, and what is left in savings.' },
+  'invest-more': { title: 'Invest more each month', description: 'Raise your SIP and see what it does to monthly cash.' },
+  prepay: { title: 'Prepay a loan', description: 'Pay extra each month on your biggest loan.' },
+  'income-drop': { title: 'Income drops by 30%', description: 'How long your savings would carry you.' },
+  'expense-increase': { title: 'Take on a new monthly cost', description: 'Higher rent, school fees, or another EMI.' },
+  'save-purchase': { title: 'Save for something big', description: 'Set aside a fixed amount every month.' },
+  'variable-income': { title: 'Uneven income months', description: 'A lean month every third month.' },
+  custom: { title: 'Start from your numbers', description: 'Change any value and see what follows.' },
 };
 
 export function baseVarsFromProfile(data: FinancialData): ScenarioVars {

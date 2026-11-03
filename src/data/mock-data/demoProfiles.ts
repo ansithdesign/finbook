@@ -10,8 +10,10 @@ import type {
   Goal,
   IncomeSource,
   Liability,
+  ScenarioTemplate,
   UserProfile,
 } from '@/types';
+import { calculateNetWorth } from '@/calculations/financial/overview';
 
 export interface DemoProfile {
   key: string;
@@ -21,6 +23,10 @@ export interface DemoProfile {
   data: FinancialData;
   activity: Activity[];
   notifications: AppNotification[];
+  /** Scenarios already explored, built from the profile's own numbers when the demo loads. */
+  scenarioSeeds?: Array<{ template: ScenarioTemplate; name?: string; saved: boolean; daysAgo: number }>;
+  /** Questions the person has already started asking. */
+  decisionSeeds?: Array<{ question: string; daysAgo: number }>;
 }
 
 const day = 86400000;
@@ -168,8 +174,14 @@ const salaried: DemoProfile = {
     { id: 'a1', type: 'contribution-added', text: '₹15,000 added to House down payment', at: ago(2), link: '/goals/goal_house' },
     { id: 'a2', type: 'expense-updated', text: 'Dining, shopping, outings updated to ₹8,000', at: ago(3), link: '/records/expense/exp_life' },
     { id: 'a3', type: 'asset-updated', text: 'Mutual funds value updated', at: ago(5), link: '/records/asset/ast_mf' },
+    { id: 'a5', type: 'scenario-saved', text: 'Saved scenario: Buy a car', at: ago(6), link: '/simulate' },
     { id: 'a4', type: 'goal-created', text: 'Goal created: Europe trip', at: ago(40), link: '/goals/goal_trip' },
   ],
+  scenarioSeeds: [
+    { template: 'car', name: 'Hatchback at ₹8 lakh', saved: true, daysAgo: 6 },
+    { template: 'invest-more', name: 'SIP up to ₹15,000', saved: false, daysAgo: 2 },
+  ],
+  decisionSeeds: [{ question: 'Can I afford to buy a car worth ₹12 lakh?', daysAgo: 1 }],
   notifications: [
     { id: 'n1', kind: 'reminder', title: 'Rent due soon', body: 'Rent of ₹17,000 is due on the 5th.', at: ago(1), read: false, link: '/home/commitments' },
     { id: 'n2', kind: 'insight', title: 'Expenses rose this month', body: 'Your recorded expenses are higher than last month.', at: ago(3), read: false, link: '/home' },
@@ -239,10 +251,18 @@ const household: DemoProfile = {
   },
   activity: [
     { id: 'ha1', type: 'liability-updated', text: 'Home loan outstanding updated', at: ago(6), link: '/records/liability/h_home_loan' },
+    { id: 'ha3', type: 'scenario-saved', text: 'Saved scenario: Prepay ₹20,000 a month', at: ago(3), link: '/simulate' },
+    { id: 'ha4', type: 'contribution-added', text: "₹20,000 added to Child's higher education", at: ago(9), link: '/goals/h_goal_edu' },
     { id: 'ha2', type: 'goal-created', text: "Goal created: Child's higher education", at: ago(50) },
   ],
+  scenarioSeeds: [
+    { template: 'prepay', name: 'Prepay ₹20,000 a month', saved: true, daysAgo: 3 },
+    { template: 'invest-more', name: 'Put the same into SIPs', saved: true, daysAgo: 3 },
+  ],
+  decisionSeeds: [{ question: 'Should I prepay my home loan or continue investing through SIPs?', daysAgo: 2 }],
   notifications: [
     { id: 'hn1', kind: 'reminder', title: 'Home loan EMI on the 7th', body: '₹38,300 will be due.', at: ago(1), read: false, link: '/home/commitments' },
+    { id: 'hn2', kind: 'reminder', title: 'School fees next month', body: 'The term fee of ₹40,000 is due in about six weeks.', at: ago(4), read: false, link: '/home/commitments' },
   ],
 };
 
@@ -300,14 +320,43 @@ const freelancer: DemoProfile = {
     history: [],
   },
   activity: [
+    { id: 'fa2', type: 'contribution-added', text: '₹12,000 added to Emergency fund', at: ago(1), link: '/goals/f_goal_em' },
     { id: 'fa1', type: 'income-updated', text: 'Design projects income range updated', at: ago(4) },
+    { id: 'fa3', type: 'scenario-saved', text: 'Saved scenario: A lean month every quarter', at: ago(11), link: '/simulate' },
   ],
+  scenarioSeeds: [
+    { template: 'variable-income', name: 'A lean month every quarter', saved: true, daysAgo: 11 },
+    { template: 'income-drop', name: 'Two slow months in a row', saved: false, daysAgo: 4 },
+  ],
+  decisionSeeds: [{ question: 'My income changes every month. How much can I safely spend?', daysAgo: 3 }],
   notifications: [
     { id: 'fn1', kind: 'reminder', title: 'Advance tax due next month', body: 'Quarterly advance tax of ₹25,000 is coming up.', at: ago(2), read: false, link: '/home/commitments' },
   ],
 };
 
 export const DEMO_PROFILES: DemoProfile[] = [salaried, household, freelancer];
+
+// Twelve months of history, shaped per person and anchored to the net worth their records produce today,
+// so the Home trend and the month-on-month change always agree with the numbers on screen.
+const SHAPES: Record<string, number[]> = {
+  salaried: [0.79, 0.81, 0.82, 0.85, 0.84, 0.87, 0.89, 0.9, 0.92, 0.94, 0.95, 0.979],
+  household: [0.931, 0.936, 0.944, 0.948, 0.951, 0.958, 0.962, 0.967, 0.973, 0.978, 0.984, 0.991],
+  freelancer: [0.74, 0.8, 0.77, 0.84, 0.81, 0.88, 0.85, 0.92, 0.9, 0.97, 0.95, 1.024],
+};
+for (const p of DEMO_PROFILES) {
+  const now = calculateNetWorth(p.data).value;
+  const shape = SHAPES[p.key];
+  if (now === null || !shape) continue;
+  const last = p.data.history.at(-1);
+  const income = last?.income ?? p.data.incomes.reduce((s, i) => s + (i.amount ?? 0), 0);
+  const expenses = last?.expenses ?? p.data.expenses.reduce((s, e) => s + (e.amount ?? 0), 0);
+  p.data.history = shape.map((f, i) => ({
+    month: monthKey(i - shape.length),
+    income: p.key === 'freelancer' ? Math.round(income * (0.55 + ((i * 37) % 10) / 10)) : income,
+    expenses: Math.round(expenses * (0.97 + ((i * 13) % 7) / 100)),
+    netWorth: Math.round((now * f) / 1000) * 1000,
+  }));
+}
 
 export function getDemoProfile(key: string): DemoProfile | undefined {
   return DEMO_PROFILES.find((p) => p.key === key);

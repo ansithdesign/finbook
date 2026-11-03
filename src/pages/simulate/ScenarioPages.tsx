@@ -1,9 +1,9 @@
 // SIM-03 Configure variables + SIM-04 Projection, SIM-06 Cash flow, SIM-07 Liquidity, SIM-08 Goal impact, SIM-09 Assumptions, SIM-10 Save.
 
-import { Bookmark, BookmarkCheck, GitCompare, LineChart as LineIcon, RotateCcw, Trash2 } from '@/components/icons';
+import { Bookmark, BookmarkCheck, Check, GitCompare, LineChart as LineIcon, RotateCcw, Trash2 } from '@/components/icons';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Expandable, KV, List, ListRow, Section } from '@/components/cards/Cards';
+import { Expandable, KV, List, ListRow, Section, Shift } from '@/components/cards/Cards';
 import { CashflowBars, LineChart } from '@/components/charts/Charts';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner, EmptyState, Money } from '@/components/feedback/States';
@@ -129,7 +129,7 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
   const warnings: string[] = [];
   if (sc.vars.downPayment > sc.vars.purchaseAmount && sc.vars.purchaseAmount > 0) warnings.push('Down payment is higher than the purchase amount.');
   if (sc.vars.essentialExpenses > sc.vars.expenses) warnings.push('Essential expenses exceed total expenses.');
-  if (sc.vars.purchaseAmount > 0 && sc.vars.downPayment < sc.vars.purchaseAmount && sc.vars.tenureMonths === 0) warnings.push('A loan is needed but tenure is 0 months — set a tenure or a full down payment.');
+  if (sc.vars.purchaseAmount > 0 && sc.vars.downPayment < sc.vars.purchaseAmount && sc.vars.tenureMonths === 0) warnings.push('A loan is needed but tenure is 0 months. Set a tenure or a full down payment.');
   const baseCap = baselineGoalCapacity(state) ?? 0;
   const goalRows = compareGoalAllocations(state.data.goals, baseCap, scenarioGoalCapacity(sc.vars));
   const hurt = goalRows.filter((r) => r.after.funded < r.before.funded);
@@ -140,7 +140,7 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
       actions={<button className="icon-btn" aria-label={sc.saved ? 'Saved' : 'Save scenario'} onClick={save}>{sc.saved ? <BookmarkCheck size={22} /> : <Bookmark size={22} />}</button>}
       footer={
         <div className="row">
-          <button className="btn flex-1" onClick={save}>{sc.saved ? 'Saved ✓' : 'Save scenario'}</button>
+          <button className="btn flex-1" onClick={save}>{sc.saved ? <><Check size={16} /> Saved</> : 'Save scenario'}</button>
           <button className="btn secondary" onClick={() => navigate(`/simulate/compare?ids=baseline,${sc.id}`)}><GitCompare size={18} /> Compare</button>
         </div>
       }
@@ -186,8 +186,8 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
           {s.emergencyCoverageAfter !== null && <p className="caption">Emergency coverage after purchase: {months(s.emergencyCoverageAfter)}</p>}
         </div>
         {warnings.map((w) => <Banner key={w} tone="warn">{w}</Banner>)}
-        {s.stability === 'At risk' && <Banner tone="warn">Liquid funds go below zero in this scenario — it would need borrowing or selling investments.</Banner>}
-        {hurt.length > 0 && <Banner tone="warn">Reduces goal funding: {hurt.map((h) => `${h.name} (${inr(h.before.funded)} → ${inr(h.after.funded)}/mo)`).join(', ')}.</Banner>}
+        {s.stability === 'At risk' && <Banner tone="warn">Liquid funds go below zero in this scenario. You would need to borrow or sell investments.</Banner>}
+        {hurt.length > 0 && <Banner tone="warn">Reduces goal funding: {hurt.map((h, i) => <span key={h.name}>{i > 0 && ', '}{h.name} (<Shift from={inr(h.before.funded)} to={`${inr(h.after.funded)}/mo`} />)</span>)}.</Banner>}
 
         <Section title="Configure variables" action={<button className="link-btn" onClick={async () => { if (await confirm({ title: 'Reset to profile values?', body: 'Variables return to the template defaults based on your current profile.', confirmLabel: 'Reset' })) { actions.upsertScenario({ ...sc, vars: varsForTemplate(sc.template, state.data) }); toast('Reset to profile values'); } }}><RotateCcw size={14} /> Reset</button>}>
           <div className="stack-sm">
@@ -328,8 +328,8 @@ export function ScenarioGoalImpact() {
           {rows.map((r) => (
             <div key={r.goalId} className="card outline">
               <div className="row-between"><span className="strong">{r.name}</span>{r.after.funded < r.before.funded ? <span className="tag warn">Reduced</span> : <span className="tag">Unchanged</span>}</div>
-              <KV k="Monthly funding" v={`${inr(r.before.funded)} → ${inr(r.after.funded)}`} />
-              <KV k="Time to target" v={`${tenure(r.before.monthsToTarget)} → ${r.after.monthsToTarget === null ? 'Not reachable' : tenure(r.after.monthsToTarget)}`} />
+              <KV k="Monthly funding" v={<Shift from={inr(r.before.funded)} to={inr(r.after.funded)} />} />
+              <KV k="Time to target" v={<Shift from={tenure(r.before.monthsToTarget)} to={r.after.monthsToTarget === null ? 'Not reachable' : tenure(r.after.monthsToTarget)} />} />
               {r.after.funded < r.before.funded && <p className="caption">In this scenario, your contribution towards {r.name} may need to decrease by {inr(r.before.funded - r.after.funded)} a month.</p>}
             </div>
           ))}
@@ -380,7 +380,7 @@ export function ScenarioAssumptions() {
             <li>Taxes, tax benefits and capital gains</li>
             <li>Interest earned on cash balances</li>
             <li>Loan processing fees, insurance, and prepayment charges</li>
-            <li>Market volatility — returns are applied evenly</li>
+            <li>Market volatility: returns are applied evenly</li>
           </ul>
         </Section>
         <Section title="Data limitations">

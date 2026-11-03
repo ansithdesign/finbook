@@ -3,6 +3,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createInitialState, STATE_VERSION, STORAGE_KEY } from '@/data/initial-state';
 import { getDemoProfile } from '@/data/mock-data/demoProfiles';
+import { TEMPLATE_INFO, varsForTemplate } from '@/calculations/projections/templates';
+import { defaultInputs, recognizeIntent } from '@/intelligence';
 import type {
   Activity,
   ActivityType,
@@ -97,6 +99,15 @@ function useActions(setState: (fn: (s: AppState) => AppState) => void) {
             data: structuredClone(demo.data),
             activity: structuredClone(demo.activity),
             notifications: structuredClone(demo.notifications),
+            scenarios: (demo.scenarioSeeds ?? []).map((sd, i) => {
+              const at = new Date(Date.now() - sd.daysAgo * 86400000).toISOString();
+              return { id: `scn_demo_${key}_${i}`, name: sd.name ?? TEMPLATE_INFO[sd.template].title, template: sd.template, vars: varsForTemplate(sd.template, demo.data), saved: sd.saved, createdAt: at, updatedAt: at };
+            }),
+            decisions: (demo.decisionSeeds ?? []).map((ds, i) => {
+              const r = recognizeIntent(ds.question);
+              const at = new Date(Date.now() - ds.daysAgo * 86400000).toISOString();
+              return { id: `dec_demo_${key}_${i}`, title: r.title, question: ds.question, intent: r.intent, status: 'in-progress' as const, inputs: defaultInputs(r.intent, demo.data, r.amount), chosenOption: null, saved: false, createdAt: at, updatedAt: at };
+            }),
             demoProfile: key,
           };
         }),

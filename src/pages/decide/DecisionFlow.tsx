@@ -80,7 +80,7 @@ export function DecisionClarify() {
         </div>
         {fromProfile.length > 0 && (
           <div>
-            <div className="label mb-8">Already known from your profile — not asked again</div>
+            <div className="label mb-8">Already in your profile, so we won't ask</div>
             <div className="chips">
               {fromProfile.map((c) => (
                 <span key={c.key} className="tag"><CheckCircle2 size={12} /> {c.label}</span>
@@ -115,13 +115,13 @@ export function DecisionContext() {
       footer={
         <>
           <button className="btn block" onClick={() => navigate(`/decide/${decision.id}?calc=1`)}>
-            {missing.length ? 'Continue with what I have' : 'Looks right — compare options'}
+            {missing.length ? 'Continue with what I have' : 'Looks right, compare options'}
           </button>
         </>
       }
     >
       <div className="stack">
-        <p className="muted" style={{ fontSize: 14 }}>This is the information we'll use, taken from your profile. Correct anything that's out of date — changes update your profile too.</p>
+        <p className="muted" style={{ fontSize: 14 }}>This is the information we'll use, taken from your profile. Correct anything that's out of date. Changes update your profile too.</p>
         {missing.length > 0 && (
           <Banner tone="warn">
             {missing.length} item{missing.length > 1 ? 's are' : ' is'} missing: {missing.map((m) => m.label.toLowerCase()).join(', ')}. Results will be limited or marked as estimates.

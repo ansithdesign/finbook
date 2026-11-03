@@ -1,6 +1,7 @@
 // SIM-01 Scenario landing, SIM-02 Create scenario, SIM-05 Scenario comparison.
 
-import { Bookmark, Check, GitCompare, LineChart as LineIcon, Plus } from '@/components/icons';
+import { Check, GitCompare, Plus } from '@/components/icons';
+import { SCENARIO_ICON } from '@/components/topicIcons';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Expandable, List, ListRow, Section, SectionLink } from '@/components/cards/Cards';
@@ -17,7 +18,10 @@ import type { Scenario, ScenarioTemplate } from '@/types';
 import { inr, months, monthLabelFromNow, relativeTime } from '@/utils/format';
 import { nowISO, uid } from '@/utils/id';
 
-const SUGGESTED: ScenarioTemplate[] = ['car', 'invest-more', 'prepay', 'income-drop', 'expense-increase', 'save-purchase', 'variable-income'];
+const GROUPS: Array<{ title: string; items: ScenarioTemplate[] }> = [
+  { title: 'Plan a move', items: ['car', 'save-purchase', 'invest-more', 'prepay'] },
+  { title: 'Stress-test your plan', items: ['income-drop', 'variable-income', 'expense-increase'] },
+];
 
 export function useCreateScenario() {
   const { state, actions } = useApp();
@@ -41,46 +45,40 @@ export function SimulateLanding() {
   const { state } = useApp();
   const create = useCreateScenario();
   const navigate = useNavigate();
-  const saved = state.scenarios.filter((s) => s.saved);
-  const recent = state.scenarios.filter((s) => !s.saved).slice(0, 3);
+  const mine = [...state.scenarios].sort((x, y) => Number(y.saved) - Number(x.saved) || y.updatedAt.localeCompare(x.updatedAt)).slice(0, 4);
   const noData = state.data.incomes.length === 0;
   return (
     <Screen large title="Simulate" actions={<Link to="/simulate/new" className="icon-btn" aria-label="Create scenario"><Plus size={24} /></Link>}>
-      <p className="muted">Explore how changes could affect your cash flow, savings and goals over time.</p>
-      {noData && <div className="mt-12"><Banner tone="warn" action={<Link className="link-btn" to="/records/new/income">Add</Link>}>Scenarios start from your current income and expenses. Add them for meaningful projections.</Banner></div>}
+      <p className="lede">Try a change before you make it. Every scenario starts from your real numbers.</p>
+      {noData && <div className="mt-12"><Banner tone="warn" action={<Link className="link-btn" to="/records/new/income">Add</Link>}>Add your income and expenses first, so projections start from something real.</Banner></div>}
       <div className="row mt-16">
-        <button className="btn flex-1" onClick={() => navigate('/simulate/new')}><Plus size={18} /> Create scenario</button>
+        <button className="btn flex-1" onClick={() => navigate('/simulate/new')}><Plus size={18} /> New scenario</button>
         <button className="btn secondary" disabled={state.scenarios.length < 1} onClick={() => navigate('/simulate/compare')}><GitCompare size={18} /> Compare</button>
       </div>
-      <Section title="Suggested scenarios">
-        <List>
-          {SUGGESTED.map((t) => (
-            <ListRow key={t} icon={LineIcon} title={TEMPLATE_INFO[t].title} sub={TEMPLATE_INFO[t].description} onClick={() => create(t)} />
-          ))}
-        </List>
-      </Section>
-      <Section title="Saved scenarios">
-        {saved.length === 0 ? (
-          <p className="caption">Save a scenario to revisit and compare it later.</p>
-        ) : (
+      {mine.length > 0 && (
+        <Section title="Your scenarios" action={state.scenarios.length > 1 ? <SectionLink to="/simulate/compare">Compare</SectionLink> : undefined}>
           <List>
-            {saved.map((s) => (
-              <ListRow key={s.id} icon={Bookmark} title={s.name} sub={`${TEMPLATE_INFO[s.template].title} · updated ${relativeTime(s.updatedAt)}`} to={`/simulate/${s.id}`} />
+            {mine.map((s) => (
+              <ListRow
+                key={s.id}
+                icon={SCENARIO_ICON[s.template]}
+                title={s.name}
+                sub={<span className="row" style={{ gap: 6 }}>{s.saved ? <span className="tag">Saved</span> : <span className="tag dashed">Draft</span>} Updated {relativeTime(s.updatedAt)}</span>}
+                to={`/simulate/${s.id}`}
+              />
             ))}
           </List>
-        )}
-      </Section>
-      <Section title="Recent simulations" action={recent.length ? <SectionLink to="/simulate/compare">Compare</SectionLink> : undefined}>
-        {recent.length === 0 ? (
-          <p className="caption">Nothing yet.</p>
-        ) : (
+        </Section>
+      )}
+      {GROUPS.map((g) => (
+        <Section key={g.title} title={g.title}>
           <List>
-            {recent.map((s) => (
-              <ListRow key={s.id} title={s.name} sub={`Not saved · ${relativeTime(s.updatedAt)}`} to={`/simulate/${s.id}`} />
+            {g.items.map((t) => (
+              <ListRow key={t} icon={SCENARIO_ICON[t]} title={TEMPLATE_INFO[t].title} sub={TEMPLATE_INFO[t].description} onClick={() => create(t)} />
             ))}
           </List>
-        )}
-      </Section>
+        </Section>
+      ))}
     </Screen>
   );
 }
@@ -101,10 +99,10 @@ export function ScenarioCreate() {
   return (
     <Screen title="Create scenario" back>
       <div className="stack">
-        <p className="muted" style={{ fontSize: 14 }}>Choose a starting point. Every value starts from your current profile and can be changed.</p>
+        <p className="muted" style={{ fontSize: 14 }}>Pick a starting point. Values come from your profile, and you can change any of them.</p>
         <List>
           {(Object.keys(TEMPLATE_INFO) as ScenarioTemplate[]).map((k) => (
-            <ListRow key={k} icon={LineIcon} title={TEMPLATE_INFO[k].title} sub={TEMPLATE_INFO[k].description} onClick={() => create(k)} />
+            <ListRow key={k} icon={SCENARIO_ICON[k]} title={TEMPLATE_INFO[k].title} sub={TEMPLATE_INFO[k].description} onClick={() => create(k)} />
           ))}
         </List>
       </div>
@@ -155,7 +153,7 @@ export function ScenarioCompare() {
   return (
     <Screen title="Compare scenarios" back="/simulate">
       <div className="stack">
-        <p className="muted" style={{ fontSize: 14 }}>Select up to three. All are projected over the same horizon{chosen.length > 1 ? ` (${horizon} months)` : ''}. The lime-ringed dot is the most favourable in each row.</p>
+        <p className="muted" style={{ fontSize: 14 }}>Select up to three. All are projected over the same horizon{chosen.length > 1 ? ` (${horizon} months)` : ''}. The highlighted dot is the better result in each row.</p>
         <div className="chips">
           {pool.map((p) => (
             <button key={p.id} className={`chip ${sel.includes(p.id) ? 'on' : ''}`} onClick={() => toggle(p.id)} aria-pressed={sel.includes(p.id)}>

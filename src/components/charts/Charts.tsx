@@ -267,7 +267,7 @@ export function CashflowBars({ values, labels, height = 150 }: { values: number[
   );
 }
 
-/** Goal path: today's savings → target, with the pace needed and the pace planned. */
+/** Goal path: today's savings to target, with the pace needed and the pace planned. */
 export function PathToTarget({ saved, target, months, planned, required, height = 190 }: { saved: number; target: number; months: number; planned: number | null; required: number | null; height?: number }) {
   const W = 360;
   const padL = 4;

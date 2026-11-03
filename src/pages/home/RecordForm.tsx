@@ -194,7 +194,7 @@ export function RecordForm() {
                 <SelectField label="Frequency" value={r.frequency} onChange={(v) => set({ frequency: v })} options={[...FREQ]} />
               </div>
               <Segmented label="Type" value={r.essential ? 'e' : 'd'} onChange={(v) => set({ essential: v === 'e' } as Partial<Expense>)} options={[{ value: 'e', label: 'Essential' }, { value: 'd', label: 'Discretionary' }]} />
-              <p className="caption">Don't add loan EMIs as expenses — add the loan as a liability so the EMI is counted once.</p>
+              <p className="caption">Don't add loan EMIs as expenses. Add the loan as a liability so the EMI is counted once.</p>
               {sourceToggle}
             </>
           );
@@ -211,9 +211,9 @@ export function RecordForm() {
                 onChange={(v) => set({ category: v, liquidity: ASSET_DEFAULTS[v].liquidity, emergencyEligible: ASSET_DEFAULTS[v].emergency } as Partial<Asset>)}
                 options={Object.keys(ASSET_DEFAULTS).map((k) => ({ value: k as AssetCategory, label: k.replace('-', ' ').replace(/^\w/, (c) => c.toUpperCase()) }))}
               />
-              <MoneyField label="Current value" value={r.value} onChange={(v) => set({ value: v } as Partial<Asset>)} error={err('amount')} help="Leave blank if unknown — it will be flagged as missing, not counted as zero." />
+              <MoneyField label="Current value" value={r.value} onChange={(v) => set({ value: v } as Partial<Asset>)} error={err('amount')} help="Leave blank if unknown. It will be flagged as missing, not counted as zero." />
               <SelectField label="How accessible is it?" value={r.liquidity} onChange={(v) => set({ liquidity: v } as Partial<Asset>)} options={[
-                { value: 'liquid', label: 'Liquid — usable within days' }, { value: 'market', label: 'Market-linked — sellable, value fluctuates' }, { value: 'locked', label: 'Locked — property, retirement' },
+                { value: 'liquid', label: 'Liquid: usable within days' }, { value: 'market', label: 'Market-linked: sellable, value moves' }, { value: 'locked', label: 'Locked: property, retirement' },
               ]} />
               <div className="list"><ToggleRow label="Count towards emergency reserve" on={r.emergencyEligible} onChange={(v) => set({ emergencyEligible: v } as Partial<Asset>)} /></div>
               {sourceToggle}
@@ -249,7 +249,7 @@ export function RecordForm() {
         {kind === 'commitment' && (() => {
           const r = rec as Commitment;
           const linkOptions = [
-            { value: '', label: 'Not linked — count separately' },
+            { value: '', label: 'Not linked, count separately' },
             ...state.data.expenses.map((e) => ({ value: `expense:${e.id}`, label: `Expense: ${e.name}` })),
             ...state.data.liabilities.map((l) => ({ value: `liability:${l.id}`, label: `Loan: ${l.name}` })),
           ];
