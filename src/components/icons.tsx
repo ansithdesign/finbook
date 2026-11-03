@@ -5,6 +5,8 @@
 import type { ComponentType, CSSProperties } from 'react';
 import {
   ArrowCounterClockwise,
+  ArrowDown as PArrowDown,
+  ArrowUp as PArrowUp,
   ArrowUpRight as PArrowUpRight,
   ArrowsLeftRight,
   Bank,
@@ -80,6 +82,8 @@ function icon(C: ComponentType<PhosphorProps>, fixed?: IconWeight): LucideIcon {
 }
 
 export const AlertTriangle = icon(Warning);
+export const ArrowUp = icon(PArrowUp, 'bold');
+export const ArrowDown = icon(PArrowDown, 'bold');
 export const ArrowUpRight = icon(PArrowUpRight);
 export const Banknote = icon(Money);
 export const BatteryFull = icon(PBatteryFull, 'fill');

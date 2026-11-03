@@ -408,7 +408,7 @@ textarea.big-input:focus { box-shadow: inset 0 0 0 1.5px var(--accent), 0 0 0 4p
 .on > .check, .check.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .toggle { width: 51px; height: 31px; border-radius: 16px; background: var(--border-strong); border: none; position: relative; flex: none; transition: background 0.2s; }
 .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 14px; background: #fff; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18), 0 0 0 0.5px rgba(0, 0, 0, 0.04); transition: transform 0.25s var(--ease); }
-.toggle.on { background: var(--ok); }
+.toggle.on { background: var(--accent); }
 .toggle.on::after { transform: translateX(20px); }
 input[type='range'] { width: 100%; accent-color: var(--accent); height: 28px; }
 .slider-head { display: flex; justify-content: space-between; align-items: baseline; }

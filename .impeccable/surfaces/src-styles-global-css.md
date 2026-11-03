@@ -16,7 +16,7 @@ Unresolved: dark (night) appearance verified on Home and Decide only.
 
 THESIS: A money decision is a forecast, so the app lives under a sky. The sky follows the time of day, headline figures sit directly on it, and risk is spoken in four bulletin levels (be aware, be prepared, take action) instead of green up and red down. It refuses boxed bento cards, bordered containers and the single-neon-accent fintech default.
 
-OWN-WORLD: Time-of-day skies (morning gold and blue, day clear blue, evening lilac and rose, night navy with stars) fading into a pale haze, soft drifting clouds and a sun glow. Remaining modules are borderless frosted glass. Midnight ink for primary actions, deep sky blue for selection and data, violet for estimates, the four warning colours only for state. Figtree throughout with tight tracking on figures. Phosphor icons, fill for selected, duotone in tinted badges. Isobar contours as faint white lines on the sky.
+OWN-WORLD: Time-of-day skies (morning gold and blue, day clear blue, evening lilac and rose, night navy with stars) fading into a pale haze, soft drifting clouds and a sun glow. Remaining modules are borderless frosted glass. Midnight ink for primary actions, deep sky blue for selection and data, violet for estimates, the four warning colours only for state. Figtree throughout with tight tracking on figures. Phosphor icons, fill for selected, duotone in tinted badges. No contour, blob or dot-grid art; illustrations are sky windows with white contrail paths.
 
 STORY: The visitor sees where they stand at a glance, sees what each choice changes, and acts by opening a decision, comparing and saving it.
 

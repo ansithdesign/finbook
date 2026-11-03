@@ -1,153 +1,1106 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-03T00:00:00Z",
+  "generatedAt": "2026-11-03T10:11:53.515Z",
   "title": "Design System: Money Decision Engine",
   "extensions": {
     "colorMeta": {
-      "cloud": { "role": "neutral", "displayName": "Overcast Cloud", "canonical": "#e7edef", "tonalRamp": ["#1b2a30", "#3b5059", "#5f7882", "#869ca5", "#aabcc3", "#c6d3d8", "#dce6e9", "#eef3f4"] },
-      "paper": { "role": "neutral", "displayName": "Paper White", "canonical": "#f8fbfb", "tonalRamp": ["#1c2626", "#3d4d4d", "#627777", "#8a9d9d", "#b0bfbf", "#cfdada", "#e6eded", "#f8fbfb"] },
-      "ink": { "role": "neutral", "displayName": "Rain Ink", "canonical": "#0b1f29", "tonalRamp": ["#05101a", "#0b1f29", "#1c3846", "#2c4d5d", "#4b6572", "#6f8791", "#8aa1ab", "#b3c4cb"] },
-      "storm": { "role": "secondary", "displayName": "Storm Teal", "canonical": "#0c3a47", "tonalRamp": ["#061f27", "#0c3a47", "#14515f", "#256c7c", "#4b8c9b", "#7aaab6", "#9fc1ca", "#cfe2e7"] },
-      "radar": { "role": "primary", "displayName": "Radar Teal", "canonical": "#0a7c8f", "tonalRamp": ["#04353d", "#07616f", "#0a7c8f", "#2a97a9", "#55b1c0", "#6fd5e3", "#a6e6ee", "#d9f4f8"] },
-      "radar-bright": { "role": "primary", "displayName": "Radar Bright", "canonical": "#6fd5e3", "tonalRamp": ["#0b4a55", "#157987", "#2a9aab", "#4fbccb", "#6fd5e3", "#98e2ec", "#c0eef4", "#e4f8fb"] },
-      "rain": { "role": "secondary", "displayName": "Rain Blue", "canonical": "#2f78b8", "tonalRamp": ["#122f4a", "#1d4e7c", "#2f78b8", "#5896cb", "#82b3dc", "#a9cbe8", "#d6eaf3", "#eef6fa"] },
-      "estimate": { "role": "secondary", "displayName": "Estimate Indigo", "canonical": "#4a62c9", "tonalRamp": ["#1a2457", "#2f43a3", "#4a62c9", "#6c80d6", "#8e9fe0", "#b3bfeb", "#e1e6f8", "#f2f4fc"] },
-      "level-ok": { "role": "tertiary", "displayName": "Bulletin Green (ok)", "canonical": "#2f8a5b", "tonalRamp": ["#0f3322", "#1d6a42", "#2f8a5b", "#55a97c", "#82c4a0", "#aedcc3", "#dcf0e4", "#f0f9f4"] },
-      "level-aware": { "role": "tertiary", "displayName": "Bulletin Yellow (aware)", "canonical": "#d9a800", "tonalRamp": ["#3a2c00", "#6b5200", "#a37d00", "#d9a800", "#ecc233", "#f4d869", "#faf0c4", "#fdf9e3"] },
-      "level-prepare": { "role": "tertiary", "displayName": "Bulletin Orange (prepare)", "canonical": "#e6801b", "tonalRamp": ["#47230a", "#8a4806", "#c06610", "#e6801b", "#ee9b4d", "#f5b985", "#fbe4cb", "#fdf3e8"] },
-      "level-act": { "role": "tertiary", "displayName": "Bulletin Red (act)", "canonical": "#c9382e", "tonalRamp": ["#4a1511", "#9c231b", "#c9382e", "#d9625a", "#e68b84", "#efb3ae", "#f8dbd7", "#fcefed"] }
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "purpose": "Primary text.",
+        "canonical": "oklch(21.8% 0.036 251.3)",
+        "tonalRamp": [
+          "oklch(15% 0.014 251.3)",
+          "oklch(26.4% 0.025 251.3)",
+          "oklch(37.9% 0.032 251.3)",
+          "oklch(49.3% 0.035 251.3)",
+          "oklch(60.7% 0.035 251.3)",
+          "oklch(72.1% 0.032 251.3)",
+          "oklch(83.6% 0.025 251.3)",
+          "oklch(95% 0.014 251.3)"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink Two",
+        "purpose": "Secondary text, form labels.",
+        "canonical": "oklch(35.1% 0.045 253.9)",
+        "tonalRamp": [
+          "oklch(15% 0.018 253.9)",
+          "oklch(26.4% 0.032 253.9)",
+          "oklch(37.9% 0.04 253.9)",
+          "oklch(49.3% 0.045 253.9)",
+          "oklch(60.7% 0.045 253.9)",
+          "oklch(72.1% 0.04 253.9)",
+          "oklch(83.6% 0.032 253.9)",
+          "oklch(95% 0.018 253.9)"
+        ],
+        "nightValue": "#c9d6e6"
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink Three",
+        "purpose": "Tertiary text.",
+        "canonical": "oklch(47.2% 0.044 253.5)",
+        "tonalRamp": [
+          "oklch(15% 0.018 253.5)",
+          "oklch(26.4% 0.031 253.5)",
+          "oklch(37.9% 0.039 253.5)",
+          "oklch(49.3% 0.044 253.5)",
+          "oklch(60.7% 0.044 253.5)",
+          "oklch(72.1% 0.039 253.5)",
+          "oklch(83.6% 0.031 253.5)",
+          "oklch(95% 0.018 253.5)"
+        ],
+        "nightValue": "#a3b4c9"
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Slate Muted",
+        "purpose": "Labels, captions, idle tabs.",
+        "canonical": "oklch(48.9% 0.042 252.4)",
+        "tonalRamp": [
+          "oklch(15% 0.017 252.4)",
+          "oklch(26.4% 0.03 252.4)",
+          "oklch(37.9% 0.038 252.4)",
+          "oklch(49.3% 0.042 252.4)",
+          "oklch(60.7% 0.042 252.4)",
+          "oklch(72.1% 0.038 252.4)",
+          "oklch(83.6% 0.03 252.4)",
+          "oklch(95% 0.017 252.4)"
+        ],
+        "nightValue": "#a1b2c7"
+      },
+      "faint": {
+        "role": "neutral",
+        "displayName": "Faint Slate",
+        "purpose": "Placeholders, chevrons, disabled.",
+        "canonical": "oklch(68.7% 0.032 253)",
+        "tonalRamp": [
+          "oklch(15% 0.013 253)",
+          "oklch(26.4% 0.022 253)",
+          "oklch(37.9% 0.028 253)",
+          "oklch(49.3% 0.031 253)",
+          "oklch(60.7% 0.031 253)",
+          "oklch(72.1% 0.028 253)",
+          "oklch(83.6% 0.022 253)",
+          "oklch(95% 0.013 253)"
+        ],
+        "nightValue": "#6b7d95"
+      },
+      "on-ink": {
+        "role": "neutral",
+        "displayName": "White",
+        "purpose": "Text on midnight.",
+        "canonical": "oklch(100% 0 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0 89.9)",
+          "oklch(26.4% 0 89.9)",
+          "oklch(37.9% 0 89.9)",
+          "oklch(49.3% 0 89.9)",
+          "oklch(60.7% 0 89.9)",
+          "oklch(72.1% 0 89.9)",
+          "oklch(83.6% 0 89.9)",
+          "oklch(95% 0 89.9)"
+        ]
+      },
+      "midnight": {
+        "role": "primary",
+        "displayName": "Midnight Ink",
+        "purpose": "Primary action, Decide pill, selected chips, chart flags.",
+        "canonical": "oklch(24.8% 0.049 253.4)",
+        "tonalRamp": [
+          "oklch(15% 0.02 253.4)",
+          "oklch(26.4% 0.034 253.4)",
+          "oklch(37.9% 0.044 253.4)",
+          "oklch(49.3% 0.048 253.4)",
+          "oklch(60.7% 0.048 253.4)",
+          "oklch(72.1% 0.044 253.4)",
+          "oklch(83.6% 0.034 253.4)",
+          "oklch(95% 0.02 253.4)"
+        ]
+      },
+      "sky-1": {
+        "role": "neutral",
+        "displayName": "Day Sky High",
+        "purpose": "Top of the day sky.",
+        "canonical": "oklch(75.2% 0.109 244.2)",
+        "tonalRamp": [
+          "oklch(15% 0.045 244.2)",
+          "oklch(26.4% 0.076 244.2)",
+          "oklch(37.9% 0.097 244.2)",
+          "oklch(49.3% 0.108 244.2)",
+          "oklch(60.7% 0.108 244.2)",
+          "oklch(72.1% 0.097 244.2)",
+          "oklch(83.6% 0.076 244.2)",
+          "oklch(95% 0.045 244.2)"
+        ]
+      },
+      "sky-2": {
+        "role": "neutral",
+        "displayName": "Day Sky Mid",
+        "purpose": "Middle of the day sky; top of the soft sky.",
+        "canonical": "oklch(84.7% 0.068 242)",
+        "tonalRamp": [
+          "oklch(15% 0.028 242)",
+          "oklch(26.4% 0.048 242)",
+          "oklch(37.9% 0.061 242)",
+          "oklch(49.3% 0.067 242)",
+          "oklch(60.7% 0.067 242)",
+          "oklch(72.1% 0.061 242)",
+          "oklch(83.6% 0.048 242)",
+          "oklch(95% 0.028 242)"
+        ]
+      },
+      "sky-3": {
+        "role": "neutral",
+        "displayName": "Day Sky Low",
+        "purpose": "Lower day sky.",
+        "canonical": "oklch(92.9% 0.03 238.8)",
+        "tonalRamp": [
+          "oklch(15% 0.012 238.8)",
+          "oklch(26.4% 0.021 238.8)",
+          "oklch(37.9% 0.027 238.8)",
+          "oklch(49.3% 0.03 238.8)",
+          "oklch(60.7% 0.03 238.8)",
+          "oklch(72.1% 0.027 238.8)",
+          "oklch(83.6% 0.021 238.8)",
+          "oklch(95% 0.012 238.8)"
+        ]
+      },
+      "haze": {
+        "role": "neutral",
+        "displayName": "Haze",
+        "purpose": "Canvas the sky fades into; sheets, dialogs, footers.",
+        "canonical": "oklch(96.7% 0.011 243.7)",
+        "tonalRamp": [
+          "oklch(15% 0.004 243.7)",
+          "oklch(26.4% 0.008 243.7)",
+          "oklch(37.9% 0.01 243.7)",
+          "oklch(49.3% 0.011 243.7)",
+          "oklch(60.7% 0.011 243.7)",
+          "oklch(72.1% 0.01 243.7)",
+          "oklch(83.6% 0.008 243.7)",
+          "oklch(95% 0.004 243.7)"
+        ]
+      },
+      "page": {
+        "role": "neutral",
+        "displayName": "Page Mist",
+        "purpose": "Stage behind the device.",
+        "canonical": "oklch(92.5% 0.019 243)",
+        "tonalRamp": [
+          "oklch(15% 0.008 243)",
+          "oklch(26.4% 0.013 243)",
+          "oklch(37.9% 0.017 243)",
+          "oklch(49.3% 0.019 243)",
+          "oklch(60.7% 0.019 243)",
+          "oklch(72.1% 0.017 243)",
+          "oklch(83.6% 0.013 243)",
+          "oklch(95% 0.008 243)"
+        ]
+      },
+      "sky-morning-1": {
+        "role": "neutral",
+        "displayName": "Morning Sky High",
+        "canonical": "oklch(79% 0.087 248)",
+        "tonalRamp": [
+          "oklch(15% 0.035 248)",
+          "oklch(26.4% 0.06 248)",
+          "oklch(37.9% 0.077 248)",
+          "oklch(49.3% 0.086 248)",
+          "oklch(60.7% 0.086 248)",
+          "oklch(72.1% 0.077 248)",
+          "oklch(83.6% 0.06 248)",
+          "oklch(95% 0.035 248)"
+        ]
+      },
+      "sky-morning-2": {
+        "role": "neutral",
+        "displayName": "Morning Sky Mid",
+        "canonical": "oklch(90.2% 0.032 249.6)",
+        "tonalRamp": [
+          "oklch(15% 0.013 249.6)",
+          "oklch(26.4% 0.023 249.6)",
+          "oklch(37.9% 0.029 249.6)",
+          "oklch(49.3% 0.032 249.6)",
+          "oklch(60.7% 0.032 249.6)",
+          "oklch(72.1% 0.029 249.6)",
+          "oklch(83.6% 0.023 249.6)",
+          "oklch(95% 0.013 249.6)"
+        ]
+      },
+      "sky-morning-3": {
+        "role": "neutral",
+        "displayName": "Morning Gold",
+        "canonical": "oklch(92.8% 0.037 59.5)",
+        "tonalRamp": [
+          "oklch(15% 0.015 59.5)",
+          "oklch(26.4% 0.026 59.5)",
+          "oklch(37.9% 0.033 59.5)",
+          "oklch(49.3% 0.037 59.5)",
+          "oklch(60.7% 0.037 59.5)",
+          "oklch(72.1% 0.033 59.5)",
+          "oklch(83.6% 0.026 59.5)",
+          "oklch(95% 0.015 59.5)"
+        ]
+      },
+      "haze-morning": {
+        "role": "neutral",
+        "displayName": "Morning Haze",
+        "canonical": "oklch(96.7% 0.003 84.6)",
+        "tonalRamp": [
+          "oklch(15% 0.001 84.6)",
+          "oklch(26.4% 0.002 84.6)",
+          "oklch(37.9% 0.003 84.6)",
+          "oklch(49.3% 0.003 84.6)",
+          "oklch(60.7% 0.003 84.6)",
+          "oklch(72.1% 0.003 84.6)",
+          "oklch(83.6% 0.002 84.6)",
+          "oklch(95% 0.001 84.6)"
+        ]
+      },
+      "sky-evening-1": {
+        "role": "neutral",
+        "displayName": "Evening Lilac High",
+        "canonical": "oklch(64.2% 0.123 278.1)",
+        "tonalRamp": [
+          "oklch(15% 0.05 278.1)",
+          "oklch(26.4% 0.085 278.1)",
+          "oklch(37.9% 0.109 278.1)",
+          "oklch(49.3% 0.121 278.1)",
+          "oklch(60.7% 0.121 278.1)",
+          "oklch(72.1% 0.109 278.1)",
+          "oklch(83.6% 0.085 278.1)",
+          "oklch(95% 0.05 278.1)"
+        ]
+      },
+      "sky-evening-2": {
+        "role": "neutral",
+        "displayName": "Evening Lilac",
+        "canonical": "oklch(76.9% 0.082 308.9)",
+        "tonalRamp": [
+          "oklch(15% 0.033 308.9)",
+          "oklch(26.4% 0.057 308.9)",
+          "oklch(37.9% 0.073 308.9)",
+          "oklch(49.3% 0.081 308.9)",
+          "oklch(60.7% 0.081 308.9)",
+          "oklch(72.1% 0.073 308.9)",
+          "oklch(83.6% 0.057 308.9)",
+          "oklch(95% 0.033 308.9)"
+        ]
+      },
+      "sky-evening-3": {
+        "role": "neutral",
+        "displayName": "Evening Rose",
+        "canonical": "oklch(84.8% 0.065 36.4)",
+        "tonalRamp": [
+          "oklch(15% 0.026 36.4)",
+          "oklch(26.4% 0.045 36.4)",
+          "oklch(37.9% 0.058 36.4)",
+          "oklch(49.3% 0.064 36.4)",
+          "oklch(60.7% 0.064 36.4)",
+          "oklch(72.1% 0.058 36.4)",
+          "oklch(83.6% 0.045 36.4)",
+          "oklch(95% 0.026 36.4)"
+        ]
+      },
+      "haze-evening": {
+        "role": "neutral",
+        "displayName": "Evening Haze",
+        "canonical": "oklch(95.9% 0.01 305.4)",
+        "tonalRamp": [
+          "oklch(15% 0.004 305.4)",
+          "oklch(26.4% 0.007 305.4)",
+          "oklch(37.9% 0.009 305.4)",
+          "oklch(49.3% 0.01 305.4)",
+          "oklch(60.7% 0.01 305.4)",
+          "oklch(72.1% 0.009 305.4)",
+          "oklch(83.6% 0.007 305.4)",
+          "oklch(95% 0.004 305.4)"
+        ]
+      },
+      "sky-night-1": {
+        "role": "neutral",
+        "displayName": "Night Sky High",
+        "purpose": "Dark appearance.",
+        "canonical": "oklch(17.6% 0.049 266.5)",
+        "tonalRamp": [
+          "oklch(15% 0.02 266.5)",
+          "oklch(26.4% 0.034 266.5)",
+          "oklch(37.9% 0.044 266.5)",
+          "oklch(49.3% 0.048 266.5)",
+          "oklch(60.7% 0.048 266.5)",
+          "oklch(72.1% 0.044 266.5)",
+          "oklch(83.6% 0.034 266.5)",
+          "oklch(95% 0.02 266.5)"
+        ]
+      },
+      "sky-night-2": {
+        "role": "neutral",
+        "displayName": "Night Sky Mid",
+        "purpose": "Dark appearance.",
+        "canonical": "oklch(24.2% 0.073 264.8)",
+        "tonalRamp": [
+          "oklch(15% 0.03 264.8)",
+          "oklch(26.4% 0.051 264.8)",
+          "oklch(37.9% 0.065 264.8)",
+          "oklch(49.3% 0.072 264.8)",
+          "oklch(60.7% 0.072 264.8)",
+          "oklch(72.1% 0.065 264.8)",
+          "oklch(83.6% 0.051 264.8)",
+          "oklch(95% 0.03 264.8)"
+        ]
+      },
+      "sky-night-3": {
+        "role": "neutral",
+        "displayName": "Night Sky Low",
+        "purpose": "Dark appearance.",
+        "canonical": "oklch(29.6% 0.092 264.7)",
+        "tonalRamp": [
+          "oklch(15% 0.037 264.7)",
+          "oklch(26.4% 0.064 264.7)",
+          "oklch(37.9% 0.082 264.7)",
+          "oklch(49.3% 0.091 264.7)",
+          "oklch(60.7% 0.091 264.7)",
+          "oklch(72.1% 0.082 264.7)",
+          "oklch(83.6% 0.064 264.7)",
+          "oklch(95% 0.037 264.7)"
+        ]
+      },
+      "haze-night": {
+        "role": "neutral",
+        "displayName": "Night Haze",
+        "purpose": "Dark canvas.",
+        "canonical": "oklch(20.1% 0.058 266.5)",
+        "tonalRamp": [
+          "oklch(15% 0.023 266.5)",
+          "oklch(26.4% 0.04 266.5)",
+          "oklch(37.9% 0.051 266.5)",
+          "oklch(49.3% 0.057 266.5)",
+          "oklch(60.7% 0.057 266.5)",
+          "oklch(72.1% 0.051 266.5)",
+          "oklch(83.6% 0.04 266.5)",
+          "oklch(95% 0.023 266.5)"
+        ]
+      },
+      "ink-night": {
+        "role": "neutral",
+        "displayName": "Night Ink",
+        "purpose": "Text at night.",
+        "canonical": "oklch(96.5% 0.011 252.1)",
+        "tonalRamp": [
+          "oklch(15% 0.005 252.1)",
+          "oklch(26.4% 0.008 252.1)",
+          "oklch(37.9% 0.01 252.1)",
+          "oklch(49.3% 0.011 252.1)",
+          "oklch(60.7% 0.011 252.1)",
+          "oklch(72.1% 0.01 252.1)",
+          "oklch(83.6% 0.008 252.1)",
+          "oklch(95% 0.005 252.1)"
+        ]
+      },
+      "solid-night": {
+        "role": "neutral",
+        "displayName": "Night Solid",
+        "purpose": "Solid surfaces at night.",
+        "canonical": "oklch(24.6% 0.064 264.4)",
+        "tonalRamp": [
+          "oklch(15% 0.026 264.4)",
+          "oklch(26.4% 0.045 264.4)",
+          "oklch(37.9% 0.057 264.4)",
+          "oklch(49.3% 0.063 264.4)",
+          "oklch(60.7% 0.063 264.4)",
+          "oklch(72.1% 0.057 264.4)",
+          "oklch(83.6% 0.045 264.4)",
+          "oklch(95% 0.026 264.4)"
+        ]
+      },
+      "glass": {
+        "role": "neutral",
+        "displayName": "Glass",
+        "purpose": "Translucent surface or tint."
+      },
+      "glass-strong": {
+        "role": "neutral",
+        "displayName": "Glass Strong",
+        "purpose": "Translucent surface or tint."
+      },
+      "glass-edge": {
+        "role": "neutral",
+        "displayName": "Glass Edge",
+        "purpose": "Translucent surface or tint."
+      },
+      "glass-night": {
+        "role": "neutral",
+        "displayName": "Glass Night",
+        "purpose": "Translucent surface or tint."
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "purpose": "Translucent surface or tint."
+      },
+      "border-strong": {
+        "role": "neutral",
+        "displayName": "Border Strong",
+        "purpose": "Translucent surface or tint."
+      },
+      "fill": {
+        "role": "neutral",
+        "displayName": "Fill",
+        "purpose": "Translucent surface or tint."
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Deep Sky Blue",
+        "purpose": "Selection, active tab, focus, data.",
+        "canonical": "oklch(53.9% 0.184 258)",
+        "tonalRamp": [
+          "oklch(15% 0.075 258)",
+          "oklch(26.4% 0.128 258)",
+          "oklch(37.9% 0.164 258)",
+          "oklch(49.3% 0.182 258)",
+          "oklch(60.7% 0.182 258)",
+          "oklch(72.1% 0.164 258)",
+          "oklch(83.6% 0.128 258)",
+          "oklch(95% 0.075 258)"
+        ]
+      },
+      "accent-ink": {
+        "role": "primary",
+        "displayName": "Deep Sky Blue Ink",
+        "purpose": "Accent text and links.",
+        "canonical": "oklch(47.1% 0.165 258.3)",
+        "tonalRamp": [
+          "oklch(15% 0.067 258.3)",
+          "oklch(26.4% 0.115 258.3)",
+          "oklch(37.9% 0.147 258.3)",
+          "oklch(49.3% 0.163 258.3)",
+          "oklch(60.7% 0.163 258.3)",
+          "oklch(72.1% 0.147 258.3)",
+          "oklch(83.6% 0.115 258.3)",
+          "oklch(95% 0.067 258.3)"
+        ],
+        "nightValue": "#9ccbff"
+      },
+      "accent-soft": {
+        "role": "neutral",
+        "displayName": "Accent Soft",
+        "purpose": "Translucent surface or tint."
+      },
+      "accent-bright": {
+        "role": "secondary",
+        "displayName": "Pale Day Blue",
+        "purpose": "End-point dots, selection, icons on midnight.",
+        "canonical": "oklch(80.8% 0.095 248.2)",
+        "tonalRamp": [
+          "oklch(15% 0.039 248.2)",
+          "oklch(26.4% 0.066 248.2)",
+          "oklch(37.9% 0.084 248.2)",
+          "oklch(49.3% 0.094 248.2)",
+          "oklch(60.7% 0.094 248.2)",
+          "oklch(72.1% 0.084 248.2)",
+          "oklch(83.6% 0.066 248.2)",
+          "oklch(95% 0.039 248.2)"
+        ],
+        "nightValue": "#9fd0ff"
+      },
+      "accent-night": {
+        "role": "primary",
+        "displayName": "Night Sky Blue",
+        "purpose": "Accent at night.",
+        "canonical": "oklch(75.4% 0.131 250.8)",
+        "tonalRamp": [
+          "oklch(15% 0.053 250.8)",
+          "oklch(26.4% 0.091 250.8)",
+          "oklch(37.9% 0.117 250.8)",
+          "oklch(49.3% 0.129 250.8)",
+          "oklch(60.7% 0.129 250.8)",
+          "oklch(72.1% 0.117 250.8)",
+          "oklch(83.6% 0.091 250.8)",
+          "oklch(95% 0.053 250.8)"
+        ]
+      },
+      "rain": {
+        "role": "secondary",
+        "displayName": "Rain Blue",
+        "purpose": "Second data colour, fill gradients, range band.",
+        "canonical": "oklch(64% 0.157 253.1)",
+        "tonalRamp": [
+          "oklch(15% 0.064 253.1)",
+          "oklch(26.4% 0.11 253.1)",
+          "oklch(37.9% 0.14 253.1)",
+          "oklch(49.3% 0.155 253.1)",
+          "oklch(60.7% 0.155 253.1)",
+          "oklch(72.1% 0.14 253.1)",
+          "oklch(83.6% 0.11 253.1)",
+          "oklch(95% 0.064 253.1)"
+        ],
+        "nightValue": "#6cb4ff"
+      },
+      "est-ink": {
+        "role": "tertiary",
+        "displayName": "Estimate Violet",
+        "purpose": "Estimated or assumed values only.",
+        "canonical": "oklch(45.1% 0.187 281)",
+        "tonalRamp": [
+          "oklch(15% 0.076 281)",
+          "oklch(26.4% 0.13 281)",
+          "oklch(37.9% 0.166 281)",
+          "oklch(49.3% 0.184 281)",
+          "oklch(60.7% 0.184 281)",
+          "oklch(72.1% 0.166 281)",
+          "oklch(83.6% 0.13 281)",
+          "oklch(95% 0.076 281)"
+        ],
+        "nightValue": "#c8c1ff"
+      },
+      "est-tint": {
+        "role": "neutral",
+        "displayName": "Est Tint",
+        "purpose": "Translucent surface or tint."
+      },
+      "seg-1": {
+        "role": "tertiary",
+        "displayName": "Deep Harbour Navy",
+        "purpose": "Categorical series.",
+        "canonical": "oklch(32.7% 0.068 256.5)",
+        "tonalRamp": [
+          "oklch(15% 0.028 256.5)",
+          "oklch(26.4% 0.048 256.5)",
+          "oklch(37.9% 0.061 256.5)",
+          "oklch(49.3% 0.067 256.5)",
+          "oklch(60.7% 0.067 256.5)",
+          "oklch(72.1% 0.061 256.5)",
+          "oklch(83.6% 0.048 256.5)",
+          "oklch(95% 0.028 256.5)"
+        ],
+        "nightValue": "#3a5f94"
+      },
+      "series-2": {
+        "role": "tertiary",
+        "displayName": "Soft Violet",
+        "purpose": "Categorical series.",
+        "canonical": "oklch(65.3% 0.168 286.7)",
+        "tonalRamp": [
+          "oklch(15% 0.068 286.7)",
+          "oklch(26.4% 0.117 286.7)",
+          "oklch(37.9% 0.15 286.7)",
+          "oklch(49.3% 0.166 286.7)",
+          "oklch(60.7% 0.166 286.7)",
+          "oklch(72.1% 0.15 286.7)",
+          "oklch(83.6% 0.117 286.7)",
+          "oklch(95% 0.068 286.7)"
+        ],
+        "nightValue": "#a99ffb"
+      },
+      "series-3": {
+        "role": "tertiary",
+        "displayName": "Sun Gold",
+        "purpose": "Categorical series.",
+        "canonical": "oklch(77.6% 0.148 69.4)",
+        "tonalRamp": [
+          "oklch(15% 0.06 69.4)",
+          "oklch(26.4% 0.103 69.4)",
+          "oklch(37.9% 0.132 69.4)",
+          "oklch(49.3% 0.146 69.4)",
+          "oklch(60.7% 0.146 69.4)",
+          "oklch(72.1% 0.132 69.4)",
+          "oklch(83.6% 0.103 69.4)",
+          "oklch(95% 0.06 69.4)"
+        ],
+        "nightValue": "#f6b45a"
+      },
+      "series-4": {
+        "role": "tertiary",
+        "displayName": "Cloud Grey",
+        "purpose": "Categorical series; hatched means locked.",
+        "canonical": "oklch(70.9% 0.032 251.4)",
+        "tonalRamp": [
+          "oklch(15% 0.013 251.4)",
+          "oklch(26.4% 0.022 251.4)",
+          "oklch(37.9% 0.028 251.4)",
+          "oklch(49.3% 0.032 251.4)",
+          "oklch(60.7% 0.032 251.4)",
+          "oklch(72.1% 0.028 251.4)",
+          "oklch(83.6% 0.022 251.4)",
+          "oklch(95% 0.013 251.4)"
+        ],
+        "nightValue": "#6b7d95"
+      },
+      "ok": {
+        "role": "state",
+        "displayName": "Bulletin Ok",
+        "purpose": "State only.",
+        "canonical": "oklch(58.3% 0.126 157)",
+        "tonalRamp": [
+          "oklch(15% 0.052 157)",
+          "oklch(26.4% 0.088 157)",
+          "oklch(37.9% 0.113 157)",
+          "oklch(49.3% 0.125 157)",
+          "oklch(60.7% 0.125 157)",
+          "oklch(72.1% 0.113 157)",
+          "oklch(83.6% 0.088 157)",
+          "oklch(95% 0.052 157)"
+        ],
+        "nightValue": "#4cc58a"
+      },
+      "ok-ink": {
+        "role": "state",
+        "displayName": "Bulletin Ok Ink",
+        "purpose": "State only.",
+        "canonical": "oklch(46.2% 0.103 155.9)",
+        "tonalRamp": [
+          "oklch(15% 0.042 155.9)",
+          "oklch(26.4% 0.072 155.9)",
+          "oklch(37.9% 0.092 155.9)",
+          "oklch(49.3% 0.102 155.9)",
+          "oklch(60.7% 0.102 155.9)",
+          "oklch(72.1% 0.092 155.9)",
+          "oklch(83.6% 0.072 155.9)",
+          "oklch(95% 0.042 155.9)"
+        ],
+        "nightValue": "#8fe2b8"
+      },
+      "ok-tint": {
+        "role": "neutral",
+        "displayName": "Ok Tint",
+        "purpose": "Translucent surface or tint."
+      },
+      "aware": {
+        "role": "state",
+        "displayName": "Bulletin Aware",
+        "purpose": "State only.",
+        "canonical": "oklch(71.1% 0.145 86.6)",
+        "tonalRamp": [
+          "oklch(15% 0.059 86.6)",
+          "oklch(26.4% 0.101 86.6)",
+          "oklch(37.9% 0.13 86.6)",
+          "oklch(49.3% 0.144 86.6)",
+          "oklch(60.7% 0.144 86.6)",
+          "oklch(72.1% 0.13 86.6)",
+          "oklch(83.6% 0.101 86.6)",
+          "oklch(95% 0.059 86.6)"
+        ],
+        "nightValue": "#f0c419"
+      },
+      "aware-ink": {
+        "role": "state",
+        "displayName": "Bulletin Aware Ink",
+        "purpose": "State only.",
+        "canonical": "oklch(45.2% 0.092 88.2)",
+        "tonalRamp": [
+          "oklch(15% 0.038 88.2)",
+          "oklch(26.4% 0.064 88.2)",
+          "oklch(37.9% 0.082 88.2)",
+          "oklch(49.3% 0.091 88.2)",
+          "oklch(60.7% 0.091 88.2)",
+          "oklch(72.1% 0.082 88.2)",
+          "oklch(83.6% 0.064 88.2)",
+          "oklch(95% 0.038 88.2)"
+        ],
+        "nightValue": "#f3d86b"
+      },
+      "aware-tint": {
+        "role": "neutral",
+        "displayName": "Aware Tint",
+        "purpose": "Translucent surface or tint."
+      },
+      "prepare": {
+        "role": "state",
+        "displayName": "Bulletin Prepare",
+        "purpose": "State only.",
+        "canonical": "oklch(72.1% 0.156 60.4)",
+        "tonalRamp": [
+          "oklch(15% 0.064 60.4)",
+          "oklch(26.4% 0.109 60.4)",
+          "oklch(37.9% 0.139 60.4)",
+          "oklch(49.3% 0.154 60.4)",
+          "oklch(60.7% 0.154 60.4)",
+          "oklch(72.1% 0.139 60.4)",
+          "oklch(83.6% 0.109 60.4)",
+          "oklch(95% 0.064 60.4)"
+        ],
+        "nightValue": "#f6a04e"
+      },
+      "prepare-ink": {
+        "role": "state",
+        "displayName": "Bulletin Prepare Ink",
+        "purpose": "State only.",
+        "canonical": "oklch(47.4% 0.113 56.4)",
+        "tonalRamp": [
+          "oklch(15% 0.046 56.4)",
+          "oklch(26.4% 0.079 56.4)",
+          "oklch(37.9% 0.1 56.4)",
+          "oklch(49.3% 0.111 56.4)",
+          "oklch(60.7% 0.111 56.4)",
+          "oklch(72.1% 0.1 56.4)",
+          "oklch(83.6% 0.079 56.4)",
+          "oklch(95% 0.046 56.4)"
+        ],
+        "nightValue": "#f9c38f"
+      },
+      "prepare-tint": {
+        "role": "neutral",
+        "displayName": "Prepare Tint",
+        "purpose": "Translucent surface or tint."
+      },
+      "act": {
+        "role": "state",
+        "displayName": "Bulletin Act",
+        "purpose": "State only.",
+        "canonical": "oklch(58.1% 0.186 28.8)",
+        "tonalRamp": [
+          "oklch(15% 0.076 28.8)",
+          "oklch(26.4% 0.13 28.8)",
+          "oklch(37.9% 0.166 28.8)",
+          "oklch(49.3% 0.184 28.8)",
+          "oklch(60.7% 0.184 28.8)",
+          "oklch(72.1% 0.166 28.8)",
+          "oklch(83.6% 0.13 28.8)",
+          "oklch(95% 0.076 28.8)"
+        ],
+        "nightValue": "#f2756a"
+      },
+      "act-ink": {
+        "role": "state",
+        "displayName": "Bulletin Act Ink",
+        "purpose": "State only.",
+        "canonical": "oklch(46.6% 0.16 29.3)",
+        "tonalRamp": [
+          "oklch(15% 0.065 29.3)",
+          "oklch(26.4% 0.112 29.3)",
+          "oklch(37.9% 0.142 29.3)",
+          "oklch(49.3% 0.158 29.3)",
+          "oklch(60.7% 0.158 29.3)",
+          "oklch(72.1% 0.142 29.3)",
+          "oklch(83.6% 0.112 29.3)",
+          "oklch(95% 0.065 29.3)"
+        ],
+        "nightValue": "#f8aaa3"
+      },
+      "act-tint": {
+        "role": "neutral",
+        "displayName": "Act Tint",
+        "purpose": "Translucent surface or tint."
+      }
     },
     "typographyMeta": {
-      "large-title": { "displayName": "Large Title", "purpose": "iOS large title in the screen header, left aligned." },
-      "headline": { "displayName": "Headline", "purpose": "Sheet and section-level statements." },
-      "section-title": { "displayName": "Section Title", "purpose": "Section heads with a link action at right." },
-      "hero-number": { "displayName": "Hero Number", "purpose": "The one tabular figure a tile exists to show." },
-      "stat-number": { "displayName": "Stat Number", "purpose": "Supporting figures in stat cards and tiles." },
-      "title": { "displayName": "Title", "purpose": "List-row titles and compact header title, system stack." },
-      "body": { "displayName": "Body", "purpose": "Running text in the system San Francisco stack." },
-      "label": { "displayName": "Label", "purpose": "Muted helper and meta text." },
-      "caption": { "displayName": "Caption", "purpose": "Smallest muted text; tab labels are 10.5px." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "The single hero figure, set on the sky (Home uses 56px)."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Lead figure in a glass module; steps to 30px and 26px."
+      },
+      "figure-sm": {
+        "displayName": "Figure Small",
+        "purpose": "Secondary figures."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Large screen title on the sky."
+      },
+      "headline-sm": {
+        "displayName": "Headline Small",
+        "purpose": "In-content headings."
+      },
+      "section-title": {
+        "displayName": "Section Title",
+        "purpose": "Heading above each section."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Centred navigation title on sub-screens."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Name above a figure; form labels at 600."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Units, context, chart notes."
+      },
+      "level": {
+        "displayName": "Level",
+        "purpose": "Bulletin level chips."
+      },
+      "tab": {
+        "displayName": "Tab",
+        "purpose": "Tab bar labels."
+      }
     },
     "shadows": [
-      { "name": "float", "value": "0 12px 28px -14px rgba(7, 28, 38, 0.4)", "purpose": "Toasts and the floating action button." },
-      { "name": "elevated-card", "value": "0 14px 30px -18px rgba(7, 28, 38, 0.28)", "purpose": "Opt-in elevated card." },
-      { "name": "selected-ring", "value": "0 0 0 2px #0b1f29", "purpose": "Selected card ring in ink (1.5px on option cards)." },
-      { "name": "focus-glow", "value": "0 0 0 4px color-mix(in srgb, #0a7c8f 32%, transparent)", "purpose": "Input focus, with border shifting to ink." },
-      { "name": "tab-bar-material", "value": "backdrop-filter: blur(22px) saturate(1.5); background: color-mix(in srgb, #f8fbfb 84%, transparent)", "purpose": "Translucent iOS-style tab bar." }
+      {
+        "name": "shadow-soft",
+        "value": "0 14px 34px -22px rgba(23, 63, 112, 0.45)",
+        "purpose": "Every glass surface, with the glass-edge highlight."
+      },
+      {
+        "name": "glass-edge",
+        "value": "inset 0 0.5px 0 rgba(255, 255, 255, 0.9)",
+        "purpose": "Top highlight that replaces a border."
+      },
+      {
+        "name": "shadow-float",
+        "value": "0 18px 40px -18px rgba(13, 27, 42, 0.5)",
+        "purpose": "FAB, toasts, dialogs."
+      },
+      {
+        "name": "midnight-lift",
+        "value": "0 12px 26px -16px rgba(15, 34, 56, 0.8)",
+        "purpose": "Primary buttons."
+      },
+      {
+        "name": "selected-ring",
+        "value": "inset 0 0 0 2px #1769d6",
+        "purpose": "Selected card or option, with shadow-soft."
+      },
+      {
+        "name": "focus-halo",
+        "value": "inset 0 0 0 1.5px #1769d6, 0 0 0 4px rgba(23, 105, 214, 0.12)",
+        "purpose": "Focused inputs."
+      },
+      {
+        "name": "glass-blur",
+        "value": "backdrop-filter: blur(18px) saturate(1.5)",
+        "purpose": "Glass modules; tab bar uses blur(24px) saturate(1.8), header blur(20px) saturate(1.6)."
+      }
     ],
     "motion": [
-      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Press scale (0.97), sheet slide-up, ribbon and progress growth, line draw-on." },
-      { "name": "duration-press", "value": "0.2s", "purpose": "Card, tile and button press feedback." },
-      { "name": "duration-grow", "value": "0.9s", "purpose": "Ribbon, runway and bar growth from the left." },
-      { "name": "reduced-motion", "value": "animation and transition durations collapse to 0.01ms", "purpose": "prefers-reduced-motion respected globally." }
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "House ease for presses, reveals, sheets and chart draws."
+      },
+      {
+        "name": "press",
+        "value": "transform: scale(0.97) buttons, scale(0.985) modules, 0.2s",
+        "purpose": "Press feedback."
+      },
+      {
+        "name": "rise",
+        "value": "0.7s, translateY(14px) and blur(4px) to rest, staggered 0.06s",
+        "purpose": "Module reveal on mount."
+      },
+      {
+        "name": "draw",
+        "value": "1.2s stroke-dashoffset, 0.1s delay",
+        "purpose": "Lines and contrails draw once."
+      },
+      {
+        "name": "grow",
+        "value": "0.9s scaleX from left, 70ms stagger",
+        "purpose": "Ribbons, runway cells, bars."
+      },
+      {
+        "name": "drift",
+        "value": "70s, 90s, 110s linear alternate, -24px to 36px",
+        "purpose": "Clouds on the sky."
+      },
+      {
+        "name": "slide-up",
+        "value": "0.35s sheets, 0.3s dialogs",
+        "purpose": "Sheets, dialogs, toasts."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animations and transitions to 0.01ms; clouds stop",
+        "purpose": "prefers-reduced-motion."
+      }
     ],
     "breakpoints": [
-      { "name": "dev-panel-narrow", "value": "900px" }
-    ]
+      {
+        "name": "device",
+        "value": "440px",
+        "purpose": "Single iOS column inside the device frame; no responsive layout inside the app."
+      }
+    ],
+    "skies": {
+      "day": {
+        "sky-1": "#6fb6ef",
+        "sky-2": "#a6d3f6",
+        "sky-3": "#d6ebfa",
+        "haze": "#eef5fb",
+        "sun": "rgba(255, 255, 255, 0.85)",
+        "sun-x": "82%",
+        "cloud-a": 0.62
+      },
+      "morning": {
+        "sky-1": "#8ec0f0",
+        "sky-2": "#cfe1f4",
+        "sky-3": "#fbe2cf",
+        "haze": "#f5f4f2",
+        "sun": "rgba(255, 220, 170, 0.95)",
+        "sun-x": "18%",
+        "cloud-a": 0.55
+      },
+      "evening": {
+        "sky-1": "#7c84d6",
+        "sky-2": "#c3a6dc",
+        "sky-3": "#f4bfb0",
+        "haze": "#f3f0f7",
+        "sun": "rgba(255, 196, 160, 0.75)",
+        "sun-x": "24%",
+        "cloud-a": 0.42
+      },
+      "night": {
+        "sky-1": "#070f26",
+        "sky-2": "#0e1d42",
+        "sky-3": "#15295a",
+        "haze": "#0a1430",
+        "sun": "rgba(190, 210, 255, 0.22)",
+        "sun-x": "80%",
+        "cloud-a": 0,
+        "note": "Dark appearance with starfield. Verified on Home and Decide only."
+      }
+    }
   },
   "components": [
     {
       "name": "Primary Button",
-      "kind": "custom",
+      "kind": "button",
       "refersTo": "button-primary",
-      "description": "Radar Teal pill, the one action on cloud and paper.",
+      "description": "Midnight pill for the one primary action on a screen; white with ink text at night.",
       "html": "<button class=\"ds-btn\">Save decision</button>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 0 26px; border-radius: 999px; border: none; background: #0a7c8f; color: #fff; font: 600 16px -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif; letter-spacing: -0.01em; cursor: pointer; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn:active { transform: scale(0.97); } .ds-btn:focus-visible { outline: 2px solid #0b1f29; outline-offset: 2px; }"
+      "css": ".ds-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:56px; padding:0 26px; border-radius:999px; border:none; background:var(--midnight, #0f2238); color:#fff; font-family:\"Figtree Variable\",Figtree,-apple-system,sans-serif; font-weight:600; font-size:16px; letter-spacing:-0.01em; box-shadow:0 12px 26px -16px rgba(15,34,56,0.8); transition:transform 0.2s cubic-bezier(0.16,1,0.3,1); cursor:pointer; } .ds-btn:hover { background:#1b3352; } .ds-btn:active { transform:scale(0.97); } .ds-btn:focus-visible { outline:2px solid var(--accent, #1769d6); outline-offset:2px; }"
     },
     {
-      "name": "Secondary Button",
-      "kind": "custom",
+      "name": "Secondary Glass Button",
+      "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Paper pill with a 1.5px inset ink ring.",
-      "html": "<button class=\"ds-btn-2\">Compare</button>",
-      "css": ".ds-btn-2 { min-height: 56px; padding: 0 26px; border-radius: 999px; border: none; background: #f8fbfb; color: #0b1f29; box-shadow: inset 0 0 0 1.5px #0b1f29; font: 600 16px -apple-system, system-ui, sans-serif; cursor: pointer; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-2:active { transform: scale(0.97); } .ds-btn-2:focus-visible { outline: 2px solid #0b1f29; outline-offset: 2px; }"
+      "description": "Frosted glass pill for the alternative action.",
+      "html": "<div class=\"ds-sky-bg\"><button class=\"ds-btn-secondary\">Compare options</button></div>",
+      "css": ".ds-sky-bg { background: linear-gradient(180deg, var(--sky-1, #6fb6ef) 0%, var(--sky-2, #a6d3f6) 45%, var(--sky-3, #d6ebfa) 75%, var(--haze, #eef5fb) 100%); padding: 24px 20px; border-radius: 24px; } .ds-btn-secondary { min-height:56px; padding:0 26px; border-radius:999px; border:none; background:var(--glass-strong, rgba(255,255,255,0.8)); color:var(--ink, #0d1b2a); font-family:\"Figtree Variable\",Figtree,-apple-system,sans-serif; font-weight:600; font-size:16px; letter-spacing:-0.01em; box-shadow:inset 0 0 0 0.5px var(--line, rgba(13,27,42,0.1)), var(--shadow-soft, 0 14px 34px -22px rgba(23,63,112,0.45)); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); transition:transform 0.2s cubic-bezier(0.16,1,0.3,1); cursor:pointer; } .ds-btn-secondary:hover { background:rgba(255,255,255,0.92); } .ds-btn-secondary:active { transform:scale(0.97); } .ds-btn-secondary:focus-visible { outline:2px solid var(--accent, #1769d6); outline-offset:2px; }"
     },
     {
-      "name": "Storm Tile",
+      "name": "Hero Figure on Sky",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "The headline figure sits directly on the sky: label, figure, delta chip, no container.",
+      "html": "<div class=\"ds-hero\"><span class=\"ds-hero-label\">Net worth</span><div class=\"ds-hero-num\">₹18.4L</div><span class=\"ds-delta\">+ ₹42,000 since Sep</span></div>",
+      "css": ".ds-hero { background: linear-gradient(180deg, var(--sky-1, #6fb6ef) 0%, var(--sky-2, #a6d3f6) 45%, var(--sky-3, #d6ebfa) 75%, var(--haze, #eef5fb) 100%); padding: 24px 20px; border-radius: 24px; color:var(--ink, #0d1b2a); font-family:\"Figtree Variable\",Figtree,-apple-system,sans-serif; } .ds-hero-label { font-size:13px; font-weight:500; color:var(--muted, #4f6278); } .ds-hero-num { margin-top:8px; font-size:56px; font-weight:650; letter-spacing:-0.045em; line-height:0.96; font-variant-numeric:tabular-nums; } .ds-delta { display:inline-flex; margin-top:12px; border-radius:999px; padding:4px 10px; font-size:12.5px; font-weight:600; background:rgba(35,145,92,0.14); color:#15693f; }"
+    },
+    {
+      "name": "Glass Module",
       "kind": "card",
-      "refersTo": "tile-storm",
-      "description": "Hero surface with a hero number and a lit Radar Bright action.",
-      "html": "<div class=\"ds-tile\"><div class=\"ds-tile-label\">Net worth</div><div class=\"ds-tile-num\">42.6L</div></div>",
-      "css": ".ds-tile { border-radius: 24px; padding: 20px; background: #0c3a47; color: #fff; border: 1px solid #0c3a47; } .ds-tile-label { font: 500 12.5px -apple-system, system-ui, sans-serif; color: #9fc1ca; } .ds-tile-num { font: 600 58px/0.96 'Barlow Semi Condensed', Barlow, system-ui, sans-serif; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; margin-top: 6px; }"
+      "refersTo": "tile-glass",
+      "description": "Borderless frosted glass for grouped, tappable content; edge is a top highlight and a soft sky shadow.",
+      "html": "<div class=\"ds-sky-bg\"><a class=\"ds-tile\" href=\"#\"><span class=\"ds-tile-label\">Emergency runway</span><div class=\"ds-tile-num\">4.2 months</div><p class=\"ds-tile-cap\">of essential spending covered</p></a></div>",
+      "css": ".ds-sky-bg { background: linear-gradient(180deg, var(--sky-1, #6fb6ef) 0%, var(--sky-2, #a6d3f6) 45%, var(--sky-3, #d6ebfa) 75%, var(--haze, #eef5fb) 100%); padding: 24px 20px; border-radius: 24px; } .ds-tile { display:block; text-decoration:none; color:var(--ink, #0d1b2a); border-radius:26px; padding:20px; background:var(--glass, rgba(255,255,255,0.56)); -webkit-backdrop-filter:blur(18px) saturate(1.5); backdrop-filter:blur(18px) saturate(1.5); box-shadow:inset 0 0.5px 0 var(--glass-edge, rgba(255,255,255,0.9)), var(--shadow-soft, 0 14px 34px -22px rgba(23,63,112,0.45)); font-family:\"Figtree Variable\",Figtree,-apple-system,sans-serif; transition:transform 0.2s cubic-bezier(0.16,1,0.3,1); } .ds-tile:hover { background:rgba(255,255,255,0.66); } .ds-tile:active { transform:scale(0.985); } .ds-tile:focus-visible { outline:2px solid var(--accent, #1769d6); outline-offset:2px; } .ds-tile-label { font-size:13px; font-weight:500; color:var(--muted, #4f6278); } .ds-tile-num { margin-top:8px; font-size:40px; font-weight:650; letter-spacing:-0.04em; line-height:0.98; font-variant-numeric:tabular-nums; } .ds-tile-cap { margin:4px 0 0; font-size:12.5px; color:var(--muted, #4f6278); }"
     },
     {
-      "name": "Card",
-      "kind": "card",
-      "refersTo": "card",
-      "description": "Paper surface with a hairline; flat at rest.",
-      "html": "<div class=\"ds-card\">Card content</div>",
-      "css": ".ds-card { background: #f8fbfb; border: 1px solid #cad7dc; border-radius: 20px; padding: 18px; color: #0b1f29; font: 15px/1.45 -apple-system, system-ui, sans-serif; }"
-    },
-    {
-      "name": "Level Pill",
-      "kind": "chip",
-      "refersTo": "level-pill-aware",
-      "description": "Bulletin warning level with a currentColor dot. State only.",
-      "html": "<span class=\"ds-level\">Be aware</span>",
-      "css": ".ds-level { display: inline-flex; align-items: center; gap: 6px; font: 700 11px/1.3 -apple-system, system-ui, sans-serif; letter-spacing: 0.02em; padding: 3px 9px; border-radius: 999px; background: #faf0c4; color: #6b5200; white-space: nowrap; } .ds-level::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }"
-    },
-    {
-      "name": "Input Field",
+      "name": "Text Field",
       "kind": "input",
-      "refersTo": "input-field",
-      "description": "54px paper field; focus shifts border to ink with a radar glow.",
-      "html": "<label class=\"ds-input\"><input placeholder=\"Amount\" /></label>",
-      "css": ".ds-input { display: flex; align-items: center; min-height: 54px; padding: 0 16px; border: 1.5px solid #cad7dc; border-radius: 14px; background: #f8fbfb; transition: border-color 0.15s, box-shadow 0.15s; } .ds-input input { flex: 1; border: none; outline: none; background: transparent; font: 500 16px -apple-system, system-ui, sans-serif; color: #0b1f29; padding: 14px 0; } .ds-input input::placeholder { color: #8aa1ab; font-weight: 400; } .ds-input:focus-within { border-color: #0b1f29; box-shadow: 0 0 0 4px color-mix(in srgb, #0a7c8f 32%, transparent); }"
+      "refersTo": "input",
+      "description": "Strong glass field with a hairline; focus is an accent ring and soft halo.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Car price</span><span class=\"ds-input-wrap\"><span class=\"ds-affix\">₹</span><input class=\"ds-input\" placeholder=\"12,00,000\" /></span></label>",
+      "css": ".ds-field { display:flex; flex-direction:column; gap:7px; font-family:\"Figtree Variable\",Figtree,-apple-system,sans-serif; } .ds-field-label { font-size:13px; font-weight:600; color:var(--ink-2, #2a3c52); padding-left:2px; } .ds-input-wrap { display:flex; align-items:center; gap:8px; min-height:54px; padding:0 16px; border-radius:16px; background:var(--glass-strong, rgba(255,255,255,0.8)); box-shadow:inset 0 0 0 0.5px var(--line, rgba(13,27,42,0.1)); transition:box-shadow 0.15s; } .ds-input-wrap:hover { box-shadow:inset 0 0 0 1px rgba(13,27,42,0.18); } .ds-input-wrap:focus-within { box-shadow:inset 0 0 0 1.5px var(--accent, #1769d6), 0 0 0 4px var(--accent-soft, rgba(23,105,214,0.12)); } .ds-affix { color:var(--muted, #4f6278); font-size:16px; font-weight:600; } .ds-input { flex:1; min-width:0; border:none; outline:none; background:transparent; padding:14px 0; font:inherit; font-size:16px; font-weight:500; color:var(--ink, #0d1b2a); caret-color:var(--accent, #1769d6); } .ds-input::placeholder { color:var(--faint, #8d9cae); font-weight:400; }"
     },
     {
-      "name": "Selected Chip",
+      "name": "Choice Chips",
       "kind": "chip",
-      "refersTo": "chip-on",
-      "description": "Storm pill for selected filters and options.",
-      "html": "<button class=\"ds-chip on\">Car</button> <button class=\"ds-chip\">Home</button>",
-      "css": ".ds-chip { min-height: 42px; padding: 10px 16px; border-radius: 999px; border: 1.5px solid #cad7dc; background: #f8fbfb; color: #0b1f29; font: 500 14px -apple-system, system-ui, sans-serif; cursor: pointer; } .ds-chip.on { background: #0c3a47; border-color: #0b1f29; color: #fff; } .ds-chip:focus-visible { outline: 2px solid #0b1f29; outline-offset: 2px; }"
+      "refersTo": "chip",
+      "description": "Glass pills; the selected one turns midnight.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip ds-chip-on\">Salaried</button><button class=\"ds-chip\">Household</button><button class=\"ds-chip\">Freelancer</button></div>",
+      "css": ".ds-chips { display:flex; flex-wrap:wrap; gap:8px; font-family:\"Figtree Variable\",Figtree,-apple-system,sans-serif; } .ds-chip { border:none; min-height:42px; padding:10px 16px; border-radius:999px; background:var(--glass-strong, rgba(255,255,255,0.8)); color:var(--ink, #0d1b2a); font:inherit; font-size:14px; font-weight:500; box-shadow:inset 0 0 0 0.5px var(--line, rgba(13,27,42,0.1)); transition:all 0.15s; cursor:pointer; } .ds-chip:hover { background:#fff; } .ds-chip:focus-visible { outline:2px solid var(--accent, #1769d6); outline-offset:2px; } .ds-chip-on, .ds-chip-on:hover { background:var(--midnight, #0f2238); color:#fff; box-shadow:none; }"
+    },
+    {
+      "name": "Bulletin Levels",
+      "kind": "chip",
+      "refersTo": "level-prepare",
+      "description": "The four state levels; these colours mean state and nothing else.",
+      "html": "<div class=\"ds-levels\"><span class=\"ds-level ds-ok\">On track</span><span class=\"ds-level ds-aware\">Be aware</span><span class=\"ds-level ds-prepare\">Be prepared</span><span class=\"ds-level ds-act\">Take action</span></div>",
+      "css": ".ds-levels { display:flex; flex-wrap:wrap; gap:8px; font-family:\"Figtree Variable\",Figtree,-apple-system,sans-serif; } .ds-level { display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:650; line-height:1.3; padding:3px 10px 3px 8px; border-radius:999px; white-space:nowrap; } .ds-level::before { content:\"\"; width:7px; height:7px; border-radius:50%; background:currentColor; } .ds-ok { background:rgba(35,145,92,0.14); color:#15693f; } .ds-aware { background:rgba(232,182,0,0.18); color:#6b5200; } .ds-prepare { background:rgba(234,138,38,0.17); color:#8a4806; } .ds-act { background:rgba(210,63,51,0.13); color:#a0261c; }"
     },
     {
       "name": "Tab Bar",
       "kind": "nav",
       "refersTo": "tab-bar",
-      "description": "Translucent blurred iOS tab bar with a storm hub pill at centre.",
-      "html": "<nav class=\"ds-tabs\"><a class=\"active\">Home</a><a>Simulate</a><a class=\"hub\"><span></span>Decide</a><a>Goals</a><a>Profile</a></nav>",
-      "css": ".ds-tabs { display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px 8px 12px; background: color-mix(in srgb, #f8fbfb 84%, transparent); backdrop-filter: blur(22px) saturate(1.5); border-top: 0.5px solid #b3c4cb; font: 500 10.5px -apple-system, system-ui, sans-serif; } .ds-tabs a { display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 48px; padding-top: 4px; color: #4b6572; text-decoration: none; } .ds-tabs a.active { color: #0a7c8f; font-weight: 600; } .ds-tabs .hub span { width: 54px; height: 30px; border-radius: 15px; background: #0c3a47; color: #6fd5e3; display: grid; place-items: center; font-size: 18px; }"
+      "description": "Translucent haze tab bar: Home, Simulate, Decide, Goals, Profile. Decide is a midnight pill; the active tab is accent with a filled icon.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Primary\"><a class=\"ds-tab ds-tab-on\" href=\"#\" aria-current=\"page\"><svg width=\"25\" height=\"25\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M224,120v96a8,8,0,0,1-8,8H160a8,8,0,0,1-8-8V164a4,4,0,0,0-4-4H108a4,4,0,0,0-4,4v52a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V120a16,16,0,0,1,4.69-11.31l80-80a16,16,0,0,1,22.62,0l80,80A16,16,0,0,1,224,120Z\"/></svg>Home</a><a class=\"ds-tab\" href=\"#\"><svg width=\"25\" height=\"25\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0V156.69l50.34-50.35a8,8,0,0,1,11.32,0L128,132.69,180.69,80H160a8,8,0,0,1,0-16h40a8,8,0,0,1,8,8v40a8,8,0,0,1-16,0V91.31l-58.34,58.35a8,8,0,0,1-11.32,0L96,123.31l-56,56V200H224A8,8,0,0,1,232,208Z\"/></svg>Simulate</a><a class=\"ds-tab ds-hub\" href=\"#\"><span class=\"ds-hub-btn\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM172.42,72.84l-64,32a8.05,8.05,0,0,0-3.58,3.58l-32,64A8,8,0,0,0,80,184a8.1,8.1,0,0,0,3.58-.84l64-32a8.05,8.05,0,0,0,3.580-3.58l32-64a8,8,0,0,0-10.74-10.74ZM138,138,97.89,158.11,118,118l40.150-20.07Z\"/></svg></span>Decide</a><a class=\"ds-tab\" href=\"#\"><svg width=\"25\" height=\"25\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M221.87,83.16A104.1,104.1,0,1,1,195.67,49l22.67-22.68a8,8,0,0,1,11.32,11.32l-96,96a8,8,0,0,1-11.32-11.32l27.72-27.72a40,40,0,1,0,17.87,31.09,8,8,0,1,1,16-.9,56,56,0,1,1-22.38-41.65L184.3,60.39a87.88,87.88,0,1,0,23.13,29.67,8,8,0,0,1,14.44-6.9Z\"/></svg>Goals</a><a class=\"ds-tab\" href=\"#\"><svg width=\"25\" height=\"25\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.780,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z\"/></svg>Profile</a></nav>",
+      "css": ".ds-nav { display:grid; grid-template-columns:repeat(5,1fr); align-items:start; padding:7px 8px 14px; background:color-mix(in srgb, #eef5fb 70%, transparent); -webkit-backdrop-filter:blur(24px) saturate(1.8); backdrop-filter:blur(24px) saturate(1.8); box-shadow:0 -0.5px 0 rgba(13,27,42,0.1); font-family:\"Figtree Variable\",Figtree,-apple-system,sans-serif; } .ds-tab { display:flex; flex-direction:column; align-items:center; gap:3px; min-height:48px; padding-top:3px; font-size:10.5px; font-weight:500; color:var(--muted, #4f6278); text-decoration:none; transition:color 0.2s; } .ds-tab > svg { margin:3px 0; } .ds-tab:hover { color:var(--ink, #0d1b2a); } .ds-tab:focus-visible { outline:2px solid var(--accent, #1769d6); outline-offset:2px; border-radius:12px; } .ds-tab-on, .ds-tab-on:hover { color:var(--accent, #1769d6); font-weight:600; } .ds-hub-btn { width:52px; height:30px; border-radius:15px; background:var(--midnight, #0f2238); color:#fff; display:grid; place-items:center; transition:transform 0.25s cubic-bezier(0.16,1,0.3,1), background 0.2s; } .ds-hub:hover .ds-hub-btn { background:#1b3352; } .ds-hub:active .ds-hub-btn { transform:scale(0.94); }"
+    },
+    {
+      "name": "Glass List",
+      "kind": "card",
+      "refersTo": "list-glass",
+      "description": "Strong glass list with duotone icons in accent-soft circles and inset hairline dividers.",
+      "html": "<div class=\"ds-list\"><a class=\"ds-row\" href=\"#\"><span class=\"ds-ibox\"></span><span class=\"ds-main\"><span class=\"ds-title\">Car loan</span><span class=\"ds-sub\">EMI on the 5th</span></span><span class=\"ds-val\">₹18,400</span></a><a class=\"ds-row\" href=\"#\"><span class=\"ds-ibox\"></span><span class=\"ds-main\"><span class=\"ds-title\">Salary</span><span class=\"ds-sub\">Monthly</span></span><span class=\"ds-val\">₹1,20,000</span></a></div>",
+      "css": ".ds-list { border-radius:24px; overflow:hidden; background:var(--glass-strong, rgba(255,255,255,0.8)); -webkit-backdrop-filter:blur(18px) saturate(1.5); backdrop-filter:blur(18px) saturate(1.5); box-shadow:inset 0 0.5px 0 var(--glass-edge, rgba(255,255,255,0.9)), var(--shadow-soft, 0 14px 34px -22px rgba(23,63,112,0.45)); font-family:\"Figtree Variable\",Figtree,-apple-system,sans-serif; } .ds-row { position:relative; display:flex; align-items:center; gap:14px; min-height:60px; padding:13px 16px; color:var(--ink, #0d1b2a); text-decoration:none; } .ds-row + .ds-row::before { content:\"\"; position:absolute; top:0; left:66px; right:0; height:0.5px; background:rgba(13,27,42,0.18); } .ds-row:hover, .ds-row:active { background:rgba(13,27,42,0.06); } .ds-row:focus-visible { outline:2px solid var(--accent, #1769d6); outline-offset:-2px; } .ds-ibox { width:36px; height:36px; border-radius:18px; background:var(--accent-soft, rgba(23,105,214,0.12)); flex:none; } .ds-main { flex:1; min-width:0; } .ds-title { display:block; font-weight:600; } .ds-sub { display:block; margin-top:2px; font-size:12.5px; color:var(--muted, #4f6278); } .ds-val { font-weight:600; font-variant-numeric:tabular-nums; }"
     }
   ],
   "narrative": {
-    "northStar": "The Monsoon Bulletin",
-    "overview": "A money decision is a forecast, so the app speaks like a weather bulletin. Outcomes are ranges, not single futures. Something changes at an onset marker. State is told in a four-level warning vocabulary (ok, aware, prepare, act) instead of green up and red down. The ground is overcast cloud grey with a cool green bias, cards are paper white, hero tiles are deep storm teal, actions are radar teal, and data and estimates are rain blue.\n\nThe shell borrows iOS grammar: large titles, grouped lists, a translucent tab bar with Decide centred, pill buttons and sheets. Numerals and headings use Barlow Semi Condensed; running text uses the system San Francisco stack. Contour art on storm tiles is drawn as isobars.",
+    "northStar": "Under the Sky",
+    "overview": "A money decision is a forecast, so the app lives under a real sky. The sky follows the time of day (morning gold and blue, clear day blue, evening lilac and rose, night navy with stars) and fades into a pale haze where the reading content begins. Headline figures sit directly on that sky with no container; only grouped, tappable content earns a surface, and that surface is borderless frosted glass so the sky keeps reading through it. Risk is spoken as a weather bulletin in four levels (ok, be aware, be prepared, take action), never as green up and red down decoration.\n\nThe world is calm, open and airy. Density is moderate: one strong figure per module, generous section breaks, and hairlines instead of boxes where a group only needs separating. One typeface (Figtree) carries everything from the 60px hero figure to the 10.5px tab label, with tight negative tracking on figures. Primary action is midnight ink; deep sky blue is the voice of selection and data; violet means estimate. The prototype is an iOS screen shown in a 440px device frame.\n\nRetired and not to return: the earlier storm-teal tile world, Barlow numerals, isobar contour lines, blob art and dot grids. Boxed bento cards, bordered containers and a single neon fintech accent are rejected by this world.",
     "keyCharacteristics": [
-      "Cloud ground, paper cards, storm-teal hero surfaces, radar-teal action, rain-blue data.",
-      "Four bulletin warning colours that only ever mean state.",
-      "Condensed tabular numerals over native text.",
-      "Soft, generous radii (14 to 24px, pills for controls) and almost no shadow.",
-      "Isobar contour art on dark tiles; ranges and onset markers in charts.",
-      "Dark appearance exists as a token set, verified on Home and Decide only.",
-      "Home net worth sparkline shows actual history with no forecast band; the range band appears on multi-option charts only."
+      "Time-of-day sky backdrop with drifting clouds on top-level screens, a softer sky on sub-screens.",
+      "Hero figures on the sky with no surface; everything else grouped on borderless frosted glass.",
+      "Four bulletin colours reserved for state.",
+      "Figtree only, tabular figures with tight tracking.",
+      "Phosphor icons: regular by default, fill when selected, duotone inside tinted badges.",
+      "Midnight pill for primary actions and for the Decide tab."
     ],
     "rules": [
-      { "name": "The Reserved Weather Rule", "body": "The four level colours (green, yellow, orange, red) mean state and nothing else. They never decorate a tile, icon, chart series or illustration.", "section": "colors" },
-      { "name": "The Lit-On-Storm Rule", "body": "Radar Bright appears only on storm surfaces or as a small signal. On cloud and paper, action is Radar Teal.", "section": "colors" },
-      { "name": "The Estimate Is Indigo Rule", "body": "Assumptions, projections and estimates are indigo or rain blue and may be dashed or hatched; they are never a level colour.", "section": "colors" },
-      { "name": "The Numerals Are Condensed Rule", "body": "Every currency figure is Barlow Semi Condensed with tabular figures.", "section": "typography" },
-      { "name": "The Native Text Rule", "body": "Prose, labels and controls use the system stack. Barlow does not set paragraphs.", "section": "typography" },
-      { "name": "The Flat Until Floating Rule", "body": "Surfaces rest flat with a hairline. Only toasts, the FAB and the tab bar float.", "section": "elevation" },
-      { "name": "The Dark Is A Token Set Rule", "body": "Dark re-values the same roles via data-theme on the screen. Verified on Home and Decide only.", "section": "elevation" }
+      {
+        "name": "The Bulletin Rule",
+        "body": "Ok green, aware amber, prepare orange and act red only ever mean state: a level chip, a negative delta, a shortfall, a destructive action, an error. They never colour a category, a decoration or a brand moment.",
+        "section": "colors"
+      },
+      {
+        "name": "The Midnight Acts Rule",
+        "body": "The filled primary action is midnight ink (white at night). Deep sky blue selects and charts; it does not fill primary buttons.",
+        "section": "colors"
+      },
+      {
+        "name": "The Violet Means Estimate Rule",
+        "body": "Violet tint marks assumed or estimated values and nothing else.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Figtree is the only typeface, including inside SVG illustrations and chart labels. No second display face, no mono.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tight Figures Rule",
+        "body": "Every money figure is tabular and tracked negative (-0.03em to -0.045em, tighter as it grows). Sentence case everywhere; nothing is set in uppercase.",
+        "section": "typography"
+      },
+      {
+        "name": "The Open Sky Rule",
+        "body": "The first figure on a top-level screen sits directly on the sky: no surface, no radius, no shadow, just its label, the figure, a delta chip and an open chart.",
+        "section": "layout"
+      },
+      {
+        "name": "The No Border Rule",
+        "body": "Surfaces never take a stroke. Their edge is a 0.5px inset highlight and a soft shadow; selection is a 2px inset accent ring, and only inputs and secondary controls use a 0.5px inset hairline.",
+        "section": "elevation"
+      }
     ],
     "dos": [
-      "Do use the four level colours only to state a level (pill, dot, border, error, negative delta).",
-      "Do set every figure in Barlow Semi Condensed with tabular numerals; keep prose in the system stack.",
-      "Do use Radar Teal for action on cloud and paper, and Radar Bright with ink text on storm.",
-      "Do keep surfaces flat with a 1px line; reserve soft cool shadows (Float) for toasts and the FAB.",
-      "Do use full pills for controls and the 14 to 24px radius ladder for containers.",
-      "Do show ranges and an onset marker where a choice changes, and mark estimates in indigo, dashed or hatched.",
-      "Do keep touch targets at or above 44px."
+      "Do put the hero figure directly on the sky with no container (no background, shadow or radius).",
+      "Do use borderless frosted glass (glass or glass-strong, 18px blur, glass-edge highlight, soft sky shadow) for every other module.",
+      "Do reserve ok, aware, prepare and act for state, and speak them through the level chip, deltas, shortfall shading and errors.",
+      "Do use midnight for the filled primary action and the Decide pill, inverted to white at night.",
+      "Do set every figure in Figtree 650 with tabular numerals and negative tracking.",
+      "Do use Phosphor icons only: regular idle, fill selected, duotone in tinted badges.",
+      "Do read sky colours from the sky tokens so morning, day, evening and night all work; verify night on any new screen."
     ],
     "donts": [
-      "Don't use green or red for plain up or down; use level meaning or neutral ink.",
-      "Don't use a level colour as decoration in an illustration, chart series, tile or icon.",
-      "Don't put white text on Radar Bright.",
-      "Don't draw a range band on a single-series chart, or imply a forecast on the Home net worth sparkline.",
-      "Don't assume dark appearance is designed beyond Home and Decide; verify other screens before relying on it.",
-      "Don't return to the incumbent bone canvas, ink tiles and electric-lime accent."
+      "Don't bring back contour lines, isobars, blob art or dot grids, on the sky, in illustrations or behind charts.",
+      "Don't put a border or stroke on a surface; use the glass-edge highlight and soft shadow.",
+      "Don't box hero figures or arrange the overview as a grid of boxed bento cards.",
+      "Don't use the bulletin colours for categories, chart series, decoration or on/off switches.",
+      "Don't add a second typeface, a mono face or uppercase labels.",
+      "Don't use text glyphs (arrows, chevrons, check marks) as icons; use Phosphor.",
+      "Don't fill primary buttons with deep sky blue or introduce a neon accent."
     ]
   }
 }

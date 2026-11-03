@@ -48,7 +48,7 @@ export function NetWorthDetails() {
         <div className="display-num mt-8" style={{ fontSize: 52 }}><Money value={f.netWorth.value} animate /></div>
         <CalcNote missing={f.netWorth.missing} estimated={f.netWorth.estimated} />
         <div className="mt-16">
-          <Ribbon onDark height={30} legend={false} parts={[{ label: 'Assets', value: f.assets.value ?? 0, color: 'var(--s1)' }, { label: 'Liabilities', value: f.liabilities.value ?? 0, color: 'var(--act)' }]} />
+          <Ribbon onDark height={30} legend={false} parts={[{ label: 'Assets', value: f.assets.value ?? 0, color: 'var(--s1)' }, { label: 'Liabilities', value: f.liabilities.value ?? 0, color: 'var(--seg-1)' }]} />
           <div className="row-between caption mt-8">
             <span>Assets <b>{inr(f.assets.value)}</b></span>
             <span>Liabilities <b>{inr(f.liabilities.value)}</b></span>

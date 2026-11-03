@@ -162,7 +162,7 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
           <div className="caption mt-4">estimate · starts at {inr(sc.vars.openingLiquid)} · lowest {inr(s.minLiquidity)} in month {s.minLiquidityMonth}</div>
         </div>
         <div className="card reveal d1">
-          <div className="row-between mb-8"><span className="strong">Liquid funds over time</span><span className="caption">teal = above zero · red = below</span></div>
+          <div className="row-between mb-8"><span className="strong">Liquid funds over time</span><span className="caption">blue = above zero · red = below</span></div>
           <LineChart
             series={[{ label: 'Liquid funds', values: projection.rows.map((r) => r.closingLiquid) }]}
             xLabels={projection.rows.map((r) => monthLabelFromNow(r.month))}
@@ -248,7 +248,7 @@ export function ScenarioCashflow() {
     <Screen title="Cash-flow projection" back>
       <p className="muted" style={{ fontSize: 14 }}>Simplified month-by-month projection for “{sc.name}”. Estimates only.</p>
       <div className="card mt-12">
-        <div className="row-between mb-8"><span className="strong">Net cash flow each month</span><span className="caption">teal = surplus · red = shortfall</span></div>
+        <div className="row-between mb-8"><span className="strong">Net cash flow each month</span><span className="caption">blue = surplus · red = shortfall</span></div>
         <CashflowBars values={projection.rows.map((r) => r.net)} labels={projection.rows.map((r) => monthLabelFromNow(r.month))} />
       </div>
       <div className="table-scroll mt-16">

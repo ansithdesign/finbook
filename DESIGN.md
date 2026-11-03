@@ -1,319 +1,426 @@
 ---
 name: Money Decision Engine
-description: Don't just track your money. Understand what to do with it. A monsoon bulletin for money decisions.
+description: "Don't just track your money. Understand what to do with it. Every screen lives under a sky that follows the time of day."
 colors:
-  cloud: "#e7edef"
-  paper: "#f8fbfb"
-  page: "#cddae0"
-  ink: "#0b1f29"
-  ink-2: "#1c3846"
-  ink-3: "#2c4d5d"
-  muted: "#4b6572"
-  faint: "#8aa1ab"
-  line: "#cad7dc"
-  line-2: "#dae4e8"
-  border-strong: "#b3c4cb"
-  storm: "#0c3a47"
-  storm-2: "#14515f"
-  shell-muted: "#9fc1ca"
-  radar: "#0a7c8f"
-  radar-ink: "#07616f"
-  radar-bright: "#6fd5e3"
-  on-bright: "#06222b"
-  rain: "#2f78b8"
-  rain-tint: "#d6eaf3"
-  estimate: "#4a62c9"
-  estimate-tint: "#e1e6f8"
-  estimate-ink: "#2f43a3"
-  level-ok: "#2f8a5b"
-  level-ok-tint: "#dcf0e4"
-  level-ok-ink: "#1d6a42"
-  level-aware: "#d9a800"
-  level-aware-tint: "#faf0c4"
-  level-aware-ink: "#6b5200"
-  level-prepare: "#e6801b"
-  level-prepare-tint: "#fbe4cb"
-  level-prepare-ink: "#8a4806"
-  level-act: "#c9382e"
-  level-act-tint: "#f8dbd7"
-  level-act-ink: "#9c231b"
+  ink: "#0d1b2a"
+  ink-2: "#2a3c52"
+  ink-3: "#4a5d74"
+  muted: "#4f6278"
+  faint: "#8d9cae"
+  on-ink: "#ffffff"
+  midnight: "#0f2238"
+  sky-1: "#6fb6ef"
+  sky-2: "#a6d3f6"
+  sky-3: "#d6ebfa"
+  haze: "#eef5fb"
+  page: "#dce8f2"
+  sky-morning-1: "#8ec0f0"
+  sky-morning-2: "#cfe1f4"
+  sky-morning-3: "#fbe2cf"
+  haze-morning: "#f5f4f2"
+  sky-evening-1: "#7c84d6"
+  sky-evening-2: "#c3a6dc"
+  sky-evening-3: "#f4bfb0"
+  haze-evening: "#f3f0f7"
+  sky-night-1: "#070f26"
+  sky-night-2: "#0e1d42"
+  sky-night-3: "#15295a"
+  haze-night: "#0a1430"
+  ink-night: "#eef4fb"
+  solid-night: "#111f3f"
+  glass: "rgba(255, 255, 255, 0.56)"
+  glass-strong: "rgba(255, 255, 255, 0.8)"
+  glass-edge: "rgba(255, 255, 255, 0.9)"
+  glass-night: "rgba(255, 255, 255, 0.07)"
+  line: "rgba(13, 27, 42, 0.1)"
+  border-strong: "rgba(13, 27, 42, 0.18)"
+  fill: "rgba(13, 27, 42, 0.06)"
+  accent: "#1769d6"
+  accent-ink: "#0f56b5"
+  accent-soft: "rgba(23, 105, 214, 0.12)"
+  accent-bright: "#8fc6fb"
+  accent-night: "#6cb4ff"
+  rain: "#3b8ee8"
+  est-ink: "#4a3cb8"
+  est-tint: "rgba(106, 91, 216, 0.13)"
+  seg-1: "#1c3557"
+  series-2: "#8b7cf0"
+  series-3: "#f2a33a"
+  series-4: "#93a3b5"
+  ok: "#23915c"
+  ok-ink: "#15693f"
+  ok-tint: "rgba(35, 145, 92, 0.14)"
+  aware: "#c99a00"
+  aware-ink: "#6b5200"
+  aware-tint: "rgba(232, 182, 0, 0.18)"
+  prepare: "#ea8a26"
+  prepare-ink: "#8a4806"
+  prepare-tint: "rgba(234, 138, 38, 0.17)"
+  act: "#d23f33"
+  act-ink: "#a0261c"
+  act-tint: "rgba(210, 63, 51, 0.13)"
 typography:
-  large-title:
-    fontFamily: "Barlow Semi Condensed, Barlow, -apple-system, system-ui, sans-serif"
-    fontSize: "38px"
-    fontWeight: 600
-    lineHeight: 1.02
-    letterSpacing: "-0.015em"
-  headline:
-    fontFamily: "Barlow Semi Condensed, Barlow, -apple-system, system-ui, sans-serif"
-    fontSize: "28px"
-    fontWeight: 600
-    lineHeight: 1.1
-    letterSpacing: "-0.01em"
-  section-title:
-    fontFamily: "Barlow Semi Condensed, Barlow, -apple-system, system-ui, sans-serif"
-    fontSize: "20px"
-    fontWeight: 600
-    letterSpacing: "-0.012em"
-  hero-number:
-    fontFamily: "Barlow Semi Condensed, Barlow, -apple-system, system-ui, sans-serif"
-    fontSize: "58px"
-    fontWeight: 600
+  display:
+    fontFamily: "Figtree Variable, Figtree, -apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, Roboto, Arial, sans-serif"
+    fontSize: "60px"
+    fontWeight: 650
     lineHeight: 0.96
+    letterSpacing: "-0.045em"
+    fontFeature: "tnum"
+  figure:
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
+    fontSize: "40px"
+    fontWeight: 650
+    lineHeight: 0.98
+    letterSpacing: "-0.04em"
+    fontFeature: "tnum"
+  figure-sm:
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
+    fontSize: "28px"
+    fontWeight: 650
+    letterSpacing: "-0.03em"
+    fontFeature: "tnum"
+  headline:
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
+    fontSize: "34px"
+    fontWeight: 700
+    lineHeight: 1.06
+    letterSpacing: "-0.03em"
+  headline-sm:
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
+    fontSize: "26px"
+    fontWeight: 650
+    lineHeight: 1.12
+    letterSpacing: "-0.025em"
+  section-title:
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
+    fontSize: "20px"
+    fontWeight: 650
     letterSpacing: "-0.02em"
-    fontFeature: "tnum"
-  stat-number:
-    fontFamily: "Barlow Semi Condensed, Barlow, -apple-system, system-ui, sans-serif"
-    fontSize: "29px"
-    fontWeight: 600
-    letterSpacing: "-0.015em"
-    fontFeature: "tnum"
   title:
-    fontFamily: "-apple-system, BlinkMacSystemFont, SF Pro Text, Geist, Segoe UI, Roboto, Arial, sans-serif"
-    fontSize: "16px"
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
+    fontSize: "17px"
     fontWeight: 600
     letterSpacing: "-0.01em"
   body:
-    fontFamily: "-apple-system, BlinkMacSystemFont, SF Pro Text, Geist, Segoe UI, Roboto, Arial, sans-serif"
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
     fontSize: "15px"
     fontWeight: 400
     lineHeight: 1.45
   label:
-    fontFamily: "-apple-system, BlinkMacSystemFont, SF Pro Text, Geist, Segoe UI, Roboto, Arial, sans-serif"
-    fontSize: "12.5px"
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
+    fontSize: "13px"
     fontWeight: 500
   caption:
-    fontFamily: "-apple-system, BlinkMacSystemFont, SF Pro Text, Geist, Segoe UI, Roboto, Arial, sans-serif"
-    fontSize: "12px"
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
+    fontSize: "12.5px"
     fontWeight: 400
+  level:
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
+    fontSize: "11.5px"
+    fontWeight: 650
+    lineHeight: 1.3
+  tab:
+    fontFamily: "Figtree Variable, Figtree, -apple-system, sans-serif"
+    fontSize: "10.5px"
+    fontWeight: 500
 rounded:
-  input: "14px"
-  stat: "18px"
-  card: "20px"
-  option: "22px"
-  tile: "24px"
-  sheet: "32px"
-  pill: "999px"
-spacing:
   xs: "8px"
   sm: "12px"
+  md: "16px"
+  lg: "20px"
+  card: "24px"
+  tile: "26px"
+  dialog: "30px"
+  sheet: "34px"
+  pill: "999px"
+spacing:
+  xs: "4px"
+  sm: "8px"
   md: "14px"
-  lg: "18px"
-  screen-gutter: "20px"
-  section-gap: "30px"
+  card: "18px"
+  gutter: "20px"
+  lg: "26px"
+  section: "34px"
 components:
   button-primary:
-    backgroundColor: "{colors.radar}"
-    textColor: "#ffffff"
+    backgroundColor: "{colors.midnight}"
+    textColor: "{colors.on-ink}"
     typography: "{typography.title}"
     rounded: "{rounded.pill}"
     padding: "0 26px"
     height: "56px"
-  button-primary-on-storm:
-    backgroundColor: "{colors.radar-bright}"
+  button-primary-night:
+    backgroundColor: "{colors.on-ink}"
     textColor: "{colors.ink}"
     rounded: "{rounded.pill}"
     height: "56px"
   button-secondary:
-    backgroundColor: "{colors.paper}"
+    backgroundColor: "{colors.glass-strong}"
     textColor: "{colors.ink}"
+    rounded: "{rounded.pill}"
+    padding: "0 26px"
+    height: "56px"
+  button-ghost:
+    textColor: "{colors.accent-ink}"
     rounded: "{rounded.pill}"
     height: "56px"
   button-danger:
-    backgroundColor: "{colors.level-act-tint}"
-    textColor: "{colors.level-act-ink}"
+    backgroundColor: "{colors.act-tint}"
+    textColor: "{colors.act-ink}"
     rounded: "{rounded.pill}"
     height: "56px"
-  card:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
+  button-sm:
+    rounded: "{rounded.pill}"
+    padding: "0 16px"
+    height: "40px"
+  card-glass:
+    backgroundColor: "{colors.glass}"
     rounded: "{rounded.card}"
-    padding: "18px"
-  tile-storm:
-    backgroundColor: "{colors.storm}"
-    textColor: "#ffffff"
+    padding: "{spacing.card}"
+  tile-glass:
+    backgroundColor: "{colors.glass}"
     rounded: "{rounded.tile}"
     padding: "20px"
-  tile-signal:
-    backgroundColor: "{colors.radar-bright}"
-    textColor: "{colors.on-bright}"
-    rounded: "{rounded.tile}"
-    padding: "20px"
-  input-field:
-    backgroundColor: "{colors.paper}"
+  list-glass:
+    backgroundColor: "{colors.glass-strong}"
+    rounded: "{rounded.card}"
+  list-row:
+    padding: "13px 16px"
+    height: "60px"
+  input:
+    backgroundColor: "{colors.glass-strong}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.input}"
+    rounded: "{rounded.md}"
+    padding: "0 16px"
     height: "54px"
-  level-pill-aware:
-    backgroundColor: "{colors.level-aware-tint}"
-    textColor: "{colors.level-aware-ink}"
+  chip:
+    backgroundColor: "{colors.glass-strong}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.pill}"
-  chip-on:
-    backgroundColor: "{colors.storm}"
-    textColor: "#ffffff"
-    rounded: "{rounded.pill}"
+    padding: "10px 16px"
     height: "42px"
+  chip-selected:
+    backgroundColor: "{colors.midnight}"
+    textColor: "{colors.on-ink}"
+    rounded: "{rounded.pill}"
+  segmented:
+    backgroundColor: "{colors.fill}"
+    rounded: "{rounded.sm}"
+    padding: "3px"
+  level-ok:
+    backgroundColor: "{colors.ok-tint}"
+    textColor: "{colors.ok-ink}"
+    typography: "{typography.level}"
+    rounded: "{rounded.pill}"
+    padding: "3px 10px 3px 8px"
+  level-aware:
+    backgroundColor: "{colors.aware-tint}"
+    textColor: "{colors.aware-ink}"
+    typography: "{typography.level}"
+    rounded: "{rounded.pill}"
+    padding: "3px 10px 3px 8px"
+  level-prepare:
+    backgroundColor: "{colors.prepare-tint}"
+    textColor: "{colors.prepare-ink}"
+    typography: "{typography.level}"
+    rounded: "{rounded.pill}"
+    padding: "3px 10px 3px 8px"
+  level-act:
+    backgroundColor: "{colors.act-tint}"
+    textColor: "{colors.act-ink}"
+    typography: "{typography.level}"
+    rounded: "{rounded.pill}"
+    padding: "3px 10px 3px 8px"
   tab-bar:
-    backgroundColor: "{colors.paper}"
     textColor: "{colors.muted}"
-    height: "90px"
+    typography: "{typography.tab}"
+    height: "92px"
+  tab-active:
+    textColor: "{colors.accent}"
+  tab-hub:
+    backgroundColor: "{colors.midnight}"
+    textColor: "{colors.on-ink}"
+    rounded: "15px"
+    width: "52px"
+    height: "30px"
+  sheet:
+    backgroundColor: "{colors.haze}"
+    rounded: "{rounded.sheet}"
 ---
 
 # Design System: Money Decision Engine
 
 ## Overview
 
-**Creative North Star: "The Monsoon Bulletin"**
+**Creative North Star: "Under the Sky"**
 
-A money decision is a forecast, so the app speaks like a weather bulletin. Outcomes are ranges, not single futures. Something changes at an onset marker. State is told in a four-level warning vocabulary (ok, aware, prepare, act) instead of green up and red down. The ground is overcast cloud grey with a cool green bias, cards are paper white, hero tiles are deep storm teal, actions are radar teal, and data and estimates are rain blue. The product is a decision tool for people in a considered moment (a car, a loan, a prepayment), so the system favors calm, legible numerals and plain sentences over dashboard density.
+A money decision is a forecast, so the app lives under a real sky. The sky follows the time of day (morning gold and blue, clear day blue, evening lilac and rose, night navy with stars) and fades into a pale haze where the reading content begins. Headline figures sit directly on that sky with no container; only grouped, tappable content earns a surface, and that surface is borderless frosted glass so the sky keeps reading through it. Risk is spoken as a weather bulletin in four levels (ok, be aware, be prepared, take action), never as green up and red down decoration.
 
-The shell borrows iOS grammar: large titles, grouped lists, a translucent tab bar with Decide centred, pill buttons and sheets. Numerals and headings use Barlow Semi Condensed so figures read like a bulletin board; running text uses the system San Francisco stack so the app feels native. Contour art on storm tiles is drawn as isobars, wobbling closed lines in radar-bright at falling opacity.
+The world is calm, open and airy. Density is moderate: one strong figure per module, generous section breaks, and hairlines instead of boxes where a group only needs separating. One typeface (Figtree) carries everything from the 60px hero figure to the 10.5px tab label, with tight negative tracking on figures. Primary action is midnight ink; deep sky blue is the voice of selection and data; violet means estimate. The prototype is an iOS screen shown in a 440px device frame.
+
+Retired and not to return: the earlier storm-teal tile world, Barlow numerals, isobar contour lines, blob art and dot grids. Boxed bento cards, bordered containers and a single neon fintech accent are rejected by this world.
 
 **Key Characteristics:**
-- Cloud ground, paper cards, storm-teal hero surfaces, radar-teal action, rain-blue data.
-- Four bulletin warning colours that only ever mean state.
-- Condensed tabular numerals over native text.
-- Soft, generous radii (14 to 24px, pills for controls) and almost no shadow.
-- Isobar contour art on dark tiles; ranges and onset markers in charts.
-- Dark appearance exists as a token set (see Elevation & Depth and Do's and Don'ts for its verification limits).
+- Time-of-day sky backdrop with drifting clouds on top-level screens, a softer sky on sub-screens.
+- Hero figures on the sky with no surface; everything else grouped on borderless frosted glass.
+- Four bulletin colours reserved for state.
+- Figtree only, tabular figures with tight tracking.
+- Phosphor icons: regular by default, fill when selected, duotone inside tinted badges.
+- Midnight pill for primary actions and for the Decide tab.
 
 ## Colors
 
-A cool, rain-washed palette: one grey-green ground, one deep teal shell, one action teal, one data blue, and four state colours held in reserve.
+A sky palette (blue, gold, lilac, navy) under midnight ink, with one deep sky blue for action and data, a violet for estimates, and four warning colours held back for state.
 
 ### Primary
-- **Radar Teal** (`colors.radar`, #0a7c8f): primary buttons, active tab label, focus glow (32% mix), stepper progress, bar fills, chart series 1.
-- **Radar Bright** (`colors.radar-bright`, #6fd5e3): the lit accent on storm surfaces: progress fill, hub icon, primary button on storm tiles, signal tile, delta pill, text selection, link underline, chart end-point dots. Needs `on-bright` (#06222b) or `ink` text, never white.
-- **Radar Ink** (`colors.radar-ink`, #07616f): accent-coloured text on light surfaces.
+- **Midnight Ink** (midnight): primary buttons, the Decide hub pill, selected chips, the FAB, chart event and low-point flags, the offline bar and the start node in illustrations. At night it inverts to white with ink text.
+- **Deep Sky Blue** (accent, accent-ink for text): selection, the active tab, focus rings, links, progress fills, the hero sparkline and positive chart areas. Night swaps in **Night Sky Blue** (accent-night).
 
 ### Secondary
-- **Storm Teal** (`colors.storm`, #0c3a47): the shell. Hero tiles, selected chips and segments, icon boxes, avatar, toggles on, toasts, chart callout labels, the tab bar hub button. `storm-2` (#14515f) is the lifted partner; `shell-muted` (#9fc1ca) is secondary text on storm.
-- **Rain Blue** (`colors.rain`, #2f78b8): data. Chart series 2, the range band fill (16% opacity), best-cell tint in comparison tables (`rain-tint` #d6eaf3), info icons.
-- **Estimate Indigo** (`colors.estimate`, #4a62c9): anything that is an estimate or assumption. Default banner background uses `estimate-tint` (#e1e6f8) with `estimate-ink` (#2f43a3) text; chart series 3.
+- **Pale Day Blue** (accent-bright): the end-point dot on lines, text selection, icons inside midnight chips and toasts, the "left over" ribbon segment.
+- **Rain Blue** (rain): second ribbon segment, gradient partner to accent in progress and runway fills, the comparison range band.
 
-### Tertiary: the four bulletin levels
-- **Level OK** (#2f8a5b, tint #dcf0e4, ink #1d6a42): on track.
-- **Level Aware** (#d9a800, tint #faf0c4, ink #6b5200): be aware.
-- **Level Prepare** (#e6801b, tint #fbe4cb, ink #8a4806): be prepared; also the attention insight card and the negative delta pill.
-- **Level Act** (#c9382e, tint #f8dbd7, ink #9c231b): take action; errors, invalid fields, destructive buttons, the notification dot, negative bars.
+### Tertiary
+- **Estimate Violet** (est-ink on est-tint): anything estimated or assumed: the default banner, dashed estimate tags. It never signals risk.
+- **Data series** (seg-1 Deep Harbour Navy, series-2 Soft Violet, series-3 Sun Gold, series-4 Cloud Grey): categorical chart colours. Series one is accent. Series four, hatched, means locked or illiquid.
 
 ### Neutral
-- **Cloud** (#e7edef): screen ground. **Paper** (#f8fbfb): cards, lists, inputs. **Page** (#cddae0): the stage behind the device frame.
-- **Ink** (#0b1f29), **Ink 2** (#1c3846), **Ink 3** (#2c4d5d): text ramp. **Muted** (#4b6572): labels and captions. **Faint** (#8aa1ab): placeholders, chevrons, disabled text.
-- **Line** (#cad7dc), **Line 2** (#dae4e8), **Border Strong** (#b3c4cb): borders, dividers, tab bar top rule, unchecked checks.
+- **Ink** (ink, ink-2, ink-3): text tiers. **Slate Muted** (muted) for labels and captions, **Faint Slate** (faint) for placeholders, chevrons and disabled text.
+- **Haze** (haze): the canvas the sky fades into; also the base of sheets, dialogs and sticky footers. **Page Mist** (page) is the stage behind the device.
+- **Frost** (glass, glass-strong, glass-edge): translucent white surfaces and their top highlight. Night glass is nearly clear (glass-night).
+- **Hairline** (line, border-strong, fill): separators, list dividers, neutral fills for tracks, skeletons and segmented controls.
+
+### Skies
+Each time of day overrides three sky stops, the haze, the sun glow position and cloud opacity on the screen root. Day is the default (sky-1..3, haze). Morning uses sky-morning-1..3 with a warm haze and the sun at the left; evening uses sky-evening-1..3 with the sun low left and fainter clouds; night uses sky-night-1..3 and haze-night, removes clouds, adds a starfield and is the dark appearance (ink becomes ink-night, solids become solid-night). Morning, day and evening are chosen automatically from the clock; night follows the dark appearance setting. Night is verified on Home and Decide only; every other screen inherits the night tokens but has not been checked.
 
 ### Named Rules
-**The Reserved Weather Rule.** The four level colours (green, yellow, orange, red) mean state and nothing else. They never decorate a tile, icon, chart series or illustration. Ink variants carry text; tints carry backgrounds; the saturated colour is for dots, borders and fills that state a level.
+**The Bulletin Rule.** Ok green, aware amber, prepare orange and act red only ever mean state: a level chip, a negative delta, a shortfall, a destructive action, an error. They never colour a category, a decoration or a brand moment.
 
-**The Lit-On-Storm Rule.** Radar Bright appears only on storm surfaces or as a small signal (delta pill, link underline, end-point dot). On cloud and paper, action is Radar Teal.
+**The Midnight Acts Rule.** The filled primary action is midnight ink (white at night). Deep sky blue selects and charts; it does not fill primary buttons.
 
-**The Estimate Is Indigo Rule.** Assumptions, projections and estimates are indigo or rain blue and may be dashed or hatched; they are never a level colour.
+**The Violet Means Estimate Rule.** Violet tint marks assumed or estimated values and nothing else.
 
 ## Typography
 
-**Display Font:** Barlow Semi Condensed (500, 600, 700 loaded via fontsource; fallback Barlow, system-ui)
-**Body Font:** system San Francisco stack (-apple-system, BlinkMacSystemFont, SF Pro Text, Geist, Segoe UI, Roboto, Arial)
+**Display Font:** Figtree Variable (with -apple-system, SF Pro Text, Segoe UI, Roboto, Arial fallback)
+**Body Font:** Figtree Variable, the same family
+**Label/Mono Font:** none; figures use Figtree with tabular numerals
 
-**Character:** A condensed bulletin face for every figure and heading against a native, quiet text face. Numerals are always tabular so columns of rupee amounts align.
+**Character:** One friendly geometric sans across every role. Hierarchy comes from size, weight (400 to 700, with 650 as the figure weight) and tracking that tightens as size grows.
 
 ### Hierarchy
-- **Large Title** (600, 38px, 1.02, -0.015em): iOS large title in the screen header, left aligned.
-- **Display H1** (700, 34px, 1.05, -0.04em): onboarding and empty-state headlines.
-- **Headline** (600, 28px, 1.1, -0.01em): sheet and section-level statements.
-- **Section Title** (600, 20px, -0.012em): section heads, with a link-style action at right.
-- **Hero Number** (600, 58px, 0.96, tabular): the one number a tile exists to show.
-- **Stat Number** (600, 29px tabular; 24px in stat cards): supporting figures.
-- **Title** (600, 16px): list-row titles and compact header title.
-- **Body** (400, 15px, 1.45): running text. Inputs 16px.
-- **Label** (500, 12.5px, muted) and **Caption** (400, 12px, muted): helper and meta text. Tab labels 10.5px.
+- **Display** (650, 60px, 0.96, -0.045em, tabular): the single hero figure. Home sets the net worth at 56px with the same treatment.
+- **Figure** (650, 40px, 0.98, -0.04em, tabular): the lead figure of a glass module; smaller module figures step down to 30px and 26px on the same treatment. **Figure small** (650, 28px, -0.03em) for secondary figures.
+- **Headline** (700, 34px, 1.06, -0.03em, balanced wrap): the large screen title, set on the sky. **Headline small** (650, 26px, 1.12) for in-content headings.
+- **Section title** (650, 20px, -0.02em): headings above each section group. Sheet titles use 700 at 21px.
+- **Title** (600, 17px, -0.01em): centred navigation bar title on sub-screens; row titles use 600 at body size.
+- **Body** (400, 15px, 1.45): running text; buttons use 600 at 16px.
+- **Label** (500, 13px, muted): the name above a figure, form labels (600, ink-2).
+- **Caption** (400, 12.5px, muted): units, context lines, chart notes.
+- **Level** (650, 11.5px): bulletin chips. **Tab** (500, 10.5px; 600 when active).
 
 ### Named Rules
-**The Numerals Are Condensed Rule.** Every currency figure, big or small, is Barlow Semi Condensed with tabular figures. Decimals are muted where the screen shows them.
+**The One Family Rule.** Figtree is the only typeface, including inside SVG illustrations and chart labels. No second display face, no mono.
 
-**The Native Text Rule.** Prose, labels and controls use the system stack. Barlow does not set paragraphs.
+**The Tight Figures Rule.** Every money figure is tabular and tracked negative (-0.03em to -0.045em, tighter as it grows). Sentence case everywhere; nothing is set in uppercase.
 
 ## Layout
 
-A single phone column, 440 by 956 inside an iPhone frame with a 59px top safe area and 34px bottom safe area. Screens are a header (compact centred title or large title) plus a scrolling body with a 20px side gutter and a floating tab bar reserve of 104px at the bottom. Content stacks with 14px default gaps (8px tight, 26px loose) and 30px between sections. Bento grids use two columns at 12px gap with full-width spans; stat grids are two columns at 12px; lists run edge to edge inside a card. Touch targets are at least 44px (icon buttons 44, buttons 56 or 40 small, inputs 54, chips 42, list rows 60). Primary screen footers fade from the ground colour so a pinned button sits above content. The only responsive rule is for the development panel outside the device, which narrows under 900px.
+A single 440px iOS column inside the device frame. Content runs in a 20px gutter; top-level screens open with a large left-aligned title on the sky (34px), sub-screens use a centred 17px title with a back button. The header gains a blurred haze background only once the body scrolls.
+
+Rhythm: sections are 34px apart (10px for the first), section heads sit 12px above their content, stacks step 8, 14 and 26px, two-up grids gap 12px, stat grids gap 18 by 16px. Modules stack full width; a pair of half-width modules closes a group at most. Sticky footers fade up from the haze instead of drawing a bar. The scroll area reserves 104px for the tab bar.
+
+### Named Rules
+**The Open Sky Rule.** The first figure on a top-level screen sits directly on the sky: no surface, no radius, no shadow, just its label, the figure, a delta chip and an open chart.
 
 ## Elevation & Depth
 
-Mostly flat, with depth from tone and one translucent layer. Cards, tiles and lists are separated from the cloud by paper fill and a 1px line, not by shadow. The bottom tab bar is the one material surface: paper at 84% mix with a 22px blur and 1.5 saturation, closed by a 0.5px strong border. Shadows are soft, low and cool, used only for floating things.
+Depth comes from translucency, not stacking. Glass surfaces blur what is behind them (18px blur, 1.5 saturation) and carry a hairline white highlight on the top edge plus one soft, sky-tinted shadow that falls well below the surface. Floating chrome (tab bar 24px blur, scrolled header 20px blur) uses the same material over the haze. Only things that float above content (FAB, toast, dialog) get the deeper float shadow.
 
 ### Shadow Vocabulary
-- **Float** (`box-shadow: 0 12px 28px -14px rgba(7, 28, 38, 0.4)`): toasts and the floating action button.
-- **Elevated card** (`box-shadow: 0 14px 30px -18px rgba(7, 28, 38, 0.28)`): the opt-in elevated card.
-- **Selected ring** (`box-shadow: 0 0 0 2px var(--ink)`, 1.5px on option cards): selection is a hard ink ring, not a shadow.
-- **Focus glow** (`0 0 0 4px` radar teal at 32%): input focus, with the border shifting to ink.
+- **Soft sky** (`box-shadow: 0 14px 34px -22px rgba(23, 63, 112, 0.45)`): every glass surface, paired with the glass-edge inset highlight.
+- **Float** (`box-shadow: 0 18px 40px -18px rgba(13, 27, 42, 0.5)`): FAB, toasts, dialogs.
+- **Midnight lift** (`box-shadow: 0 12px 26px -16px rgba(15, 34, 56, 0.8)`): primary buttons.
+- **Glass edge** (`box-shadow: inset 0 0.5px 0 var(--glass-edge)`): the top highlight that replaces a border.
 
 ### Named Rules
-**The Flat Until Floating Rule.** Surfaces rest flat with a hairline. Only toasts, the FAB and the tab bar float.
-
-**The Dark Is A Token Set Rule.** The dark appearance (`data-theme="dark"` on the screen) re-values the same roles: cloud #08151c, paper #0f2430, ink #e8f1f4, radar #55c7d9, and brightened level colours with dark tints. It was verified on Home and Decide only. Other screens inherit it through tokens but have not been reviewed in dark.
+**The No Border Rule.** Surfaces never take a stroke. Their edge is a 0.5px inset highlight and a soft shadow; selection is a 2px inset accent ring, and only inputs and secondary controls use a 0.5px inset hairline.
 
 ## Shapes
 
-Soft and rounded, in a clear size ladder: inputs 14px, stat cards 18px, cards and lists 20px, option cards 22px, hero tiles 24px, large text areas 26px, dialogs 30px, sheets 32px on top corners, device screen 56px. Every button, chip, tag, level pill, segmented control and delta is a full pill (999px). Icon containers are rounded squares (13 to 16px) in storm with radar-bright glyphs; avatars and the FAB are circles. Borders are 1px hairlines on cards and 1.5px on inputs and chips. Charts use rounded bars (up to 7px radius) and rounded 3 to 4px legend swatches.
+Generously rounded, continuous forms. Glass cards and lists 24px, module tiles 26px, insights 22px, option cards and expanders 20px, chip buttons 18px, inputs and date boxes 16px, segmented controls 12px with 9px segments, checkboxes 8px. Buttons, chips, tags, level chips and deltas are full pills. Sheets round 34px at the top; dialogs 30px. Icon badges and avatars are circles. Illustrations are clipped into 26px sky windows.
 
 ## Components
 
 ### Buttons
-- **Shape:** full pill, 56px tall (40px small), 26px side padding, 16px semibold.
-- **Primary:** Radar Teal fill, white text. On storm tiles it becomes Radar Bright with ink text.
-- **Secondary:** paper with a 1.5px inset ink ring. **Ghost:** transparent ink text. **Danger:** act tint with act ink text.
-- **Press:** scale to 0.97 with an expo-out ease (cubic-bezier(0.16, 1, 0.3, 1), 0.2s). Disabled is line-2 fill with faint text.
+Calm, heavy and round: a midnight pill that presses in.
+- **Shape:** full pill (999px), 56px tall, 26px side padding; small variant 40px tall with 16px padding.
+- **Primary:** midnight with white 600 16px text and the midnight lift shadow. At night: white with ink text.
+- **Press / Focus:** scales to 0.97 on press with the house ease; focus is a 2px accent outline offset 2px.
+- **Secondary:** strong frosted glass with ink text, 0.5px hairline and soft shadow, 16px blur.
+- **Ghost:** transparent with accent-ink text. **Danger:** act tint with act-ink text. **Disabled:** neutral fill, faint text, no shadow.
+- **Icon button:** 44px circle, transparent, neutral fill on press.
 
-### Cards, Tiles and Lists
-- **Card:** paper, 1px line, 20px radius, 18px padding. **Tile:** 24px radius, 20px padding, may hold isobar contour art as an absolutely positioned first child.
-- **Tile variants:** paper (default), storm (hero), signal (Radar Bright, ink text), flat (line-2).
-- **List:** a paper card of 60px rows with 1px line-2 separators, a storm icon box at left, tabular value at right, faint chevron.
-- **Bulletin card (insight):** 18px radius with an icon square; the attention severity switches to the prepare tint, border and icon.
+### Chips
+- **Choice chip:** strong glass pill, 42px tall, hairline inset; selected turns midnight with white text and a pale-blue icon.
+- **Tag:** small neutral pill (11.5px, 600). Midnight tag for emphasis; violet tint tag for estimates; act tint tag for warnings.
+- **Delta chip:** ok tint for a gain; prepare tint for a negative change on the hero; act tint for other negatives.
 
-### Level pill
-Pill with a 7px currentColor dot, 11px bold, tinted background and ink text. One per level; the only way to state a warning level in text.
+### Bulletin Level
+The signature state marker: an 11.5px pill with a 7px dot in the current colour, tinted background, ink-toned text. Four levels only: ok, aware, prepare ("Be prepared"), act. Insights at attention severity carry the prepare level and a prepare-tinted wash into glass.
+
+### Cards / Containers
+- **Corner Style:** 24px (card, list), 26px (tile), 22px (insight).
+- **Background:** glass (0.56 white) by default, strong glass (0.8 white) for lists, elevated cards and inputs; near-clear glass at night.
+- **Shadow Strategy:** soft sky shadow plus glass-edge highlight (see Elevation & Depth).
+- **Border:** none.
+- **Internal Padding:** 18px cards (14px tight), 20px tiles, 16px insights and list rows.
+- **Hero tile:** no background, no shadow, no radius, 2px inset padding: the figure stands on the sky.
+- **Stats:** open, no box: a 0.5px top hairline over a 26px figure.
+- **Signal tile:** a solid deep-sky-blue gradient tile with white type appears once on Home (liquid funds) and once on Simulate. It is an existing exception to the glass rule, not a pattern to extend.
+- **Press:** tappable modules scale to 0.985.
+
+### Lists
+Strong glass, 24px radius, rows 60px minimum with 13px by 16px padding. Leading icon in a 36px accent-soft circle with a duotone Phosphor icon. Dividers are 0.5px hairlines inset to the text. Values are tabular 600, trailing faint caret.
 
 ### Inputs / Fields
-- 54px tall, 14px radius, 1.5px line border on paper, 16px medium text, muted affix.
-- **Focus:** border to ink plus a 4px radar glow. **Error:** act border on act tint, error text in act ink semibold.
-
-### Chips, Segments and Toggles
-- Selected state is storm fill with white text and an ink border; unselected is paper with a line border. Segmented control is a line-2 pill track with a storm thumb. Toggle on is storm with a Radar Bright knob.
+- **Style:** strong glass, 16px radius, 54px tall, 0.5px inset hairline, 16px 500 text, faint placeholder; muted affixes.
+- **Focus:** 1.5px accent inset ring plus a 4px accent-soft halo.
+- **Error / Disabled:** 1.5px act ring on act tint; error text act-ink 600 at 12.5px.
+- **Segmented control:** neutral fill track, 3px inset; the selected segment is solid with a small lift.
+- **Toggle:** 51 by 31px, white knob, on state filled with accent (never ok green, which is reserved for state).
 
 ### Navigation
-- **Tab bar:** five items on a translucent blurred bar, 10.5px labels in muted, active in Radar Teal semibold. Decide sits centre as a storm pill (54 by 30) with a Radar Bright glyph; when active it gains a 2px Radar Teal ring.
-- **Header:** compact centred 16px title, or large title; a hairline appears under the header once the body scrolls.
+- **Tab bar:** five tabs (Home, Simulate, Decide, Goals, Profile) on haze glass at 70% with a 24px blur and a hairline top edge. Icons 25px, regular when idle and fill when active; labels 10.5px. Idle tabs are muted, the active tab is accent at 600.
+- **Decide hub:** the centre tab is a 52 by 30px midnight pill holding a 22px bold compass (fill when active). Active, the pill turns accent; at night it is white with ink.
+- **Header:** large titles sit on the sky; on scroll the header picks up a 72% haze blur and a hairline.
 
-### Charts (signature)
-Series run in reading order: Radar Teal, Rain Blue, Estimate Indigo, Faint grey. Lines are drawn on with a stroke animation. Dashed hairline gridlines, a dashed ink onset marker with a storm pill label, a ringed low point with a storm callout, and a Radar Bright end-point dot with an ink ring. Estimates may be hatched. The income-flow ribbon and emergency runway are rounded segment strips that grow from the left. Dot plots place numbered storm dots on a line, with the best option in Radar Bright and an ink ring.
-
-- **Range band:** the shaded Rain Blue band (16% opacity) appears on multi-option charts only, where it spans the true minimum to maximum across the options at each month. Single-series charts have no band.
-- **Home net worth sparkline:** shows actual history only, a Radar Bright line with a fading area fill on the storm tile. It has no forecast band and no onset marker.
+### Sky Backdrop
+The screen background on every light screen. Top-level screens get a 620px sky (sky-1 to sky-2 at 250px, sky-3 at 440px, haze at 620px) with a radial sun glow and three blurred clouds drifting over 70 to 110 seconds. Sub-screens get the soft 360px sky with no clouds. Night adds a faint starfield and drops clouds. Key moments (welcome, completion) use a full twilight gradient with white type.
 
 ### Illustrations
-Storm-teal scenes (360 wide, 30px radius) with dotted-line grids, dashed estimate paths in #2c6677, and a lit Radar Bright path with concentric ripple rings at its end. Isobar contours appear as `ContourArt` on tiles.
+Authored SVG sky windows (26px radius) that read the live sky tokens, a sun glow and soft clouds. Decisions are drawn as white contrail paths, dashed for the options not taken and solid for the chosen route, between midnight and white nodes. Labels inside use Figtree. On twilight screens the window drops away and the drawing floats on the sky.
+
+### Charts
+Authored SVG, labelled directly. The primary line is accent at 3px with an accent area fading to clear; values below zero shade act. Comparisons add dashed secondary series and a rain-blue range band. Event and low-point flags are midnight pills with white text. Ribbons are rounded 10px segments with in-bar percentages; hatching marks locked money. Runways are month cells filled with a rain to accent gradient.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** use the four level colours only to state a level (pill, dot, border, error, negative delta).
-- **Do** set every figure in Barlow Semi Condensed with tabular numerals; keep prose in the system stack.
-- **Do** use Radar Teal for action on cloud and paper, and Radar Bright with ink text on storm.
-- **Do** keep surfaces flat with a 1px line; reserve soft cool shadows (Float) for toasts and the FAB.
-- **Do** use full pills for controls and the 14 to 24px radius ladder for containers.
-- **Do** show ranges and an onset marker where a choice changes, and mark estimates in indigo, dashed or hatched.
-- **Do** keep touch targets at or above 44px.
+- **Do** put the hero figure directly on the sky with no container (no background, shadow or radius).
+- **Do** use borderless frosted glass (glass or glass-strong, 18px blur, glass-edge highlight, soft sky shadow) for every other module.
+- **Do** reserve ok, aware, prepare and act for state, and speak them through the level chip, deltas, shortfall shading and errors.
+- **Do** use midnight for the filled primary action and the Decide pill, inverted to white at night.
+- **Do** set every figure in Figtree 650 with tabular numerals and negative tracking.
+- **Do** use Phosphor icons only: regular idle, fill selected, duotone in tinted badges.
+- **Do** read sky colours from the sky tokens so morning, day, evening and night all work; verify night on any new screen.
 
 ### Don't:
-- **Don't** use green or red for plain up or down; use level meaning or neutral ink.
-- **Don't** use a level colour as decoration in an illustration, chart series, tile or icon.
-- **Don't** put white text on Radar Bright.
-- **Don't** draw a range band on a single-series chart, or imply a forecast on the Home net worth sparkline.
-- **Don't** assume dark appearance is designed beyond Home and Decide; verify other screens before relying on it.
-- **Don't** return to the incumbent bone canvas, ink tiles and electric-lime accent.
-
-## Not canonized (defects the build carries)
-
-- Hardcoded hex values bypass tokens and do not re-theme in dark: `#fff` on storm surfaces, `#2c6677` and `#1a4c5b` in illustrations, `#6aa9de`, `#f0715f`, `#2f9fb4` in the on-dark chart palette, `#7aa3ae` hatch swatch.
-- Tiny uppercase letter-spaced micro labels (`.datebox small` at 9.5px, the dev panel headings) are not a pattern for new surfaces.
-- Legacy aliases (`--green-tint`, `--accent-tint`, `--warn`) remain and map to rain or act tokens; do not reuse the names.
-- The Geist web font is requested in index.html but only sits as a late fallback in the text stack.
+- **Don't** bring back contour lines, isobars, blob art or dot grids, on the sky, in illustrations or behind charts.
+- **Don't** put a border or stroke on a surface; use the glass-edge highlight and soft shadow.
+- **Don't** box hero figures or arrange the overview as a grid of boxed bento cards.
+- **Don't** use the bulletin colours for categories, chart series, decoration or on/off switches.
+- **Don't** add a second typeface, a mono face or uppercase labels.
+- **Don't** use text glyphs (arrows, chevrons, check marks) as icons; use Phosphor.
+- **Don't** fill primary buttons with deep sky blue or introduce a neon accent.

@@ -1,6 +1,6 @@
 // HOME-01 Financial overview. Every number is derived from the user's records via useFinance().
 
-import { ArrowUpRight, Banknote, Bell, Compass, Eye, EyeOff, Inbox, Landmark, Lightbulb, PiggyBank, Plus, Receipt, Search, Target } from '@/components/icons';
+import { ArrowDown, ArrowUp, ArrowUpRight, Banknote, Bell, Compass, Eye, EyeOff, Inbox, Landmark, Lightbulb, PiggyBank, Plus, Receipt, Search, Target } from '@/components/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { List, ListRow, Section, SectionLink } from '@/components/cards/Cards';
 import { HeroSparkline, Ribbon, Runway } from '@/components/charts/Charts';
@@ -109,7 +109,7 @@ export function HomeOverview() {
             </div>
             <div className="row wrap mt-12" style={{ gap: 8 }}>
               {nwDelta !== null && !state.prefs.hideBalances ? (
-                <span className={`delta ${nwDelta < 0 ? 'neg prepare' : ''}`}>{nwDelta >= 0 ? '↑' : '↓'} {inr(Math.abs(nwDelta))} since {lastNW?.month}</span>
+                <span className={`delta ${nwDelta < 0 ? 'neg prepare' : ''}`}>{nwDelta >= 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />} {inr(Math.abs(nwDelta))} since {lastNW?.month}</span>
               ) : (
                 <span className="caption">Change appears once monthly history exists</span>
               )}

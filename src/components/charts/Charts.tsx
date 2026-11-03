@@ -4,7 +4,7 @@
 import { useId, type ReactNode } from 'react';
 import { inr, inrCompact } from '@/utils/format';
 
-const PALETTE = ['var(--seg-1)', 'var(--rain)', 'var(--accent-bright)', 'var(--s2)', 'var(--act)', 'var(--faint)', 'var(--s3)'];
+const PALETTE = ['var(--seg-1)', 'var(--rain)', 'var(--accent-bright)', 'var(--s2)', 'var(--s3)', 'var(--faint)', 'var(--s4)'];
 const LINE_COLORS = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)'];
 const LINE_DASH = ['', '5 5', '2 5', '8 3 2 3'];
 
@@ -28,7 +28,7 @@ export interface ChartEvent {
 }
 
 /**
- * Area/line chart. The first series gets a filled area: teal above zero, red below zero, so a shortfall is
+ * Area/line chart. The first series gets a filled area: blue above zero, red below zero, so a shortfall is
  * visible at a glance. Events are vertical markers; the lowest point is called out directly.
  */
 export function LineChart({ series, height = 190, xLabels, events = [], zeroLine = true, lowLabel = 'Low' }: { series: Series[]; height?: number; xLabels?: string[]; events?: ChartEvent[]; zeroLine?: boolean; lowLabel?: string }) {
@@ -129,7 +129,7 @@ export function Ribbon({ parts, total, format = inrCompact, legend = true, heigh
   const clean = parts.filter((p) => p.value > 0);
   const sum = total ?? clean.reduce((s, p) => s + p.value, 0);
   if (sum <= 0) return <div className="skeleton" style={{ height }} />;
-  const colors = onDark ? ['var(--s1)', 'var(--s2)', 'var(--s4)', 'var(--act)', 'var(--faint)', 'var(--rain)'] : PALETTE;
+  const colors = onDark ? ['var(--s1)', 'var(--s2)', 'var(--s4)', 'var(--s3)', 'var(--faint)', 'var(--rain)'] : PALETTE;
   return (
     <div>
       <div className="ribbon" style={{ height }} role="img" aria-label={clean.map((p) => `${p.label} ${format(p.value)}`).join(', ')}>
@@ -233,7 +233,7 @@ export function DotPlot({ rows }: { rows: DotRow[] }) {
   );
 }
 
-/** Diverging monthly net cash-flow bars: teal above zero, red below. */
+/** Diverging monthly net cash-flow bars: blue above zero, red below. */
 export function CashflowBars({ values, labels, height = 150 }: { values: number[]; labels?: string[]; height?: number }) {
   if (values.length === 0) return <div className="skeleton" style={{ height }} />;
   const W = 360;
