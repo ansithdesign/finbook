@@ -284,7 +284,6 @@ export function SplitBar({ parts }: { parts: Array<{ label: string; value: numbe
 /** Months of cover as a segmented meter: one segment per month of the target, filled to today's cover. */
 export function Runway({ months, target }: { months: number; target: number; light?: boolean }) {
   const cells = Math.max(1, Math.min(12, Math.round(target)));
-  const met = months >= target;
   return (
     <div className="meter" role="img" aria-label={`${months.toFixed(1)} months of cover against a ${target}-month target`}>
       <div className="meter-cells">
@@ -296,10 +295,6 @@ export function Runway({ months, target }: { months: number; target: number; lig
             </div>
           );
         })}
-      </div>
-      <div className="meter-ticks">
-        <span>Today</span>
-        <span>{met ? `Target of ${target} months met` : `${target}-month target`}</span>
       </div>
     </div>
   );

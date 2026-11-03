@@ -11,7 +11,7 @@ import { SliderField, TextField } from '@/components/forms/Fields';
 import { Screen } from '@/components/layout/Screen';
 import { compareGoalAllocations } from '@/calculations/financial/goals';
 import { projectScenario } from '@/calculations/projections/scenario';
-import { TEMPLATE_INFO, varsForTemplate } from '@/calculations/projections/templates';
+import { varsForTemplate } from '@/calculations/projections/templates';
 import { baselineGoalCapacity, scenarioGoalCapacity } from '@/features/goals/impact';
 import { useApp } from '@/hooks/useAppState';
 import type { Scenario, ScenarioVars } from '@/types';
@@ -146,11 +146,6 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
       }
     >
       <div className="stack">
-        <div className="row wrap" style={{ gap: 6 }}>
-          <span className="tag">{TEMPLATE_INFO[sc.template].title}</span>
-          {sc.saved ? <span className="tag dark">Saved</span> : <span className="tag dashed">Not saved</span>}
-          <span className="tag">{tenure(sc.vars.horizonMonths)} horizon</span>
-        </div>
         {sc.fromDecisionId && <Banner tone="outline">Created from a decision. <Link to={`/decide/${sc.fromDecisionId}`}><u>Open decision</u></Link></Banner>}
 
         <div className="tile ink reveal">
@@ -159,10 +154,10 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
             <span className={`delta ${s.stability === 'At risk' ? 'neg' : ''}`}>{s.stability}</span>
           </div>
           <div className="display-num mt-8" style={{ fontSize: 52 }}><Money value={s.endLiquidity} compact animate /></div>
-          <div className="caption mt-4">estimate · starts at {inr(sc.vars.openingLiquid)} · lowest {inr(s.minLiquidity)} in month {s.minLiquidityMonth}</div>
+          <div className="caption mt-4">Lowest {inr(s.minLiquidity)} in month {s.minLiquidityMonth}</div>
         </div>
         <div className="card reveal d1">
-          <div className="row-between mb-8"><span className="strong">Liquid funds over time</span><span className="caption">blue = above zero · red = below</span></div>
+          <div className="strong mb-8">Liquid funds over time</div>
           <LineChart
             series={[{ label: 'Liquid funds', values: projection.rows.map((r) => r.closingLiquid) }]}
             xLabels={projection.rows.map((r) => monthLabelFromNow(r.month))}
@@ -173,18 +168,19 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
             ]}
           />
         </div>
-        <div className="bento">
-          <div className="tile"><span className="label">Monthly surplus</span><div className="display-num mt-8" style={{ fontSize: 26 }}><Money value={s.monthlySurplus} compact /></div><p className="caption mt-4">after all EMIs</p></div>
-          <div className="tile signal"><span className="label">After allocations</span><div className="display-num mt-8" style={{ fontSize: 26 }}><Money value={s.unallocatedSurplus} compact /></div><p className="caption mt-4">free each month</p></div>
-          <div className="tile"><span className="label">Monthly EMIs</span><div className="display-num mt-8" style={{ fontSize: 26 }}><Money value={s.emiTotal} compact /></div><p className="caption mt-4">{s.newLoan > 0 ? `new EMI ${inr(s.newEmi)}` : 'existing loans'}</p></div>
-          <div className="tile"><span className="label">Cash-flow months</span><div className="display-num mt-8" style={{ fontSize: 26 }}>{projection.rows.length - s.negativeMonths}<span className="muted" style={{ fontSize: 16 }}> / {projection.rows.length}</span></div><p className="caption mt-4">{s.negativeMonths} negative</p></div>
+        <div className="stat-grid">
+          <div className="stat"><div className="label">Monthly surplus</div><div className="v"><Money value={s.monthlySurplus} compact /></div></div>
+          <div className="stat"><div className="label">Free after goals</div><div className="v"><Money value={s.unallocatedSurplus} compact /></div></div>
         </div>
-        <div className="card">
-          {s.newLoan > 0 && <p className="caption">New loan {inr(s.newLoan)} · EMI {inr(s.newEmi)} · interest in horizon {inr(s.newLoanInterest)}</p>}
-          {s.investedEnd > 0 && <p className="caption">Investments at end: {inr(s.investedEnd)} (contributed {inr(s.investedContributed)}, at an assumed {sc.vars.expectedReturnPct}%, not guaranteed)</p>}
-          {s.existingLoanClosedMonth && <p className="caption">Existing loan closes in month {s.existingLoanClosedMonth}.</p>}
-          {s.emergencyCoverageAfter !== null && <p className="caption">Emergency coverage after purchase: {months(s.emergencyCoverageAfter)}</p>}
-        </div>
+        <Expandable title="More detail">
+          <KV k="Monthly EMIs" v={inr(s.emiTotal)} />
+          <KV k="Months in surplus" v={`${projection.rows.length - s.negativeMonths} of ${projection.rows.length}`} />
+          {s.newLoan > 0 && <KV k="New loan" v={`${inr(s.newLoan)} at ${inr(s.newEmi)}/mo`} />}
+          {s.newLoan > 0 && <KV k="Interest over horizon" v={inr(s.newLoanInterest)} />}
+          {s.investedEnd > 0 && <KV k={`Investments at end (${sc.vars.expectedReturnPct}% assumed)`} v={inr(s.investedEnd)} />}
+          {s.existingLoanClosedMonth && <KV k="Existing loan closes" v={`Month ${s.existingLoanClosedMonth}`} />}
+          {s.emergencyCoverageAfter !== null && <KV k="Safety net after purchase" v={months(s.emergencyCoverageAfter)} />}
+        </Expandable>
         {warnings.map((w) => <Banner key={w} tone="warn">{w}</Banner>)}
         {s.stability === 'At risk' && <Banner tone="warn">Liquid funds go below zero in this scenario. You would need to borrow or sell investments.</Banner>}
         {hurt.length > 0 && <Banner tone="warn">Reduces goal funding: {hurt.map((h, i) => <span key={h.name}>{i > 0 && ', '}{h.name} (<Shift from={inr(h.before.funded)} to={`${inr(h.after.funded)}/mo`} />)</span>)}.</Banner>}
@@ -215,7 +211,7 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
         </Section>
         <Section title="Details"><SubNav id={sc.id} /></Section>
         <button
-          className="btn danger"
+          className="btn ghost danger-text"
           onClick={async () => {
             if (!(await confirm({ title: 'Delete this scenario?', confirmLabel: 'Delete', danger: true }))) return;
             actions.deleteScenario(sc.id);

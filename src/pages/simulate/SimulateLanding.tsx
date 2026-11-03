@@ -4,7 +4,7 @@ import { Check, GitCompare, Plus } from '@/components/icons';
 import { SCENARIO_ICON } from '@/components/topicIcons';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Expandable, List, ListRow, Section, SectionLink } from '@/components/cards/Cards';
+import { Expandable, List, ListRow, Section } from '@/components/cards/Cards';
 import { DotPlot, LineChart } from '@/components/charts/Charts';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import { Banner, EmptyState } from '@/components/feedback/States';
@@ -18,10 +18,7 @@ import type { Scenario, ScenarioTemplate } from '@/types';
 import { inr, months, monthLabelFromNow, relativeTime } from '@/utils/format';
 import { nowISO, uid } from '@/utils/id';
 
-const GROUPS: Array<{ title: string; items: ScenarioTemplate[] }> = [
-  { title: 'Plan a move', items: ['car', 'save-purchase', 'invest-more', 'prepay'] },
-  { title: 'Stress-test your plan', items: ['income-drop', 'variable-income', 'expense-increase'] },
-];
+const START: ScenarioTemplate[] = ['car', 'save-purchase', 'invest-more', 'income-drop'];
 
 export function useCreateScenario() {
   const { state, actions } = useApp();
@@ -45,40 +42,32 @@ export function SimulateLanding() {
   const { state } = useApp();
   const create = useCreateScenario();
   const navigate = useNavigate();
-  const mine = [...state.scenarios].sort((x, y) => Number(y.saved) - Number(x.saved) || y.updatedAt.localeCompare(x.updatedAt)).slice(0, 4);
+  const mine = [...state.scenarios].sort((x, y) => Number(y.saved) - Number(x.saved) || y.updatedAt.localeCompare(x.updatedAt)).slice(0, 3);
   const noData = state.data.incomes.length === 0;
   return (
-    <Screen large title="Simulate" actions={<Link to="/simulate/new" className="icon-btn" aria-label="Create scenario"><Plus size={24} /></Link>}>
-      <p className="lede">Try a change before you make it. Every scenario starts from your real numbers.</p>
-      {noData && <div className="mt-12"><Banner tone="warn" action={<Link className="link-btn" to="/records/new/income">Add</Link>}>Add your income and expenses first, so projections start from something real.</Banner></div>}
-      <div className="row mt-16">
+    <Screen large title="Simulate">
+      {noData && <div className="mt-4"><Banner tone="warn" action={<Link className="link-btn" to="/records/new/income">Add</Link>}>Add your income and expenses first, so projections start from real numbers.</Banner></div>}
+      <div className="row mt-8">
         <button className="btn flex-1" onClick={() => navigate('/simulate/new')}><Plus size={18} /> New scenario</button>
         <button className="btn secondary" disabled={state.scenarios.length < 1} onClick={() => navigate('/simulate/compare')}><GitCompare size={18} /> Compare</button>
       </div>
       {mine.length > 0 && (
-        <Section title="Your scenarios" action={state.scenarios.length > 1 ? <SectionLink to="/simulate/compare">Compare</SectionLink> : undefined}>
+        <Section title="Your scenarios">
           <List>
             {mine.map((s) => (
-              <ListRow
-                key={s.id}
-                icon={SCENARIO_ICON[s.template]}
-                title={s.name}
-                sub={<span className="row" style={{ gap: 6 }}>{s.saved ? <span className="tag">Saved</span> : <span className="tag dashed">Draft</span>} Updated {relativeTime(s.updatedAt)}</span>}
-                to={`/simulate/${s.id}`}
-              />
+              <ListRow key={s.id} icon={SCENARIO_ICON[s.template]} title={s.name} sub={s.saved ? `Saved · ${relativeTime(s.updatedAt)}` : `Draft · ${relativeTime(s.updatedAt)}`} to={`/simulate/${s.id}`} />
             ))}
           </List>
         </Section>
       )}
-      {GROUPS.map((g) => (
-        <Section key={g.title} title={g.title}>
-          <List>
-            {g.items.map((t) => (
-              <ListRow key={t} icon={SCENARIO_ICON[t]} title={TEMPLATE_INFO[t].title} sub={TEMPLATE_INFO[t].description} onClick={() => create(t)} />
-            ))}
-          </List>
-        </Section>
-      ))}
+      <Section title="Start from">
+        <List>
+          {START.map((t) => (
+            <ListRow key={t} icon={SCENARIO_ICON[t]} title={TEMPLATE_INFO[t].title} onClick={() => create(t)} />
+          ))}
+          <ListRow icon={Plus} title="More starting points" to="/simulate/new" />
+        </List>
+      </Section>
     </Screen>
   );
 }

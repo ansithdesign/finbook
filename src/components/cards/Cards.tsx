@@ -43,7 +43,7 @@ export function ListRow({ icon: Icon, title, sub, value, to, onClick, chevron }:
         </span>
       )}
       <span className="main">
-        <span className="title" style={{ display: 'block' }}>{title}</span>
+        <span className="title">{title}</span>
         {sub && <span className="sub" style={{ display: 'block' }}>{sub}</span>}
       </span>
       {value !== undefined && <span className="value">{value}</span>}

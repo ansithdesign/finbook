@@ -1,6 +1,6 @@
 // PROF-01 … PROF-10 and SYS-06 Incomplete financial profile.
 
-import { Banknote, Bell, Building2, CircleHelp, Lock, LogOut, Plus, Settings, ShieldCheck, User, Wallet, ClipboardList, Link2 } from '@/components/icons';
+import { Banknote, Bell, Building2, CircleHelp, Lock, LogOut, Plus, Settings, ShieldCheck, User, Wallet, ClipboardList, History } from '@/components/icons';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Expandable, KV, List, ListRow, Section } from '@/components/cards/Cards';
@@ -38,29 +38,20 @@ export function ProfileOverview() {
         <div className="flex-1">
           <div className="h3">{name}</div>
           <div className="caption">{state.profile.email || 'No email'} · {state.profile.mobile ? `+91 ${state.profile.mobile}` : 'No mobile'}</div>
-          <div className="caption">{state.profile.profileTypes.map((p) => PROFILE_TYPE_LABEL[p]).join(', ') || 'Financial profile not set'}</div>
         </div>
       </div>
-      <Link to="/profile/completeness" className="card mt-16" style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
+      {f.missing.length > 0 && <Link to="/profile/completeness" className="card mt-16" style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
         <div className="row-between"><span className="strong">Profile completeness</span><span className="strong">{pct(f.completeness.score)}</span></div>
         <div className="mt-8"><ProgressBar value={f.completeness.score} /></div>
-        <div className="caption mt-8">{f.missing.length ? `${f.missing.length} item(s) missing. See what's affected.` : 'All core sections complete'}</div>
-      </Link>
-      <Section title="Financial summary">
-        <div className="card outline">
-          <KV k="Monthly income" v={<Money value={f.income.value} />} />
-          <KV k="Monthly expenses" v={<Money value={f.expenses.value} />} />
-          <KV k="Net worth" v={<Money value={f.netWorth.value} />} />
-          <KV k="Goals" v={state.data.goals.length} />
-        </div>
-      </Section>
+        <div className="caption mt-8">{f.missing.length} {f.missing.length === 1 ? 'detail' : 'details'} missing</div>
+      </Link>}
       <Section title="Account">
         <List>
           <ListRow icon={User} title="Personal information" to="/profile/personal" />
           <ListRow icon={ClipboardList} title="Financial profile" to="/profile/financial" />
           <ListRow icon={Banknote} title="Income sources" sub={`${state.data.incomes.length} source(s)`} to="/profile/income" />
           <ListRow icon={Wallet} title="Accounts, assets and liabilities" to="/profile/accounts" />
-          <ListRow icon={Link2} title="Data connections" sub={state.connections.length ? `${state.connections.length} illustrative` : 'None'} to="/profile/accounts" />
+          <ListRow icon={History} title="Activity" to="/home/activity" />
         </List>
       </Section>
       <Section title="Settings">
@@ -85,7 +76,6 @@ export function ProfileOverview() {
           />
         </List>
       </Section>
-      <p className="caption center mt-16">Money Decision Engine · low-fidelity prototype v0.1</p>
     </Screen>
   );
 }

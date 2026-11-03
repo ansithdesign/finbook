@@ -53,17 +53,14 @@ export function GoalsOverview() {
   const suggestions = (Object.keys(GOAL_TYPE_LABEL) as GoalType[]).filter((t) => t !== 'other' && !goals.some((g) => g.type === t));
   return (
     <Screen large title="Goals" actions={<Link to="/goals/new" className="icon-btn" aria-label="Create goal"><Plus size={24} /></Link>}>
-      <p className="lede">What you're saving toward, and whether this month's surplus keeps every goal on pace.</p>
-      <div className="stat-grid mt-16">
+      <div className="stat-grid mt-8">
         <div className="stat">
           <div className="label">Planned each month</div>
           <div className="v"><Money value={totalNeeded} /></div>
-          <div className="caption">across {goals.length} {goals.length === 1 ? 'goal' : 'goals'}</div>
         </div>
         <div className="stat">
-          <div className="label">Free after SIPs</div>
+          <div className="label">Free each month</div>
           <div className="v"><Money value={capacity} /></div>
-          <div className="caption">estimated monthly surplus</div>
         </div>
       </div>
       {capacity !== null && totalNeeded > capacity && <div className="mt-12"><span className="level prepare">Be prepared</span><p className="caption mt-4">You've planned {inr(totalNeeded - capacity)} a month more than you have free. Lower-priority goals will fall behind first.</p></div>}
@@ -84,16 +81,16 @@ export function GoalsOverview() {
                     <span className="topic-badge">{(() => { const I = GOAL_ICON[g.type]; return <I size={20} weight="duotone" />; })()}</span>
                     <span className="flex-1" style={{ minWidth: 0 }}>
                       <span className="strong truncate" style={{ display: 'block' }}>{g.name}</span>
-                      <span className="caption">{g.targetDate ? `By ${fmtMonth(g.targetDate)}` : 'No target date'} · {g.priority} priority</span>
+                      <span className="caption">{g.targetDate ? `By ${fmtMonth(g.targetDate)}` : 'No target date'}</span>
                     </span>
                     {a && a.onTrack === false ? <span className="level prepare">Behind</span> : p.progress !== null ? <span className="level ok">On pace</span> : null}
                   </div>
                   <div className="row-between mt-16" style={{ alignItems: 'baseline' }}>
                     <span className="mid-number" style={{ fontSize: 24 }}><Money value={p.saved} compact /></span>
-                    <span className="caption">of {p.target === null ? 'no target yet' : <Money value={p.target} compact />} · <b className="num">{p.progress === null ? '—' : pct(p.progress)}</b></span>
+                    <span className="caption">of {p.target === null ? 'no target yet' : <Money value={p.target} compact />}</span>
                   </div>
                   <div className="mt-8"><ProgressBar value={p.progress} /></div>
-                  <div className="caption mt-8">{req.required === null ? req.reason : `Needs ${inr(req.required)} a month`}</div>
+                  <div className="caption mt-8">{req.required === null ? req.reason : `${inr(req.required)} a month needed`}</div>
                 </Link>
               );
             })}
