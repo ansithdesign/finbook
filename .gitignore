@@ -5,3 +5,7 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Impeccable working files (screenshots, roll records)
+.impeccable/review/
+.impeccable/questions/
