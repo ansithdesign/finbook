@@ -32,12 +32,12 @@ export function useDeviceScale(reservedLeft: number) {
   return scale;
 }
 
-export function DeviceFrame({ children, scale }: { children: ReactNode; scale: number }) {
+export function DeviceFrame({ children, scale, appearance = 'light' }: { children: ReactNode; scale: number; appearance?: 'light' | 'dark' }) {
   const time = useClock();
   return (
     <div className="device-slot" style={{ width: DEVICE_W * scale, height: DEVICE_H * scale }}>
       <div className="device" style={{ transform: `scale(${scale})` }} aria-label="iPhone 18 Pro Max prototype frame">
-        <div className="screen" id="device-screen">
+        <div className="screen" id="device-screen" data-theme={appearance}>
           <div className="statusbar" aria-hidden="true">
             <span>{time}</span>
             <span className="icons">

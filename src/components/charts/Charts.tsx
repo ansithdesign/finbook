@@ -4,8 +4,8 @@
 import { useId, type ReactNode } from 'react';
 import { inr, inrCompact } from '@/utils/format';
 
-const PALETTE = ['#111210', '#cbf23b', '#3d5afe', '#ff5a36', '#a29f94', '#5e7a00', '#d9d5c7'];
-const LINE_COLORS = ['#111210', '#3d5afe', '#ff5a36', '#a29f94'];
+const PALETTE = ['var(--seg-1)', 'var(--accent-bright)', 'var(--rain)', 'var(--act)', 'var(--faint)', 'var(--accent)', 'var(--line)'];
+const LINE_COLORS = ['var(--s1)', 'var(--s2)', 'var(--s3)', 'var(--s4)'];
 const LINE_DASH = ['', '5 5', '2 5', '8 3 2 3'];
 
 /** Short axis label: ₹3.1L, ₹1.2Cr, ₹45k. */
@@ -28,7 +28,7 @@ export interface ChartEvent {
 }
 
 /**
- * Area/line chart. The first series gets a filled area: lime above zero, coral below zero, so a shortfall is
+ * Area/line chart. The first series gets a filled area: teal above zero, red below zero, so a shortfall is
  * visible at a glance. Events are vertical markers; the lowest point is called out directly.
  */
 export function LineChart({ series, height = 190, xLabels, events = [], zeroLine = true, lowLabel = 'Low' }: { series: Series[]; height?: number; xLabels?: string[]; events?: ChartEvent[]; zeroLine?: boolean; lowLabel?: string }) {
@@ -36,7 +36,7 @@ export function LineChart({ series, height = 190, xLabels, events = [], zeroLine
   const W = 360;
   const H = height;
   const padB = 20;
-  const padT = 26;
+  const padT = 36;
   const padR = series.length > 1 ? 70 : 6;
   const all = series.flatMap((s) => s.values);
   if (all.length === 0) return <div className="skeleton" style={{ height }} />;
@@ -51,6 +51,10 @@ export function LineChart({ series, height = 190, xLabels, events = [], zeroLine
   const y = (v: number) => padT + (1 - (v - min) / (max - min)) * (H - padT - padB);
   const zeroY = y(0);
   const s0 = series[0].values;
+  // With several options on one chart, the shaded band is the true range across them at each month.
+  const bandHi = Array.from({ length: n }, (_, i) => Math.max(...series.map((s) => s.values[Math.min(i, s.values.length - 1)])));
+  const bandLo = Array.from({ length: n }, (_, i) => Math.min(...series.map((s) => s.values[Math.min(i, s.values.length - 1)])));
+  const band = series.length > 1 && n > 2 ? `${bandHi.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ')} ${bandLo.map((_, i) => `${x(n - 1 - i).toFixed(1)},${y(bandLo[n - 1 - i]).toFixed(1)}`).join(' ')}` : null;
   const pts = (vals: number[]) => vals.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   const area = `${x(0)},${zeroY} ${pts(s0)} ${x(s0.length - 1)},${zeroY}`;
   const labelEvery = Math.ceil(n / 6);
@@ -66,12 +70,12 @@ export function LineChart({ series, height = 190, xLabels, events = [], zeroLine
     <svg className="chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Chart: ${series.map((s) => s.label).join(', ')}`}>
       <defs>
         <linearGradient id={`${uid}p`} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#cbf23b" stopOpacity="0.95" />
-          <stop offset="100%" stopColor="#cbf23b" stopOpacity="0.05" />
+          <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.38" />
+          <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.03" />
         </linearGradient>
         <linearGradient id={`${uid}n`} x1="0" x2="0" y1="1" y2="0">
-          <stop offset="0%" stopColor="#ff5a36" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#ff5a36" stopOpacity="0.08" />
+          <stop offset="0%" stopColor="var(--act)" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="var(--act)" stopOpacity="0.06" />
         </linearGradient>
         <clipPath id={`${uid}up`}><rect x="-2" y="0" width={W + 4} height={Math.max(0, zeroY)} /></clipPath>
         <clipPath id={`${uid}dn`}><rect x="-2" y={zeroY} width={W + 4} height={Math.max(0, H - zeroY)} /></clipPath>
@@ -82,13 +86,14 @@ export function LineChart({ series, height = 190, xLabels, events = [], zeroLine
           <text x={0} y={y(t) - 4}>{axisLabel(t)}</text>
         </g>
       ))}
+      {band && <polygon points={band} fill="var(--rain)" opacity={0.16} />}
       <polygon points={area} fill={`url(#${uid}p)`} clipPath={`url(#${uid}up)`} />
       <polygon points={area} fill={`url(#${uid}n)`} clipPath={`url(#${uid}dn)`} />
       {zeroLine && min < 0 && max > 0 && <line x1={0} x2={W - padR + 4} y1={zeroY} y2={zeroY} stroke="var(--ink)" strokeWidth={1.2} />}
       {events.map((e) => (
         <g key={e.label + e.index}>
           <line x1={x(e.index)} x2={x(e.index)} y1={padT - 4} y2={H - padB} stroke="var(--ink)" strokeDasharray="2 3" opacity={0.55} />
-          <rect x={Math.min(Math.max(x(e.index) - e.label.length * 2.9 - 6, 0), W - padR - e.label.length * 5.8 - 12)} y={2} width={e.label.length * 5.8 + 12} height={16} rx={8} fill="var(--ink)" />
+          <rect x={Math.min(Math.max(x(e.index) - e.label.length * 2.9 - 6, 0), W - padR - e.label.length * 5.8 - 12)} y={2} width={e.label.length * 5.8 + 12} height={16} rx={8} fill="var(--storm)" />
           <text x={Math.min(Math.max(x(e.index), e.label.length * 2.9 + 6), W - padR - e.label.length * 2.9 - 6)} y={13} textAnchor="middle" style={{ fill: '#fff', fontWeight: 600 }}>{e.label}</text>
         </g>
       ))}
@@ -97,15 +102,15 @@ export function LineChart({ series, height = 190, xLabels, events = [], zeroLine
       ))}
       {series.length === 1 && s0.length > 2 && (
         <g>
-          <circle cx={x(minIdx)} cy={y(s0[minIdx])} r={5} fill="#fff" stroke="var(--ink)" strokeWidth={2.5} />
-          <rect x={lowX - 38} y={lowAbove ? y(s0[minIdx]) - 30 : y(s0[minIdx]) + 11} width={76} height={19} rx={9.5} fill="var(--ink)" />
+          <circle cx={x(minIdx)} cy={y(s0[minIdx])} r={5} fill="var(--paper)" stroke="var(--ink)" strokeWidth={2.5} />
+          <rect x={lowX - 38} y={lowAbove ? y(s0[minIdx]) - 30 : y(s0[minIdx]) + 11} width={76} height={19} rx={9.5} fill="var(--storm)" />
           <text x={lowX} y={(lowAbove ? y(s0[minIdx]) - 30 : y(s0[minIdx]) + 11) + 13} textAnchor="middle" style={{ fill: '#fff', fontWeight: 600 }}>{lowLabel} {axisLabel(s0[minIdx])}</text>
         </g>
       )}
-      <circle cx={x(s0.length - 1)} cy={y(s0[s0.length - 1])} r={5} fill="var(--lime)" stroke="var(--ink)" strokeWidth={2.5} />
+      <circle cx={x(s0.length - 1)} cy={y(s0[s0.length - 1])} r={5} fill="var(--accent-bright)" stroke="var(--ink)" strokeWidth={2.5} />
       {series.length > 1 &&
         ends.map((e) => (
-          <text key={e.label} x={W - padR + 10} y={e.y + 3} style={{ fill: e.color === '#a29f94' ? '#66645c' : e.color, fontWeight: 600 }}>{e.label.length > 11 ? e.label.slice(0, 10) + '…' : e.label}</text>
+          <text key={e.label} x={W - padR + 10} y={e.y + 3} style={{ fill: e.color === 'var(--s4)' ? 'var(--muted)' : e.color, fontWeight: 600 }}>{e.label.length > 11 ? e.label.slice(0, 10) + '…' : e.label}</text>
         ))}
       {xLabels?.map((l, i) => (i % labelEvery === 0 ? <text key={i} x={x(i)} y={H - 4} textAnchor="middle">{l}</text> : null))}
     </svg>
@@ -124,17 +129,17 @@ export function Ribbon({ parts, total, format = inrCompact, legend = true, heigh
   const clean = parts.filter((p) => p.value > 0);
   const sum = total ?? clean.reduce((s, p) => s + p.value, 0);
   if (sum <= 0) return <div className="skeleton" style={{ height }} />;
-  const colors = onDark ? ['#cbf23b', '#ffffff', '#3d5afe', '#ff5a36', '#a29f94', '#7c9a1d'] : PALETTE;
+  const colors = onDark ? ['var(--accent-bright)', '#ffffff', '#6aa9de', '#f0715f', '#9fc1ca', '#2f9fb4'] : PALETTE;
   return (
     <div>
       <div className="ribbon" style={{ height }} role="img" aria-label={clean.map((p) => `${p.label} ${format(p.value)}`).join(', ')}>
         {clean.map((p, i) => {
           const c = p.color ?? colors[i % colors.length];
           const share = p.value / sum;
-          const dark = ['#111210', '#3d5afe', '#ff5a36', '#5e7a00'].includes(c);
+          const dark = ['var(--seg-1)', 'var(--storm)', 'var(--rain)', 'var(--act)', 'var(--accent)', '#6aa9de', '#f0715f', '#2f9fb4'].includes(c);
           return (
             <div key={p.label} className={p.hatch ? 'hatch' : ''} style={{ flex: `${p.value} 1 0`, background: c, animationDelay: `${i * 70}ms` }}>
-              {share >= 0.12 && <span style={{ position: 'absolute', left: 10, bottom: 7, fontSize: 11, fontWeight: 700, color: dark ? '#fff' : '#111210', background: p.hatch ? c : 'transparent', borderRadius: 4, padding: p.hatch ? '0 3px' : 0 }}>{Math.round(share * 100)}%</span>}
+              {share >= 0.12 && <span style={{ position: 'absolute', left: 10, bottom: 7, fontSize: 11, fontWeight: 700, color: dark ? '#fff' : '#06222b', background: p.hatch ? c : 'transparent', borderRadius: 4, padding: p.hatch ? '0 3px' : 0 }}>{Math.round(share * 100)}%</span>}
             </div>
           );
         })}
@@ -190,7 +195,7 @@ export interface DotRow {
   lowerIsBetter?: boolean;
   values: Array<{ key: string; value: number | null; display: string; feasible?: boolean }>;
 }
-/** Strip plot: one row per metric, one dot per option on a shared scale. The best dot is lime-ringed. */
+/** Strip plot: one row per metric, one dot per option on a shared scale. The best dot is ringed. */
 export function DotPlot({ rows }: { rows: DotRow[] }) {
   return (
     <div className="dotplot">
@@ -228,7 +233,7 @@ export function DotPlot({ rows }: { rows: DotRow[] }) {
   );
 }
 
-/** Diverging monthly net cash-flow bars: lime above zero, coral below. */
+/** Diverging monthly net cash-flow bars: teal above zero, red below. */
 export function CashflowBars({ values, labels, height = 150 }: { values: number[]; labels?: string[]; height?: number }) {
   if (values.length === 0) return <div className="skeleton" style={{ height }} />;
   const W = 360;
@@ -249,7 +254,7 @@ export function CashflowBars({ values, labels, height = 150 }: { values: number[
         const cx = step * i + step / 2;
         return (
           <g key={i}>
-            <rect x={cx - bw / 2} y={v >= 0 ? zeroY - h : zeroY} width={bw} height={h} rx={Math.min(7, bw / 2)} fill={v >= 0 ? '#cbf23b' : '#ff5a36'} stroke={v >= 0 ? '#111210' : 'none'} strokeWidth={v >= 0 ? 1 : 0}>
+            <rect x={cx - bw / 2} y={v >= 0 ? zeroY - h : zeroY} width={bw} height={h} rx={Math.min(7, bw / 2)} fill={v >= 0 ? 'var(--accent)' : 'var(--act)'} stroke="none" strokeWidth={v >= 0 ? 1 : 0}>
               <title>{inr(v)}</title>
             </rect>
             {labels && i % every === 0 && <text x={cx} y={height - 4} textAnchor="middle">{labels[i]}</text>}
@@ -283,14 +288,14 @@ export function PathToTarget({ saved, target, months, planned, required, height 
       <text x={W - padR + 10} y={y(target) + 3} className="lbl-strong">{axisLabel(target)}</text>
       <text x={padL} y={y(target) - 6}>Target</text>
       {required !== null && <line x1={x(0)} y1={y(saved)} x2={x(horizon)} y2={y(target)} stroke="var(--ink)" strokeWidth={2} strokeDasharray="6 5" />}
-      {endV !== null && <polyline className="draw" pathLength={1} points={`${x(0)},${y(saved)} ${x(endM)},${y(endV)}`} fill="none" stroke="#5e7a00" strokeWidth={4.5} strokeLinecap="round" />}
-      {endV !== null && <circle cx={x(endM)} cy={y(endV)} r={6} fill="var(--lime)" stroke="var(--ink)" strokeWidth={2.5} />}
+      {endV !== null && <polyline className="draw" pathLength={1} points={`${x(0)},${y(saved)} ${x(endM)},${y(endV)}`} fill="none" stroke="var(--accent)" strokeWidth={4.5} strokeLinecap="round" />}
+      {endV !== null && <circle cx={x(endM)} cy={y(endV)} r={6} fill="var(--accent-bright)" stroke="var(--ink)" strokeWidth={2.5} />}
       <circle cx={x(0)} cy={y(saved)} r={6} fill="var(--ink)" />
       <text x={x(0) + 2} y={y(saved) + 22} className="lbl-strong">Today {axisLabel(saved)}</text>
       <text x={x(horizon)} y={height - 5} textAnchor="end">{months} mo</text>
       <text x={padL} y={height - 5}>Now</text>
       {required !== null && <text x={W - padR + 10} y={y(target) + 20} style={{ fontWeight: 600 }}>Needs {axisLabel(required)}/mo</text>}
-      {planned !== null && <text x={W - padR + 10} y={y(target) + 33} style={{ fill: '#5e7a00', fontWeight: 600 }}>Plan {axisLabel(planned)}/mo</text>}
+      {planned !== null && <text x={W - padR + 10} y={y(target) + 33} style={{ fill: 'var(--accent-ink)', fontWeight: 600 }}>Plan {axisLabel(planned)}/mo</text>}
     </svg>
   );
 }
@@ -310,12 +315,12 @@ export function HeroSparkline({ values, height = 84 }: { values: number[]; heigh
     <svg className="chart" viewBox={`0 0 ${W} ${height}`} preserveAspectRatio="none" style={{ height }} aria-hidden="true">
       <defs>
         <linearGradient id={uid} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#cbf23b" stopOpacity="0.4" />
-          <stop offset="100%" stopColor="#cbf23b" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--accent-bright)" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="var(--accent-bright)" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={`0,${height} ${pts} ${W},${height}`} fill={`url(#${uid})`} />
-      <polyline className="draw" pathLength={1} points={pts} fill="none" stroke="#cbf23b" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+      <polyline className="draw" pathLength={1} points={pts} fill="none" stroke="var(--accent-bright)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }

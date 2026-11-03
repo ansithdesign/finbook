@@ -50,7 +50,7 @@ export function NetWorthDetails() {
         <div className="display-num mt-8" style={{ fontSize: 52 }}><Money value={f.netWorth.value} animate /></div>
         <CalcNote missing={f.netWorth.missing} estimated={f.netWorth.estimated} />
         <div className="mt-16">
-          <Ribbon onDark height={30} legend={false} parts={[{ label: 'Assets', value: f.assets.value ?? 0, color: '#cbf23b' }, { label: 'Liabilities', value: f.liabilities.value ?? 0, color: '#ff5a36' }]} />
+          <Ribbon onDark height={30} legend={false} parts={[{ label: 'Assets', value: f.assets.value ?? 0, color: 'var(--accent-bright)' }, { label: 'Liabilities', value: f.liabilities.value ?? 0, color: '#f0715f' }]} />
           <div className="row-between caption mt-8">
             <span>Assets <b style={{ color: '#fff' }}>{inr(f.assets.value)}</b></span>
             <span>Liabilities <b style={{ color: '#fff' }}>{inr(f.liabilities.value)}</b></span>
@@ -65,9 +65,9 @@ export function NetWorthDetails() {
               <div className="label mb-8">How accessible is it?</div>
               <Ribbon
                 parts={[
-                  { label: 'Liquid', value: f.byLiquidity.liquid.value ?? 0, color: '#cbf23b', note: 'usable within days' },
-                  { label: 'Market-linked', value: f.byLiquidity.market.value ?? 0, color: '#111210', note: 'value fluctuates' },
-                  { label: 'Locked', value: f.byLiquidity.locked.value ?? 0, color: '#d9d5c7', hatch: true, note: 'property, retirement' },
+                  { label: 'Liquid', value: f.byLiquidity.liquid.value ?? 0, color: 'var(--accent-bright)', note: 'usable within days' },
+                  { label: 'Market-linked', value: f.byLiquidity.market.value ?? 0, color: 'var(--seg-1)', note: 'value fluctuates' },
+                  { label: 'Locked', value: f.byLiquidity.locked.value ?? 0, color: 'var(--line)', hatch: true, note: 'property, retirement' },
                 ]}
               />
             </div>
@@ -173,7 +173,7 @@ export function ExpenseBreakdown() {
         <div className="label">Total monthly expenditure</div>
         <div className="big-number"><Money value={f.expenses.value} /></div>
         <CalcNote missing={f.expenses.missing} estimated={f.expenses.estimated} />
-        <div className="mt-12"><Ribbon height={34} parts={[{ label: 'Essential', value: ess, color: '#111210' }, { label: 'Discretionary', value: disc, color: '#cbf23b' }]} /></div>
+        <div className="mt-12"><Ribbon height={34} parts={[{ label: 'Essential', value: ess, color: 'var(--seg-1)' }, { label: 'Discretionary', value: disc, color: 'var(--accent-bright)' }]} /></div>
         <p className="caption mt-8">Loan EMIs ({inr(f.emi.value ?? 0)}) are tracked under liabilities and not included here, to avoid double-counting.</p>
       </div>
       {prev && f.expenses.value !== null ? (
@@ -402,7 +402,7 @@ export function InsightDetail() {
     <Screen title="Insight" back footer={<Link to={insight.action.to} className="btn block">{insight.action.label}</Link>}>
       <div className="stack-lg">
         <div className="stack-sm">
-          {insight.severity === 'attention' && <span className="tag warn" style={{ alignSelf: 'flex-start' }}>Needs attention</span>}
+          {insight.severity === 'attention' && <span className="level prepare" style={{ alignSelf: 'flex-start' }}>Be prepared</span>}
           <h2 className="h2">{insight.title}</h2>
         </div>
         <div><div className="label">What we observed</div><p className="mt-4">{insight.observation}</p></div>

@@ -170,10 +170,11 @@ function AppRoutes() {
 function Stage() {
   const [panelOpen, setPanelOpen] = useState(() => window.innerWidth > 760);
   const scale = useDeviceScale(panelOpen ? 290 : 0);
+  const { state } = useApp();
   return (
     <div className="stage" style={{ paddingLeft: panelOpen ? 290 : 0 }}>
       <DevPanel open={panelOpen} onToggle={() => setPanelOpen((o) => !o)} />
-      <DeviceFrame scale={scale}>
+      <DeviceFrame scale={scale} appearance={state.dev.appearance}>
         <AppRoutes />
       </DeviceFrame>
       <div className="stage-note">Low-fidelity prototype · all figures illustrative · no real financial connections</div>

@@ -3,7 +3,7 @@
 import { ArrowUpRight, Banknote, Bell, Compass, Eye, EyeOff, Inbox, Landmark, Lightbulb, PiggyBank, Plus, Receipt, Search, Target } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { List, ListRow, Section, SectionLink } from '@/components/cards/Cards';
-import { Ribbon, Runway } from '@/components/charts/Charts';
+import { HeroSparkline, Ribbon, Runway } from '@/components/charts/Charts';
 import { useQuickAdd } from '@/components/bottom-sheets/QuickAdd';
 import { Banner, EmptyState, Money } from '@/components/feedback/States';
 import { ContourArt } from '@/components/illustrations/Illustrations';
@@ -24,7 +24,7 @@ export function HomeHeaderActions({ onAdd }: { onAdd?: () => void }) {
   return (
     <>
       {onAdd && (
-        <button className="icon-btn" aria-label="Quick add" onClick={onAdd} style={{ background: 'var(--ink)', color: 'var(--lime)', width: 38, height: 38, margin: '3px 4px 0 0' }}>
+        <button className="icon-btn" aria-label="Quick add" onClick={onAdd} style={{ background: 'var(--storm)', color: 'var(--accent-bright)', width: 38, height: 38, margin: '3px 4px 0 0' }}>
           <Plus size={20} />
         </button>
       )}
@@ -56,6 +56,10 @@ export function HomeOverview() {
     .slice(0, 3);
   const target = state.prefs.emergencyMonthsTarget;
   const nwDelta = lastNW && f.netWorth.value !== null ? f.netWorth.value - lastNW.netWorth : null;
+  const nwSeries = [...hist.map((h) => h.netWorth), ...(f.netWorth.value !== null ? [f.netWorth.value] : [])];
+  // The most pressing insight is read first, so it sits in the first viewport instead of below the fold.
+  const lead = f.insights.find((i) => i.severity === 'attention') ?? null;
+  const restInsights = f.insights.filter((i) => i !== lead);
 
   // Income flow: every rupee of income is either spent, committed or left over.
   const income = f.income.value;
@@ -66,25 +70,18 @@ export function HomeOverview() {
   const flowParts =
     income !== null && f.expenses.value !== null
       ? [
-          { label: 'Expenses', value: spent, color: '#111210' },
-          { label: 'Loan EMIs', value: emi, color: '#3d5afe' },
-          { label: 'Other commitments', value: other, color: '#a29f94' },
-          { label: left !== null && left < 0 ? 'Shortfall' : 'Left over', value: Math.abs(left ?? 0), color: left !== null && left < 0 ? '#ff5a36' : '#cbf23b' },
+          { label: 'Expenses', value: spent, color: 'var(--seg-1)' },
+          { label: 'Loan EMIs', value: emi, color: 'var(--rain)' },
+          { label: 'Other commitments', value: other, color: 'var(--faint)' },
+          { label: left !== null && left < 0 ? 'Shortfall' : 'Left over', value: Math.abs(left ?? 0), color: left !== null && left < 0 ? 'var(--act)' : 'var(--accent-bright)' },
         ]
       : [];
 
   return (
     <Screen
       large
-      title={
-        <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Link to="/profile" className="avatar" aria-label="Profile" style={{ textDecoration: 'none' }}>
-            {(first || '?').slice(0, 1).toUpperCase()}
-          </Link>
-          <span style={{ fontFamily: 'var(--font)', fontSize: 15, fontWeight: 600, letterSpacing: '-0.01em' }}>{greeting()}{first ? `, ${first}` : ''}</span>
-        </span>
-      }
-      actions={<HomeHeaderActions onAdd={quickAdd} />}
+      title={`${greeting()}${first ? `, ${first}` : ''}`}
+      actions={<HomeHeaderActions />}
     >
       {!f.hasData ? (
         <div className="tile ink mt-12">
@@ -115,12 +112,15 @@ export function HomeOverview() {
             </div>
             <div className="row wrap mt-12" style={{ gap: 8 }}>
               {nwDelta !== null && !state.prefs.hideBalances ? (
-                <span className={`delta ${nwDelta < 0 ? 'neg' : ''}`}>{nwDelta >= 0 ? '↑' : '↓'} {inr(Math.abs(nwDelta))} since {lastNW?.month}</span>
+                <span className={`delta ${nwDelta < 0 ? 'neg prepare' : ''}`}>{nwDelta >= 0 ? '↑' : '↓'} {inr(Math.abs(nwDelta))} since {lastNW?.month}</span>
               ) : (
                 <span className="caption">Change appears once monthly history exists</span>
               )}
             </div>
-            <div style={{ marginTop: 26 }}>
+            {nwSeries.length >= 2 && !state.prefs.hideBalances && (
+              <div style={{ marginTop: 14 }} aria-hidden="true"><HeroSparkline values={nwSeries} height={52} /></div>
+            )}
+            <div style={{ marginTop: 20 }}>
               <div className="label mb-8">Where it sits</div>
               <Ribbon
                 onDark
@@ -129,16 +129,26 @@ export function HomeOverview() {
                 parts={[
                   { label: 'Liquid', value: f.byLiquidity.liquid.value ?? 0 },
                   { label: 'Market-linked', value: f.byLiquidity.market.value ?? 0 },
-                  { label: 'Locked', value: f.byLiquidity.locked.value ?? 0, hatch: true, color: '#8f8d82' },
+                  { label: 'Locked', value: f.byLiquidity.locked.value ?? 0, hatch: true, color: '#7aa3ae' },
                 ]}
               />
-              <div className="row-between caption mt-8">
-                <span>● Liquid <b style={{ color: '#fff' }}><Money value={f.byLiquidity.liquid.value} compact /></b></span>
-                <span>○ Market <b style={{ color: '#fff' }}><Money value={f.byLiquidity.market.value} compact /></b></span>
-                <span>▨ Locked <b style={{ color: '#fff' }}><Money value={f.byLiquidity.locked.value} compact /></b></span>
+              <div className="lg3 caption mt-8">
+                <span><i className="lg-sw" style={{ background: 'var(--accent-bright)' }} />Liquid<b><Money value={f.byLiquidity.liquid.value} compact /></b></span>
+                <span><i className="lg-sw" style={{ background: '#ffffff' }} />Market<b><Money value={f.byLiquidity.market.value} compact /></b></span>
+                <span><i className="lg-sw hatch-sw" />Locked<b><Money value={f.byLiquidity.locked.value} compact /></b></span>
               </div>
             </div>
           </Link>
+          {lead && (
+            <Link to={`/home/insights/${lead.id}`} className="insight span-2 reveal d1" data-severity={lead.severity}>
+              <span className="insight-icon"><Lightbulb size={18} /></span>
+              <span className="flex-1">
+                <span className="level prepare" style={{ marginBottom: 6 }}>Be prepared</span>
+                <span className="strong" style={{ display: 'block' }}>{lead.title}</span>
+                <span className="caption" style={{ display: 'block', marginTop: 3 }}>{lead.observation}</span>
+              </span>
+            </Link>
+          )}
 
           {/* Monthly flow */}
           {flowParts.length > 0 && (
@@ -183,7 +193,7 @@ export function HomeOverview() {
             )}
           </Link>
 
-          <Link to="/home/liquidity" className="tile lime reveal d2">
+          <Link to="/home/liquidity" className="tile signal reveal d2">
             <span className="label">Liquid funds</span>
             <div className="display-num mt-8" style={{ fontSize: 30 }}><Money value={f.liquid.value} compact animate /></div>
             <p className="caption mt-8">Usable within days</p>
@@ -198,15 +208,17 @@ export function HomeOverview() {
 
       {f.hasData && (
         <>
-          <Section title="What needs attention" action={f.insights.length > 2 ? <span className="caption">{f.insights.length} insights</span> : undefined}>
+          {(restInsights.length > 0 || !lead) && (
+          <Section title={lead ? 'More to know' : 'What needs attention'} action={f.insights.length > 2 ? <span className="caption">{f.insights.length} insights</span> : undefined}>
             {f.insights.length === 0 ? (
               <Banner tone="outline">Nothing needs your attention right now, based on the information you've entered.</Banner>
             ) : (
               <div className="stack-sm">
-                {f.insights.slice(0, 4).map((i) => (
+                {restInsights.slice(0, 4).map((i) => (
                   <Link key={i.id} to={`/home/insights/${i.id}`} className="insight" data-severity={i.severity}>
                     <span className="insight-icon"><Lightbulb size={18} /></span>
                     <span className="flex-1">
+                      {i.severity === 'attention' && <span className="level prepare" style={{ marginBottom: 6 }}>Be prepared</span>}
                       <span className="strong" style={{ display: 'block' }}>{i.title}</span>
                       <span className="caption" style={{ display: 'block', marginTop: 3 }}>{i.observation}</span>
                       <span className="caption strong" style={{ display: 'block', marginTop: 6, color: 'var(--ink)' }}>Why am I seeing this? ›</span>
@@ -216,6 +228,7 @@ export function HomeOverview() {
               </div>
             )}
           </Section>
+          )}
 
           <Section title="Explore a decision" action={<SectionLink to="/decide">All</SectionLink>}>
             <div className="stack-sm">

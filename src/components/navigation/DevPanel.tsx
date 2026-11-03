@@ -140,6 +140,9 @@ export function DevPanel({ open, onToggle }: { open: boolean; onToggle: () => vo
 
         <h4>Simulate conditions</h4>
         <div className="stack-sm">
+          <button className={`dp-btn ${state.dev.appearance === 'dark' ? 'on' : ''}`} onClick={() => actions.setDev({ appearance: state.dev.appearance === 'dark' ? 'light' : 'dark' })}>
+            Appearance: {state.dev.appearance}
+          </button>
           <button className={`dp-btn ${state.dev.offline ? 'on' : ''}`} onClick={() => actions.setDev({ offline: !state.dev.offline })}>
             Offline mode: {state.dev.offline ? 'on' : 'off'}
           </button>

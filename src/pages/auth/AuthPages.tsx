@@ -26,7 +26,7 @@ export function AuthWelcome() {
     >
       <div className="stack-lg" style={{ paddingTop: 8 }}>
         <div className="row" style={{ gap: 10 }}>
-          <span className="brand-mark"><BrandMark size={26} color="#111210" /></span>
+          <span className="brand-mark"><BrandMark size={26} color="#06222b" /></span>
           <span className="strong" style={{ fontSize: 17 }}>Money Decision Engine</span>
         </div>
         <div className="reveal"><SunriseScene /></div>

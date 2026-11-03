@@ -320,7 +320,7 @@ function AlternativesView({ decision, analysis, hidden }: { decision: Decision; 
     <Screen title="Alternatives" back footer={<Link to={`/decide/${decision.id}/explanation`} className="btn block">See trade-offs and explanation</Link>}>
       <div className="stack">
         <p className="muted" style={{ fontSize: 14 }}>
-          Each dot is one option, placed on a shared scale. The lime-ringed dot is the most favourable in that row, which is not a recommendation: priorities differ. Hollow dots are not feasible with current liquid funds.
+          Each dot is one option, placed on a shared scale. The ringed dot is the most favourable in that row, which is not a recommendation: priorities differ. Hollow dots are not feasible with current liquid funds.
         </p>
         <DotPlot
           rows={metricKeys

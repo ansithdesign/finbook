@@ -164,7 +164,7 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
           <div className="caption mt-4">estimate · starts at {inr(sc.vars.openingLiquid)} · lowest {inr(s.minLiquidity)} in month {s.minLiquidityMonth}</div>
         </div>
         <div className="card reveal d1">
-          <div className="row-between mb-8"><span className="strong">Liquid funds over time</span><span className="caption">lime = above zero · coral = below</span></div>
+          <div className="row-between mb-8"><span className="strong">Liquid funds over time</span><span className="caption">teal = above zero · red = below</span></div>
           <LineChart
             series={[{ label: 'Liquid funds', values: projection.rows.map((r) => r.closingLiquid) }]}
             xLabels={projection.rows.map((r) => monthLabelFromNow(r.month))}
@@ -177,7 +177,7 @@ function ScenarioView({ sc, projection }: { sc: Scenario; projection: ReturnType
         </div>
         <div className="bento">
           <div className="tile"><span className="label">Monthly surplus</span><div className="display-num mt-8" style={{ fontSize: 26 }}><Money value={s.monthlySurplus} compact /></div><p className="caption mt-4">after all EMIs</p></div>
-          <div className="tile lime"><span className="label">After allocations</span><div className="display-num mt-8" style={{ fontSize: 26 }}><Money value={s.unallocatedSurplus} compact /></div><p className="caption mt-4">free each month</p></div>
+          <div className="tile signal"><span className="label">After allocations</span><div className="display-num mt-8" style={{ fontSize: 26 }}><Money value={s.unallocatedSurplus} compact /></div><p className="caption mt-4">free each month</p></div>
           <div className="tile"><span className="label">Monthly EMIs</span><div className="display-num mt-8" style={{ fontSize: 26 }}><Money value={s.emiTotal} compact /></div><p className="caption mt-4">{s.newLoan > 0 ? `new EMI ${inr(s.newEmi)}` : 'existing loans'}</p></div>
           <div className="tile"><span className="label">Cash-flow months</span><div className="display-num mt-8" style={{ fontSize: 26 }}>{projection.rows.length - s.negativeMonths}<span className="muted" style={{ fontSize: 16 }}> / {projection.rows.length}</span></div><p className="caption mt-4">{s.negativeMonths} negative</p></div>
         </div>
@@ -250,7 +250,7 @@ export function ScenarioCashflow() {
     <Screen title="Cash-flow projection" back>
       <p className="muted" style={{ fontSize: 14 }}>Simplified month-by-month projection for “{sc.name}”. Estimates only.</p>
       <div className="card mt-12">
-        <div className="row-between mb-8"><span className="strong">Net cash flow each month</span><span className="caption">lime = surplus · coral = shortfall</span></div>
+        <div className="row-between mb-8"><span className="strong">Net cash flow each month</span><span className="caption">teal = surplus · red = shortfall</span></div>
         <CashflowBars values={projection.rows.map((r) => r.net)} labels={projection.rows.map((r) => monthLabelFromNow(r.month))} />
       </div>
       <div className="table-scroll mt-16">

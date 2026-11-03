@@ -315,6 +315,7 @@ export interface OnboardingState {
 export interface DevFlags {
   offline: boolean;
   failConnections: boolean;
+  appearance: 'light' | 'dark';
 }
 
 export interface AppState {
